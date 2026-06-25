@@ -8,6 +8,7 @@ export default function CalculatorPage() {
   const [region, setRegion] = useState<"metro" | "nonmetro" | "depop">("metro");
   const [careType, setCareType] = useState<"home" | "daycare">("home");
   const [period, setPeriod] = useState(24);
+  const [heating, setHeating] = useState<"none" | "citygas" | "district">("citygas");
 
   const result = useMemo(() => {
     const months0 = Math.min(12, period);
@@ -25,20 +26,31 @@ export default function CalculatorPage() {
     const elecMonths = Math.min(36, Math.max(period, 12));
     const elec = elecMonths * 1.6;
 
-    const total = med + first + parent0 + parent1 + child + elec;
+    const isMulti = birthOrder === "third";
+    const months = Math.max(period, 12);
+    const winterMonths = Math.round((months / 12) * 4);
+    const nonWinterMonths = months - winterMonths;
+    const gas = isMulti && heating === "citygas"
+      ? (winterMonths * 1.8 + nonWinterMonths * 0.247)
+      : 0;
+    const district = isMulti && heating === "district" ? (months / 12) * 4.8 : 0;
+    const heatingTotal = gas + district;
 
-    return {
-      med, first, parent0, parent1, child, elec, total,
-      breakdown: [
-        { name: "임신·출산 진료비", val: med, note: twins ? "다태아 기본 140만원" : "단태아 100만원" },
-        { name: "첫만남이용권", val: first, note: birthOrder === "first" ? "첫째 200만원" : "둘째 이상 300만원" },
-        { name: `부모급여 0세 × ${months0}개월`, val: parent0, note: "월 100만원" },
-        { name: `부모급여 1세 × ${months1}개월`, val: parent1, note: careType === "home" ? "월 50만원" : "어린이집 시 보육료 차감" },
-        { name: `아동수당 × ${period}개월`, val: child, note: `월 ${childMonthly}만원` },
-        { name: `출산가구 전기할인 (최대 ${elecMonths}개월)`, val: elec, note: "월 1.6만원 한도" },
-      ],
-    };
-  }, [birthOrder, twins, region, careType, period]);
+    const total = med + first + parent0 + parent1 + child + elec + heatingTotal;
+
+    const breakdown = [
+      { name: "임신·출산 진료비", val: med, note: twins ? "다태아 기본 140만원" : "단태아 100만원" },
+      { name: "첫만남이용권", val: first, note: birthOrder === "first" ? "첫째 200만원" : "둘째 이상 300만원" },
+      { name: `부모급여 0세 × ${months0}개월`, val: parent0, note: "월 100만원" },
+      { name: `부모급여 1세 × ${months1}개월`, val: parent1, note: careType === "home" ? "월 50만원" : "어린이집 시 보육료 차감" },
+      { name: `아동수당 × ${period}개월`, val: child, note: `월 ${childMonthly}만원` },
+      { name: `출산가구 전기할인 (최대 ${elecMonths}개월)`, val: elec, note: "월 1.6만원 한도" },
+    ];
+    if (gas > 0) breakdown.push({ name: "도시가스 다자녀 할인", val: gas, note: "동절기 月 1.8만 · 비동절기 月 0.247만 (3자녀+)" });
+    if (district > 0) breakdown.push({ name: "지역난방 다자녀 할인", val: district, note: "月 4,000원 × 12개월 일괄지급 (3자녀+)" });
+
+    return { med, first, parent0, parent1, child, elec, heatingTotal, total, breakdown, isMulti };
+  }, [birthOrder, twins, region, careType, period, heating]);
 
   return (
     <div className="space-y-8">
@@ -79,6 +91,17 @@ export default function CalculatorPage() {
           <Field label={`📅 계산 기간: ${period}개월`}>
             <input type="range" min={1} max={36} value={period} onChange={(e) => setPeriod(+e.target.value)}
               className="w-full accent-rose" />
+          </Field>
+
+          <Field label="🔥 난방 방식 (3자녀+만 감면)">
+            <Pills value={heating} onChange={setHeating} options={[
+              { v: "citygas", l: "도시가스" },
+              { v: "district", l: "지역난방" },
+              { v: "none", l: "해당없음" },
+            ]} />
+            {birthOrder !== "third" && (
+              <p className="text-xs text-ink/50 mt-2">⚠️ 도시가스·지역난방 다자녀 감면은 3자녀 이상부터 적용돼요.</p>
+            )}
           </Field>
         </div>
 
