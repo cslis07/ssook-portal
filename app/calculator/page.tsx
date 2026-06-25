@@ -16,9 +16,11 @@ export default function CalculatorPage() {
 
     const med = twins ? 140 : 100;
     const first = birthOrder === "first" ? 200 : 300;
-    const parent0 = months0 * 100;
-    const parent1Cash = careType === "home" ? months1 * 50 : Math.max(0, months1 * (50 - 58));
-    const parent1 = Math.max(0, parent1Cash);
+    const DAYCARE_VOUCHER = 58.4;
+    const parent0Monthly = careType === "home" ? 100 : Math.max(0, 100 - DAYCARE_VOUCHER);
+    const parent1Monthly = careType === "home" ? 50 : Math.max(0, 50 - DAYCARE_VOUCHER);
+    const parent0 = months0 * parent0Monthly;
+    const parent1 = months1 * parent1Monthly;
 
     const childMonthly = region === "metro" ? 10 : region === "nonmetro" ? 10.5 : 12;
     const child = period * childMonthly;
@@ -41,8 +43,8 @@ export default function CalculatorPage() {
     const breakdown = [
       { name: "임신·출산 진료비", val: med, note: twins ? "다태아 기본 140만원" : "단태아 100만원" },
       { name: "첫만남이용권", val: first, note: birthOrder === "first" ? "첫째 200만원" : "둘째 이상 300만원" },
-      { name: `부모급여 0세 × ${months0}개월`, val: parent0, note: "월 100만원" },
-      { name: `부모급여 1세 × ${months1}개월`, val: parent1, note: careType === "home" ? "월 50만원" : "어린이집 시 보육료 차감" },
+      { name: `부모급여 0세 × ${months0}개월`, val: parent0, note: careType === "home" ? "월 100만원" : `월 100만 − 보육료 58.4만 = 약 ${parent0Monthly.toFixed(1)}만` },
+      { name: `부모급여 1세 × ${months1}개월`, val: parent1, note: careType === "home" ? "월 50만원 (0세 100만에서 절반↓)" : "월 50만 < 보육료 58.4만 → 현금 0원" },
       { name: `아동수당 × ${period}개월`, val: child, note: `월 ${childMonthly}만원` },
       { name: `출산가구 전기할인 (최대 ${elecMonths}개월)`, val: elec, note: "월 1.6만원 한도" },
     ];
