@@ -5,6 +5,7 @@ const links = [
   { href: "/timeline", label: "신청 타임라인", icon: "📅" },
   { href: "/support", label: "지원금 총정리", icon: "💝" },
   { href: "/calendar", label: "개월별 가이드", icon: "👶" },
+  { href: "/growth", label: "월령별 성장", icon: "🌷" },
   { href: "/checklist", label: "준비물", icon: "🎀" },
   { href: "/utility", label: "공과금 혜택", icon: "💡" },
   { href: "/calculator", label: "계산기", icon: "🧮" },
