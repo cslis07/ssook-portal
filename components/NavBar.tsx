@@ -9,6 +9,7 @@ const links = [
   { href: "/checklist", label: "준비물", icon: "🎀" },
   { href: "/utility", label: "공과금 혜택", icon: "💡" },
   { href: "/calculator", label: "계산기", icon: "🧮" },
+  { href: "/local", label: "우리 동네", icon: "🗺️" },
 ];
 
 export default function NavBar() {
