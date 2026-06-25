@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #FFF8F0;
+}
+
+html, body {
+  background: linear-gradient(180deg, #FFF8F0 0%, #FFEFE3 100%);
+  color: #3D2C2E;
+  min-height: 100%;
+}
+
+.dotbg {
+  background-image: radial-gradient(rgba(255, 181, 197, 0.25) 1.2px, transparent 1.2px);
+  background-size: 18px 18px;
+}
+
+.cloud-shape {
+  filter: drop-shadow(0 6px 16px rgba(255, 181, 197, 0.35));
+}
+
+.btn-pop {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-pop:hover { transform: translateY(-2px); }
+.btn-pop:active { transform: translateY(1px); }
+
+.card {
+  background: #fff;
+  border: 2px solid #FFE2E9;
+  border-radius: 28px;
+  box-shadow: 0 8px 24px rgba(255, 181, 197, 0.18);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
