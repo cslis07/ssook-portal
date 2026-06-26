@@ -11,6 +11,7 @@ const links = [
   { href: "/calculator", label: "계산기", icon: "🧮" },
   { href: "/local", label: "우리 동네", icon: "🗺️" },
   { href: "/medical", label: "의료/약국", icon: "🏥" },
+  { href: "/seoul", label: "서울 예약", icon: "🎫" },
 ];
 
 export default function NavBar() {

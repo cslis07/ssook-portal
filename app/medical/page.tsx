@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { REGIONS, SEVERE_TYPES } from "@/lib/regions";
 
-type TabId = "medical" | "seoul" | "aed" | "night" | "screening";
+type TabId = "medical" | "aed" | "night" | "screening";
 type ModeId =
   | "realtime" | "erNearby" | "trauma" | "severe"
   | "hospitalAll" | "baby"
@@ -32,24 +32,12 @@ const MEDICAL_MODES: Mode[] = [
   { id: "phNearby", group: "💊 약국", service: "pharmacy", label: "📍 내 주변", input: "geo", op: "getParmacyLcinfoInqire" },
 ];
 
-const SEOUL_CATS = [
-  { id: "all", label: "전체" },
-  { id: "medical", label: "🩺 진료" },
-  { id: "culture", label: "🎭 문화" },
-  { id: "education", label: "📚 교육" },
-  { id: "sport", label: "⚽ 체육" },
-  { id: "institution", label: "🏛️ 시설" },
-];
-
 const TABS: { id: TabId; label: string }[] = [
   { id: "medical", label: "🏥 의료" },
   { id: "aed", label: "❤️ AED" },
   { id: "night", label: "🌙 심야약국" },
   { id: "screening", label: "🩺 선별진료소" },
-  { id: "seoul", label: "🎫 서울 예약" },
 ];
-
-const SEOUL_GU = REGIONS["서울특별시"] || [];
 
 export default function MedicalPage() {
   const [tab, setTab] = useState<TabId>("medical");
@@ -61,11 +49,6 @@ export default function MedicalPage() {
   const [keyword, setKeyword] = useState("");
   const [bedSort, setBedSort] = useState<"" | "free" | "full">("");
   const [severeType, setSevereType] = useState("");
-
-  const [seoulCat, setSeoulCat] = useState("all");
-  const [seoulArea, setSeoulArea] = useState("");
-  const [seoulStat, setSeoulStat] = useState("");
-  const [seoulKw, setSeoulKw] = useState("");
 
   const [status, setStatus] = useState<{ msg: string; type?: "ok" | "warn" | "error" | "loading" }>({ msg: "" });
   const [items, setItems] = useState<any[]>([]);
@@ -145,25 +128,6 @@ export default function MedicalPage() {
       }
       setItems(list);
       setStatus({ msg: `총 ${data.totalCount}건 중 ${list.length}건 표시${note ? " · " + note : ""}`, type: "ok" });
-    } catch (e: any) {
-      setStatus({ msg: `오류: ${e.message}`, type: "error" });
-    }
-  }
-
-  async function searchSeoul() {
-    setStatus({ msg: "조회 중…", type: "loading" });
-    setItems([]);
-    try {
-      const r = await fetch(`/api/seoul-reserve?cat=${seoulCat}&start=1&end=1000`);
-      const data = await r.json();
-      if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
-      let rows: any[] = data.rows || [];
-      if (seoulArea) rows = rows.filter((x) => x.AREANM === seoulArea);
-      if (seoulStat) rows = rows.filter((x) => (x.SVCSTATNM || "") === seoulStat);
-      if (seoulKw) rows = rows.filter((x) => decodeHtml(x.SVCNM || "").includes(seoulKw));
-      if (!rows.length) return setStatus({ msg: "조회 결과가 없습니다. (필터를 완화해 보세요)", type: "warn" });
-      setItems(rows.slice(0, 100));
-      setStatus({ msg: `전체 ${data.total}건 · 조건 일치 ${rows.length}건 표시`, type: "ok" });
     } catch (e: any) {
       setStatus({ msg: `오류: ${e.message}`, type: "error" });
     }
@@ -314,47 +278,6 @@ export default function MedicalPage() {
         </div>
       )}
 
-      {/* 서울 예약 */}
-      {tab === "seoul" && (
-        <div className="med-card space-y-3">
-          <div>
-            <div className="med-group-label mb-2">카테고리</div>
-            <div className="flex flex-wrap gap-2">
-              {SEOUL_CATS.map((c) => (
-                <button key={c.id} onClick={() => setSeoulCat(c.id)}
-                  className={`med-tab ${seoulCat === c.id ? "active" : ""}`}>{c.label}</button>
-              ))}
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-            <div className="med-field">
-              <label>자치구</label>
-              <select className="med-input" value={seoulArea} onChange={(e) => setSeoulArea(e.target.value)}>
-                <option value="">전체</option>
-                {SEOUL_GU.map((g) => <option key={g} value={g}>{g}</option>)}
-              </select>
-            </div>
-            <div className="med-field">
-              <label>접수상태</label>
-              <select className="med-input" value={seoulStat} onChange={(e) => setSeoulStat(e.target.value)}>
-                <option value="">전체</option>
-                <option value="접수중">접수중만</option>
-              </select>
-            </div>
-            <div className="med-field md:col-span-2">
-              <label>서비스명 <span className="text-ink/40">(선택)</span></label>
-              <input className="med-input" type="text" value={seoulKw}
-                onChange={(e) => setSeoulKw(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && searchSeoul()}
-                placeholder="예: 테니스장" />
-            </div>
-            <div className="md:col-span-4 flex justify-end">
-              <button className="med-search-btn" onClick={searchSeoul}>조회</button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* 힌트·상태 */}
       {tab === "medical" && mode.hint && <p className="med-hint">{mode.hint}</p>}
       {status.msg && <div className={`med-status ${status.type || ""}`}>{status.msg}</div>}
@@ -387,7 +310,6 @@ function ResultCard({ tab, modeId, item }: { tab: TabId; modeId: ModeId; item: a
   if (tab === "aed") return <AedCard it={item} />;
   if (tab === "night") return <NightCard it={item} />;
   if (tab === "screening") return <ScreeningCard it={item} />;
-  if (tab === "seoul") return <SeoulCard it={item} />;
   return null;
 }
 
@@ -531,28 +453,6 @@ function ScreeningCard({ it }: { it: any }) {
   );
 }
 
-function SeoulCard({ it }: { it: any }) {
-  const stat = it.SVCSTATNM || "";
-  const statCls = stat === "접수중" ? "ok" : "full";
-  const rcpt = (it.RCPTBGNDT || it.RCPTENDDT) ? `${(it.RCPTBGNDT || "").slice(0, 16)} ~ ${(it.RCPTENDDT || "").slice(0, 16)}` : "";
-  return (
-    <article className="med-card">
-      <div className="med-card-top">
-        <h3>{decodeHtml(it.SVCNM || "")}</h3>
-        {stat && <span className={`med-bed ${statCls}`}>{stat}</span>}
-      </div>
-      <p className="addr">📍 {decodeHtml(it.PLACENM || "")}{it.AREANM && ` · ${it.AREANM}`}</p>
-      {rcpt && <p className="meta">🗓️ 접수 {rcpt}</p>}
-      {it.PAYATNM && <p className="meta">{it.PAYATNM}</p>}
-      {it.SVCURL && (
-        <div className="med-actions">
-          <a className="med-btn tel" href={decodeHtml(it.SVCURL)} target="_blank" rel="noopener">🔗 예약 페이지</a>
-        </div>
-      )}
-    </article>
-  );
-}
-
 function TelBtn({ n, label }: { n: string; label?: string }) {
   if (!n) return null;
   return <a className="med-btn tel" href={`tel:${String(n).replace(/[^0-9]/g, "")}`}>{label || `📞 ${n}`}</a>;
@@ -587,7 +487,3 @@ function pediatricItems(it: any): { ok: boolean; t: string }[] {
   return items;
 }
 
-function decodeHtml(s: string): string {
-  if (!s) return "";
-  return s.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&middot;/g, "·");
-}
