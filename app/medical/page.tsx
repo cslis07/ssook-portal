@@ -125,21 +125,21 @@ export default function MedicalPage() {
   }
 
   return (
-    <div className="space-y-5 max-w-md mx-auto">
+    <div className="space-y-5 max-w-5xl mx-auto">
       <header className="px-1">
         <span className="chip bg-rose/40 text-ink">공공의료 정보</span>
-        <h1 className="text-2xl font-extrabold text-ink mt-2">🏥 우리 가족 의료 찾기</h1>
-        <p className="text-ink/70 text-sm mt-1">응급실·병의원·약국·AED·심야약국·서울예약</p>
+        <h1 className="text-2xl md:text-4xl font-extrabold text-ink mt-2">🏥 우리 가족 의료 찾기</h1>
+        <p className="text-ink/70 text-sm md:text-base mt-1">응급실·병의원·약국·AED·심야약국·서울예약</p>
       </header>
 
-      {/* TAB BAR (가로 스크롤) */}
-      <div className="overflow-x-auto -mx-4 px-4">
-        <div className="flex gap-2 min-w-max">
+      {/* TAB BAR (모바일: 가로 스크롤 / PC: 줄바꿈 그리드) */}
+      <div className="overflow-x-auto md:overflow-visible -mx-4 md:mx-0 px-4 md:px-0">
+        <div className="flex md:flex-wrap gap-2 min-w-max md:min-w-0">
           {TABS.map((t) => (
             <button
               key={t.id}
               onClick={() => { setTab(t.id); setResult(null); }}
-              className={`btn-pop px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap ${
+              className={`btn-pop px-4 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold whitespace-nowrap ${
                 tab === t.id ? "bg-ink text-cream shadow-soft" : `${t.color} text-ink`
               }`}
             >
@@ -151,9 +151,9 @@ export default function MedicalPage() {
 
       {/* REGION (서울예약·선별진료소 제외) */}
       {tab !== "seoul" && tab !== "screening" && (
-        <div className="card p-4 space-y-2">
-          <label className="text-xs font-bold text-ink/60 block">📍 지역 선택</label>
-          <div className="grid grid-cols-2 gap-2">
+        <div className="card p-4 md:p-5 space-y-2">
+          <label className="text-xs md:text-sm font-bold text-ink/60 block">📍 지역 선택</label>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             <select value={sido} onChange={(e) => { setSido(e.target.value); setSigungu(""); }}
               className="p-3 rounded-2xl border-2 border-rose/30 bg-white font-semibold">
               <option value="">시·도</option>
@@ -229,7 +229,7 @@ export default function MedicalPage() {
       )}
 
       <button onClick={search} disabled={loading}
-        className="w-full btn-pop bg-ink text-cream py-4 rounded-2xl font-extrabold text-base disabled:opacity-60">
+        className="w-full md:max-w-xs md:mx-auto block btn-pop bg-ink text-cream py-4 rounded-2xl font-extrabold text-base disabled:opacity-60">
         {loading ? "불러오는 중..." : "🔍 검색하기"}
       </button>
 
@@ -239,7 +239,9 @@ export default function MedicalPage() {
           {result.error && <p className="card p-3 bg-rose/30 text-ink text-sm">⚠️ {result.error}</p>}
           {result.notice && <p className="card p-3 bg-butter/40 text-ink text-xs">ℹ️ {result.notice}</p>}
           {result.source === "live" && <p className="text-xs text-mint font-bold">● 실시간 데이터</p>}
-          <Results tab={tab} data={result} />
+          <div className="grid md:grid-cols-2 gap-2">
+            <Results tab={tab} data={result} />
+          </div>
         </div>
       )}
 

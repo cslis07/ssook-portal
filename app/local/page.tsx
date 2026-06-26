@@ -54,22 +54,22 @@ export default function LocalPage() {
   };
 
   return (
-    <div className="space-y-5 max-w-md mx-auto">
+    <div className="space-y-5 max-w-5xl mx-auto">
       <header className="px-1">
         <span className="chip bg-sky/60 text-ink">우리 동네</span>
-        <h1 className="text-2xl font-extrabold text-ink mt-2">🗺️ 내 주변 아기 정보</h1>
-        <p className="text-ink/70 mt-1 text-sm">
+        <h1 className="text-2xl md:text-4xl font-extrabold text-ink mt-2">🗺️ 내 주변 아기 정보</h1>
+        <p className="text-ink/70 mt-1 text-sm md:text-base">
           어린이집·놀이터·예방접종·안전정보를 한 곳에서.
         </p>
       </header>
 
       {/* REGION PICKER */}
-      <div className="card p-4">
-        <label className="text-xs font-bold text-ink/60 mb-2 block">📍 우리 동네 선택</label>
+      <div className="card p-4 md:p-5">
+        <label className="text-xs md:text-sm font-bold text-ink/60 mb-2 block">📍 우리 동네 선택</label>
         <select
           value={savedRegion}
           onChange={(e) => saveRegion(e.target.value)}
-          className="w-full p-3 rounded-2xl border-2 border-rose/30 bg-white text-ink font-semibold text-base"
+          className="w-full md:max-w-sm p-3 rounded-2xl border-2 border-rose/30 bg-white text-ink font-semibold text-base"
         >
           <option value="">시군구를 선택해주세요</option>
           {SIGUNGU_TOP.map((s) => (<option key={s} value={s}>{s}</option>))}
@@ -80,15 +80,15 @@ export default function LocalPage() {
       </div>
 
       {/* FEATURE GRID */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {LOCAL_FEATURES.map((f) => (
           <button
             key={f.id}
             onClick={() => open(f)}
-            className={`btn-pop card p-4 text-left ${f.color}`}
+            className={`btn-pop card p-4 md:p-5 text-left ${f.color}`}
           >
-            <div className="text-4xl mb-2">{f.icon}</div>
-            <div className="font-extrabold text-ink text-sm leading-tight">{f.title}</div>
+            <div className="text-4xl md:text-5xl mb-2">{f.icon}</div>
+            <div className="font-extrabold text-ink text-sm md:text-base leading-tight">{f.title}</div>
             <div className="text-xs text-ink/65 mt-1 leading-snug">{f.desc}</div>
           </button>
         ))}
@@ -98,7 +98,7 @@ export default function LocalPage() {
       {active && !active.endpoint.startsWith("http") && (
         <div className="fixed inset-0 z-50 bg-ink/40 flex items-end md:items-center justify-center" onClick={() => setActive(null)}>
           <div
-            className="bg-cream w-full max-w-md max-h-[85vh] overflow-y-auto rounded-t-blob md:rounded-blob p-5"
+            className="bg-cream w-full max-w-md md:max-w-2xl max-h-[85vh] overflow-y-auto rounded-t-blob md:rounded-blob p-5 md:p-7"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-3">
@@ -150,9 +150,11 @@ export default function LocalPage() {
                 {result.items.length === 0 ? (
                   <p className="text-center text-ink/60 py-4">결과가 없어요.</p>
                 ) : (
-                  result.items.map((it: any, i: number) => (
-                    <ResultCard key={i} feature={active.id} item={it} />
-                  ))
+                  <div className="grid md:grid-cols-2 gap-2">
+                    {result.items.map((it: any, i: number) => (
+                      <ResultCard key={i} feature={active.id} item={it} />
+                    ))}
+                  </div>
                 )}
               </div>
             )}
