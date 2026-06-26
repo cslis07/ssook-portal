@@ -43,3 +43,39 @@ html, body {
   font-size: 12px;
   font-weight: 600;
 }
+
+/* ---- 의료 페이지 전용: 흰 카드 + 파란 액센트 (원본 톤 유지) ---- */
+.med-root { --med-primary: #1a5fd0; --med-primary-dark: #14479c; --med-border: #e3e8f0; --med-muted: #687283; --med-ink: #1d2330; --med-ok: #18794e; --med-full: #c0392b; --med-warn: #b45309; }
+.med-tab { padding: 8px 14px; border: 1px solid var(--med-border); background: #fff; color: var(--med-muted); border-radius: 999px; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: .15s; white-space: nowrap; }
+.med-tab.active { background: #e8f0fe; color: var(--med-primary-dark); border-color: var(--med-primary); }
+.med-card { background: #fff; border: 1px solid var(--med-border); border-radius: 14px; padding: 16px; }
+.med-card h3 { margin: 0 0 8px; font-size: 17px; color: var(--med-ink); font-weight: 700; }
+.med-card .addr, .med-card .hours, .med-card .meta { margin: 4px 0; font-size: 13.5px; color: var(--med-muted); }
+.med-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.med-bed { font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+.med-bed.ok { background: #e6f4ea; color: var(--med-ok); }
+.med-bed.full { background: #fde8e6; color: var(--med-full); }
+.med-stats { list-style: none; padding: 0; margin: 10px 0; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.med-stats li { background: #f7f9fc; border-radius: 8px; padding: 8px; text-align: center; }
+.med-stats li span { display: block; font-size: 11px; color: var(--med-muted); }
+.med-stats li b { font-size: 17px; color: var(--med-ink); }
+.med-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.med-btn { flex: 1; min-width: 90px; text-align: center; text-decoration: none; padding: 9px; border-radius: 9px; font-size: 13.5px; font-weight: 600; }
+.med-btn.tel { background: #e8f0fe; color: var(--med-primary-dark); }
+.med-btn.map { background: #fef3e2; color: var(--med-warn); }
+.med-field label { font-size: 13px; font-weight: 600; color: var(--med-muted); display: block; margin-bottom: 6px; }
+.med-input { padding: 11px 12px; border: 1px solid var(--med-border); border-radius: 10px; font-size: 16px; background: #fff; width: 100%; min-height: 44px; }
+.med-search-btn { padding: 12px 22px; background: var(--med-primary); color: #fff; border: 0; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; height: 44px; }
+.med-search-btn:hover { background: var(--med-primary-dark); }
+.med-search-btn:disabled { opacity: .55; cursor: not-allowed; }
+.med-status { font-size: 14px; font-weight: 600; min-height: 20px; }
+.med-status.ok { color: var(--med-ok); }
+.med-status.warn { color: var(--med-warn); }
+.med-status.error { color: var(--med-full); }
+.med-status.loading { color: var(--med-muted); }
+.med-hint { color: var(--med-warn); font-size: 13px; }
+.med-chip { display: inline-block; background: #f4f6fb; color: var(--med-ink); padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; margin: 2px 4px 2px 0; }
+.med-chip.chip-no { background: #fff0ee; color: var(--med-full); }
+.med-group-label { font-size: 12px; font-weight: 700; color: var(--med-muted); letter-spacing: .2px; }
+.med-ped-row { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--med-border); }
+.med-ped-label { display: block; font-size: 13px; font-weight: 700; color: #6d28a8; margin-bottom: 6px; }

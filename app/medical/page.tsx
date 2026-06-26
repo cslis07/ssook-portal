@@ -3,27 +3,33 @@
 import { useEffect, useMemo, useState } from "react";
 import { REGIONS, SEVERE_TYPES } from "@/lib/regions";
 
-type TabId = "er" | "hospital" | "pharmacy" | "night" | "aed" | "screening" | "seoul";
+type TabId = "medical" | "seoul" | "aed" | "night" | "screening";
+type ModeId =
+  | "realtime" | "erNearby" | "trauma" | "severe"
+  | "hospitalAll" | "baby"
+  | "pharmacyRegion" | "phNearby";
 
-const TABS: { id: TabId; label: string; icon: string; color: string }[] = [
-  { id: "er", label: "응급실", icon: "🚑", color: "bg-rose/40" },
-  { id: "hospital", label: "병·의원", icon: "🏥", color: "bg-mint/40" },
-  { id: "pharmacy", label: "약국", icon: "💊", color: "bg-lavender/40" },
-  { id: "night", label: "심야약국", icon: "🌙", color: "bg-sky/40" },
-  { id: "aed", label: "AED", icon: "❤️‍🩹", color: "bg-peach/50" },
-  { id: "screening", label: "선별진료소", icon: "🩺", color: "bg-butter/50" },
-  { id: "seoul", label: "서울 예약", icon: "🎫", color: "bg-rose/30" },
-];
+type Mode = {
+  id: ModeId;
+  group: string;
+  service: "emergency" | "hospital" | "pharmacy";
+  label: string;
+  input: "region" | "geo";
+  op: string;
+  sigunguRequired?: boolean;
+  keyword?: boolean;
+  hint?: string;
+};
 
-const ER_MODES = [
-  { id: "realtime", label: "실시간 가용병상", op: "getEmrrmRltmUsefulSckbdInfoInqire", sigunguRequired: true },
-  { id: "trauma", label: "🚨 외상센터", op: "getStrmListInfoInqire", sigunguRequired: false },
-  { id: "severe", label: "🆘 중증질환 수용", op: "getSrsillDissAceptncPosblInfoInqire", sigunguRequired: true },
-];
-
-const HOSPITAL_MODES = [
-  { id: "all", label: "전체 병·의원", op: "getHsptlMdcncListInfoInqire" },
-  { id: "baby", label: "🌙 달빛어린이병원", op: "getBabyListInfoInqire" },
+const MEDICAL_MODES: Mode[] = [
+  { id: "realtime", group: "🚑 응급실", service: "emergency", label: "실시간 가용병상", input: "region", op: "getEmrrmRltmUsefulSckbdInfoInqire", sigunguRequired: true, hint: "※ 실시간 가용병상은 시/군/구까지 선택해야 조회됩니다. (병상 정렬·여유/포화 필터 가능)" },
+  { id: "erNearby", group: "🚑 응급실", service: "emergency", label: "📍 내 주변", input: "geo", op: "getEgytLcinfoInqire" },
+  { id: "trauma", group: "🚑 응급실", service: "emergency", label: "🚨 외상센터", input: "region", op: "getStrmListInfoInqire" },
+  { id: "severe", group: "🚑 응급실", service: "emergency", label: "🆘 중증질환 수용", input: "region", op: "getSrsillDissAceptncPosblInfoInqire", sigunguRequired: true, hint: "🆘 시/군/구까지 선택하세요. 특정 중증질환 수용 병원만 보려면 질환을 선택하세요." },
+  { id: "hospitalAll", group: "🏥 병·의원", service: "hospital", label: "병·의원", input: "region", op: "getHsptlMdcncListInfoInqire", keyword: true },
+  { id: "baby", group: "🏥 병·의원", service: "hospital", label: "🌙 달빛어린이병원", input: "region", op: "getBabyListInfoInqire", hint: "🌙 달빛어린이병원은 야간·휴일 소아 진료 기관입니다." },
+  { id: "pharmacyRegion", group: "💊 약국", service: "pharmacy", label: "지역 검색", input: "region", op: "getParmacyListInfoInqire", keyword: true },
+  { id: "phNearby", group: "💊 약국", service: "pharmacy", label: "📍 내 주변", input: "geo", op: "getParmacyLcinfoInqire" },
 ];
 
 const SEOUL_CATS = [
@@ -35,301 +41,553 @@ const SEOUL_CATS = [
   { id: "institution", label: "🏛️ 시설" },
 ];
 
+const TABS: { id: TabId; label: string }[] = [
+  { id: "medical", label: "🏥 의료" },
+  { id: "aed", label: "❤️ AED" },
+  { id: "night", label: "🌙 심야약국" },
+  { id: "screening", label: "🩺 선별진료소" },
+  { id: "seoul", label: "🎫 서울 예약" },
+];
+
+const SEOUL_GU = REGIONS["서울특별시"] || [];
+
 export default function MedicalPage() {
-  const [tab, setTab] = useState<TabId>("er");
+  const [tab, setTab] = useState<TabId>("medical");
+  const [modeId, setModeId] = useState<ModeId>("realtime");
+  const mode = useMemo(() => MEDICAL_MODES.find((m) => m.id === modeId)!, [modeId]);
+
   const [sido, setSido] = useState("");
   const [sigungu, setSigungu] = useState("");
   const [keyword, setKeyword] = useState("");
-  const [erMode, setErMode] = useState(ER_MODES[0].id);
-  const [hospMode, setHospMode] = useState(HOSPITAL_MODES[0].id);
-  const [seoulCat, setSeoulCat] = useState(SEOUL_CATS[0].id);
+  const [bedSort, setBedSort] = useState<"" | "free" | "full">("");
   const [severeType, setSevereType] = useState("");
-  const [seoulGu, setSeoulGu] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+
+  const [seoulCat, setSeoulCat] = useState("all");
+  const [seoulArea, setSeoulArea] = useState("");
+  const [seoulStat, setSeoulStat] = useState("");
+  const [seoulKw, setSeoulKw] = useState("");
+
+  const [status, setStatus] = useState<{ msg: string; type?: "ok" | "warn" | "error" | "loading" }>({ msg: "" });
+  const [items, setItems] = useState<any[]>([]);
+
+  const sigunguList = useMemo(() => REGIONS[sido] || [], [sido]);
 
   useEffect(() => {
     try {
-      const s = localStorage.getItem("ssook-medical-region");
-      if (s) {
-        const [a, b] = s.split("|");
+      const raw = localStorage.getItem("ssook-med-region");
+      if (raw) {
+        const [a, b] = raw.split("|");
         if (a) setSido(a);
         if (b) setSigungu(b);
       }
     } catch {}
   }, []);
-
   useEffect(() => {
-    try { localStorage.setItem("ssook-medical-region", `${sido}|${sigungu}`); } catch {}
+    try { localStorage.setItem("ssook-med-region", `${sido}|${sigungu}`); } catch {}
   }, [sido, sigungu]);
 
-  const sigunguList = useMemo(() => REGIONS[sido] || [], [sido]);
+  function setMode(id: ModeId) {
+    setModeId(id);
+    setItems([]);
+    setStatus({ msg: "" });
+  }
 
-  async function search() {
-    setLoading(true);
-    setResult(null);
+  async function searchRegion() {
+    if (!sido) return setStatus({ msg: "시/도를 선택하세요.", type: "warn" });
+    if (mode.sigunguRequired && !sigungu) return setStatus({ msg: "이 조회는 시/군/구를 선택해야 합니다.", type: "warn" });
+    const params: Record<string, string> = { service: mode.service, op: mode.op, numOfRows: "50" };
+    if (mode.id === "realtime" || mode.id === "severe") {
+      params.STAGE1 = sido;
+      params.STAGE2 = sigungu;
+      if (mode.id === "severe" && severeType) params.SM_TYPE = severeType;
+    } else {
+      params.Q0 = sido;
+      if (sigungu) params.Q1 = sigungu;
+      params.ORD = "NAME";
+      if (mode.keyword && keyword) params.QN = keyword;
+    }
+    await runQuery(params);
+  }
+
+  function searchGeo() {
+    if (!navigator.geolocation) return setStatus({ msg: "이 브라우저는 위치 기능을 지원하지 않습니다.", type: "error" });
+    setStatus({ msg: "위치 확인 중…", type: "loading" });
+    navigator.geolocation.getCurrentPosition(
+      (pos) => runQuery({
+        service: mode.service, op: mode.op, numOfRows: "50",
+        WGS84_LON: String(pos.coords.longitude),
+        WGS84_LAT: String(pos.coords.latitude),
+      }, true),
+      (err) => setStatus({ msg: `위치 가져오기 실패: ${err.message}`, type: "error" }),
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
+  async function runQuery(params: Record<string, string>, sortByDistance = false) {
+    setStatus({ msg: "조회 중…", type: "loading" });
+    setItems([]);
     try {
-      let url = "";
-      if (tab === "er") {
-        const m = ER_MODES.find((x) => x.id === erMode)!;
-        const p = new URLSearchParams({ service: "emergency", op: m.op });
-        if (erMode === "trauma") {
-          if (sido) p.set("Q0", sido);
-          if (sigungu) p.set("Q1", sigungu);
-          p.set("ORD", "NAME");
-        } else {
-          if (!sigungu) { alert("시·군·구까지 선택해주세요"); setLoading(false); return; }
-          p.set("STAGE1", sido);
-          p.set("STAGE2", sigungu);
-          if (erMode === "severe" && severeType) p.set("SM_TYPE", severeType);
-        }
-        url = `/api/medical?${p}`;
-      } else if (tab === "hospital") {
-        const m = HOSPITAL_MODES.find((x) => x.id === hospMode)!;
-        const p = new URLSearchParams({ service: "hospital", op: m.op });
-        if (sido) p.set("Q0", sido);
-        if (sigungu) p.set("Q1", sigungu);
-        if (keyword && hospMode === "all") p.set("QN", keyword);
-        p.set("ORD", "NAME");
-        url = `/api/medical?${p}`;
-      } else if (tab === "pharmacy") {
-        const p = new URLSearchParams({ service: "pharmacy", op: "getParmacyListInfoInqire" });
-        if (sido) p.set("Q0", sido);
-        if (sigungu) p.set("Q1", sigungu);
-        if (keyword) p.set("QN", keyword);
-        p.set("ORD", "NAME");
-        url = `/api/medical?${p}`;
-      } else if (tab === "night") {
-        const p = new URLSearchParams();
-        if (sido) p.set("sido", sido);
-        if (sigungu) p.set("sigungu", sigungu);
-        url = `/api/night-pharmacy?${p}`;
-      } else if (tab === "aed") {
-        const p = new URLSearchParams();
-        if (sido) p.set("sido", sido);
-        if (sigungu) p.set("sigungu", sigungu);
-        url = `/api/aed?${p}`;
-      } else if (tab === "screening") {
-        url = `/api/screening-clinic`;
-      } else if (tab === "seoul") {
-        url = `/api/seoul-reserve?cat=${seoulCat}&start=1&end=50`;
+      const qs = new URLSearchParams(params).toString();
+      const r = await fetch(`/api/medical?${qs}`);
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+      if (data.resultCode && data.resultCode !== "00") throw new Error(`API [${data.resultCode}] ${data.resultMsg}`);
+      let list: any[] = data.items || [];
+      if (!list.length) return setStatus({ msg: "조회 결과가 없습니다.", type: "warn" });
+      if (sortByDistance) list = [...list].sort((a, b) => num(a.distance) - num(b.distance));
+      let note = "";
+      if (mode.id === "realtime") {
+        const free = (x: any) => num(x.hvec) > 0;
+        if (bedSort === "free") { list = list.filter(free); note = "여유 병원만"; }
+        else if (bedSort === "full") { list = list.filter((x) => !free(x)); note = "포화 병원만"; }
+        list = [...list].sort((a, b) => (num(b.hvec) || -1) - (num(a.hvec) || -1));
+        if (!list.length) return setStatus({ msg: "해당 조건의 병원이 없습니다.", type: "warn" });
       }
+      setItems(list);
+      setStatus({ msg: `총 ${data.totalCount}건 중 ${list.length}건 표시${note ? " · " + note : ""}`, type: "ok" });
+    } catch (e: any) {
+      setStatus({ msg: `오류: ${e.message}`, type: "error" });
+    }
+  }
+
+  async function searchSeoul() {
+    setStatus({ msg: "조회 중…", type: "loading" });
+    setItems([]);
+    try {
+      const r = await fetch(`/api/seoul-reserve?cat=${seoulCat}&start=1&end=1000`);
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+      let rows: any[] = data.rows || [];
+      if (seoulArea) rows = rows.filter((x) => x.AREANM === seoulArea);
+      if (seoulStat) rows = rows.filter((x) => (x.SVCSTATNM || "") === seoulStat);
+      if (seoulKw) rows = rows.filter((x) => decodeHtml(x.SVCNM || "").includes(seoulKw));
+      if (!rows.length) return setStatus({ msg: "조회 결과가 없습니다. (필터를 완화해 보세요)", type: "warn" });
+      setItems(rows.slice(0, 100));
+      setStatus({ msg: `전체 ${data.total}건 · 조건 일치 ${rows.length}건 표시`, type: "ok" });
+    } catch (e: any) {
+      setStatus({ msg: `오류: ${e.message}`, type: "error" });
+    }
+  }
+
+  async function searchSimple(url: string) {
+    setStatus({ msg: "조회 중…", type: "loading" });
+    setItems([]);
+    try {
       const r = await fetch(url);
       const data = await r.json();
-      setResult({ ...data, _gu: seoulGu });
+      if (data.notice) setStatus({ msg: data.notice, type: "warn" });
+      setItems(data.items || []);
+      if (data.items?.length && !data.notice) setStatus({ msg: `${data.items.length}건 표시`, type: "ok" });
+      if (!data.items?.length && !data.notice) setStatus({ msg: "결과가 없습니다.", type: "warn" });
     } catch (e: any) {
-      setResult({ error: e.message });
-    } finally {
-      setLoading(false);
+      setStatus({ msg: `오류: ${e.message}`, type: "error" });
     }
   }
 
   return (
-    <div className="space-y-5 max-w-5xl mx-auto">
+    <div className="med-root space-y-5 max-w-5xl mx-auto">
       <header className="px-1">
         <span className="chip bg-rose/40 text-ink">공공의료 정보</span>
         <h1 className="text-2xl md:text-4xl font-extrabold text-ink mt-2">🏥 우리 가족 의료 찾기</h1>
-        <p className="text-ink/70 text-sm md:text-base mt-1">응급실·병의원·약국·AED·심야약국·서울예약</p>
+        <p className="text-ink/70 text-sm md:text-base mt-1">국립중앙의료원 · 실시간 가용병상 · 외상센터 · 달빛어린이병원 · AED · 심야약국 · 서울 예약</p>
       </header>
 
-      {/* TAB BAR (모바일: 가로 스크롤 / PC: 줄바꿈 그리드) */}
-      <div className="overflow-x-auto md:overflow-visible -mx-4 md:mx-0 px-4 md:px-0">
-        <div className="flex md:flex-wrap gap-2 min-w-max md:min-w-0">
+      {/* 상위 탭 */}
+      <div className="overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0">
+        <div className="flex gap-2 min-w-max md:flex-wrap md:min-w-0">
           {TABS.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => { setTab(t.id); setResult(null); }}
-              className={`btn-pop px-4 py-2 md:py-2.5 rounded-full text-sm md:text-base font-bold whitespace-nowrap ${
-                tab === t.id ? "bg-ink text-cream shadow-soft" : `${t.color} text-ink`
-              }`}
-            >
-              <span className="mr-1">{t.icon}</span>{t.label}
-            </button>
+            <button key={t.id} onClick={() => { setTab(t.id); setItems([]); setStatus({ msg: "" }); }}
+              className={`med-tab ${tab === t.id ? "active" : ""}`}>{t.label}</button>
           ))}
         </div>
       </div>
 
-      {/* REGION (서울예약·선별진료소 제외) */}
-      {tab !== "seoul" && tab !== "screening" && (
-        <div className="card p-4 md:p-5 space-y-2">
-          <label className="text-xs md:text-sm font-bold text-ink/60 block">📍 지역 선택</label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            <select value={sido} onChange={(e) => { setSido(e.target.value); setSigungu(""); }}
-              className="p-3 rounded-2xl border-2 border-rose/30 bg-white font-semibold">
-              <option value="">시·도</option>
+      {/* 의료 탭: 그룹화된 모드 바 */}
+      {tab === "medical" && (
+        <div className="med-card p-4 space-y-3">
+          {["🚑 응급실", "🏥 병·의원", "💊 약국"].map((g) => (
+            <div key={g}>
+              <div className="med-group-label mb-2">{g}</div>
+              <div className="flex flex-wrap gap-2">
+                {MEDICAL_MODES.filter((m) => m.group === g).map((m) => (
+                  <button key={m.id} onClick={() => setMode(m.id)}
+                    className={`med-tab ${mode.id === m.id ? "active" : ""}`}>{m.label}</button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 의료 탭: 컨트롤 */}
+      {tab === "medical" && (
+        <div className="med-card">
+          {mode.input === "region" ? (
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div className="med-field">
+                <label>시/도</label>
+                <select className="med-input" value={sido}
+                  onChange={(e) => { setSido(e.target.value); setSigungu(""); }}>
+                  <option value="">선택</option>
+                  {Object.keys(REGIONS).map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
+              </div>
+              <div className="med-field">
+                <label>시/군/구</label>
+                <select className="med-input" value={sigungu} disabled={!sido}
+                  onChange={(e) => setSigungu(e.target.value)}>
+                  <option value="">전체</option>
+                  {sigunguList.map((g) => <option key={g} value={g}>{g}</option>)}
+                </select>
+              </div>
+              {mode.keyword && (
+                <div className="med-field">
+                  <label>기관명 <span className="text-ink/40">(선택)</span></label>
+                  <input className="med-input" type="text" value={keyword}
+                    onChange={(e) => setKeyword(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && searchRegion()}
+                    placeholder="예: 삼성서울병원" />
+                </div>
+              )}
+              {mode.id === "severe" && (
+                <div className="med-field">
+                  <label>중증질환 <span className="text-ink/40">(선택)</span></label>
+                  <select className="med-input" value={severeType} onChange={(e) => setSevereType(e.target.value)}>
+                    <option value="">전체</option>
+                    {Object.entries(SEVERE_TYPES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                  </select>
+                </div>
+              )}
+              {mode.id === "realtime" && (
+                <div className="med-field">
+                  <label>병상</label>
+                  <select className="med-input" value={bedSort} onChange={(e) => setBedSort(e.target.value as any)}>
+                    <option value="">여유 순 (병상 많은 순)</option>
+                    <option value="free">여유 병원만</option>
+                    <option value="full">포화 병원만</option>
+                  </select>
+                </div>
+              )}
+              <div className="md:col-span-4 flex justify-end">
+                <button className="med-search-btn" onClick={searchRegion}>조회</button>
+              </div>
+            </div>
+          ) : (
+            <button className="med-search-btn w-full md:w-auto" onClick={searchGeo}>📍 내 위치로 검색</button>
+          )}
+        </div>
+      )}
+
+      {/* AED / 심야약국 / 선별진료소: 시/도·시/군/구 + 검색 */}
+      {(tab === "aed" || tab === "night") && (
+        <div className="med-card grid grid-cols-1 md:grid-cols-4 gap-3">
+          <div className="med-field">
+            <label>시/도</label>
+            <select className="med-input" value={sido}
+              onChange={(e) => { setSido(e.target.value); setSigungu(""); }}>
+              <option value="">선택</option>
               {Object.keys(REGIONS).map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
-            <select value={sigungu} onChange={(e) => setSigungu(e.target.value)}
-              className="p-3 rounded-2xl border-2 border-rose/30 bg-white font-semibold" disabled={!sido}>
+          </div>
+          <div className="med-field">
+            <label>시/군/구</label>
+            <select className="med-input" value={sigungu} disabled={!sido}
+              onChange={(e) => setSigungu(e.target.value)}>
               <option value="">전체</option>
               {sigunguList.map((g) => <option key={g} value={g}>{g}</option>)}
             </select>
           </div>
-        </div>
-      )}
-
-      {/* TAB-SPECIFIC CONTROLS */}
-      {tab === "er" && (
-        <div className="card p-4 space-y-3">
-          <div className="flex flex-wrap gap-2">
-            {ER_MODES.map((m) => (
-              <button key={m.id} onClick={() => setErMode(m.id)}
-                className={`btn-pop px-3 py-1.5 rounded-full text-xs font-bold ${
-                  erMode === m.id ? "bg-rose text-white" : "bg-white border-2 border-rose/30 text-ink"
-                }`}>{m.label}</button>
-            ))}
+          <div className="md:col-span-2 flex md:items-end">
+            <button className="med-search-btn w-full md:w-auto md:ml-auto"
+              onClick={() => searchSimple(`/api/${tab === "aed" ? "aed" : "night-pharmacy"}?${new URLSearchParams({ sido, sigungu })}`)}>
+              조회
+            </button>
           </div>
-          {erMode === "severe" && (
-            <select value={severeType} onChange={(e) => setSevereType(e.target.value)}
-              className="w-full p-3 rounded-2xl border-2 border-rose/30 bg-white">
-              <option value="">중증질환 전체</option>
-              {Object.entries(SEVERE_TYPES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-            </select>
-          )}
         </div>
       )}
 
-      {tab === "hospital" && (
-        <div className="card p-4 space-y-3">
-          <div className="flex gap-2">
-            {HOSPITAL_MODES.map((m) => (
-              <button key={m.id} onClick={() => setHospMode(m.id)}
-                className={`btn-pop px-3 py-1.5 rounded-full text-xs font-bold ${
-                  hospMode === m.id ? "bg-mint text-ink" : "bg-white border-2 border-mint/40 text-ink"
-                }`}>{m.label}</button>
-            ))}
-          </div>
-          {hospMode === "all" && (
-            <input value={keyword} onChange={(e) => setKeyword(e.target.value)}
-              placeholder="병원명 (선택)" className="w-full p-3 rounded-2xl border-2 border-mint/30 bg-white" />
-          )}
+      {tab === "screening" && (
+        <div className="med-card">
+          <button className="med-search-btn w-full md:w-auto" onClick={() => searchSimple("/api/screening-clinic")}>
+            선별진료소 안내 보기
+          </button>
         </div>
       )}
 
-      {tab === "pharmacy" && (
-        <div className="card p-4">
-          <input value={keyword} onChange={(e) => setKeyword(e.target.value)}
-            placeholder="약국명 (선택)" className="w-full p-3 rounded-2xl border-2 border-lavender/40 bg-white" />
-        </div>
-      )}
-
+      {/* 서울 예약 */}
       {tab === "seoul" && (
-        <div className="card p-4">
-          <label className="text-xs font-bold text-ink/60 block mb-2">카테고리</label>
-          <div className="flex flex-wrap gap-2">
-            {SEOUL_CATS.map((c) => (
-              <button key={c.id} onClick={() => setSeoulCat(c.id)}
-                className={`btn-pop px-3 py-1.5 rounded-full text-xs font-bold ${
-                  seoulCat === c.id ? "bg-rose text-white" : "bg-white border-2 border-rose/30 text-ink"
-                }`}>{c.label}</button>
-            ))}
+        <div className="med-card space-y-3">
+          <div>
+            <div className="med-group-label mb-2">카테고리</div>
+            <div className="flex flex-wrap gap-2">
+              {SEOUL_CATS.map((c) => (
+                <button key={c.id} onClick={() => setSeoulCat(c.id)}
+                  className={`med-tab ${seoulCat === c.id ? "active" : ""}`}>{c.label}</button>
+              ))}
+            </div>
           </div>
-          <p className="text-xs text-ink/60 mt-3">서울 자치구 결과를 받은 후 자치구별로 필터링됩니다.</p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div className="med-field">
+              <label>자치구</label>
+              <select className="med-input" value={seoulArea} onChange={(e) => setSeoulArea(e.target.value)}>
+                <option value="">전체</option>
+                {SEOUL_GU.map((g) => <option key={g} value={g}>{g}</option>)}
+              </select>
+            </div>
+            <div className="med-field">
+              <label>접수상태</label>
+              <select className="med-input" value={seoulStat} onChange={(e) => setSeoulStat(e.target.value)}>
+                <option value="">전체</option>
+                <option value="접수중">접수중만</option>
+              </select>
+            </div>
+            <div className="med-field md:col-span-2">
+              <label>서비스명 <span className="text-ink/40">(선택)</span></label>
+              <input className="med-input" type="text" value={seoulKw}
+                onChange={(e) => setSeoulKw(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && searchSeoul()}
+                placeholder="예: 테니스장" />
+            </div>
+            <div className="md:col-span-4 flex justify-end">
+              <button className="med-search-btn" onClick={searchSeoul}>조회</button>
+            </div>
+          </div>
         </div>
       )}
 
-      <button onClick={search} disabled={loading}
-        className="w-full md:max-w-xs md:mx-auto block btn-pop bg-ink text-cream py-4 rounded-2xl font-extrabold text-base disabled:opacity-60">
-        {loading ? "불러오는 중..." : "🔍 검색하기"}
-      </button>
+      {/* 힌트·상태 */}
+      {tab === "medical" && mode.hint && <p className="med-hint">{mode.hint}</p>}
+      {status.msg && <div className={`med-status ${status.type || ""}`}>{status.msg}</div>}
 
-      {/* RESULTS */}
-      {result && (
-        <div className="space-y-2">
-          {result.error && <p className="card p-3 bg-rose/30 text-ink text-sm">⚠️ {result.error}</p>}
-          {result.notice && <p className="card p-3 bg-butter/40 text-ink text-xs">ℹ️ {result.notice}</p>}
-          {result.source === "live" && <p className="text-xs text-mint font-bold">● 실시간 데이터</p>}
-          <div className="grid md:grid-cols-2 gap-2">
-            <Results tab={tab} data={result} />
-          </div>
+      {/* 결과 그리드 */}
+      {items.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pb-8">
+          {items.map((it, i) => (
+            <ResultCard key={i} tab={tab} modeId={modeId} item={it} />
+          ))}
         </div>
       )}
 
-      <div className="card p-4 bg-rose/15 text-xs text-ink/70">
-        <b>🆘 응급시 119</b> · 실시간 정보는 의료기관 입력 시점 기준이며 실제와 다를 수 있어요.
-      </div>
+      <footer className="text-xs text-ink/60 border-t border-rose/20 pt-3">
+        <p>출처: 국립중앙의료원 · 행안부 · 서울 열린데이터광장 (data.go.kr · openapi.seoul.go.kr)</p>
+        <p>실시간 정보는 의료기관 입력 시점 기준이며 실제와 다를 수 있습니다. 응급상황 시 <strong>119</strong>.</p>
+      </footer>
     </div>
   );
 }
 
-function Results({ tab, data }: { tab: TabId; data: any }) {
-  const items: any[] = data.items || data.rows || [];
-  if (!items.length && !data.error) return <p className="text-center text-ink/50 py-6">결과 없음</p>;
-
-  if (tab === "er") {
-    return <>{items.map((x, i) => (
-      <div key={i} className="card p-3">
-        <div className="font-extrabold text-ink">{x.dutyName || x.hpid || "-"}</div>
-        {x.dutyAddr && <div className="text-xs text-ink/70 mt-1">📍 {x.dutyAddr}</div>}
-        {x.dutyTel3 && <div className="text-xs text-ink/70">☎ 응급 {x.dutyTel3}</div>}
-        {x.hvec !== undefined && <div className="text-xs text-rose font-bold mt-1">응급실 가용 {x.hvec} · 일반 {x.hv27 ?? "-"} · 소아 {x.hv28 ?? "-"}</div>}
-      </div>
-    ))}</>;
+function ResultCard({ tab, modeId, item }: { tab: TabId; modeId: ModeId; item: any }) {
+  if (tab === "medical") {
+    if (modeId === "realtime") return <EmergencyCard it={item} />;
+    if (modeId === "erNearby" || modeId === "phNearby") return <NearbyCard it={item} />;
+    if (modeId === "trauma") return <TraumaCard it={item} />;
+    if (modeId === "severe") return <SevereCard it={item} />;
+    return <FacilityCard it={item} />;
   }
-  if (tab === "hospital" || tab === "pharmacy") {
-    return <>{items.map((x, i) => (
-      <div key={i} className="card p-3">
-        <div className="font-extrabold text-ink">{x.dutyName}</div>
-        <div className="text-xs text-ink/70 mt-1">📍 {x.dutyAddr}</div>
-        {x.dutyTel1 && <div className="text-xs text-ink/70">☎ {x.dutyTel1}</div>}
-        {x.dutyDivNam && <div className="text-xs text-rose mt-1">{x.dutyDivNam}</div>}
-      </div>
-    ))}</>;
-  }
-  if (tab === "night") {
-    return <>{items.map((x, i) => (
-      <div key={i} className="card p-3">
-        <div className="font-extrabold text-ink">{x.name}</div>
-        <div className="text-xs text-ink/70 mt-1">📍 {x.address}</div>
-        <div className="text-xs text-ink/70">☎ {x.tel}</div>
-        <div className="text-xs text-sky font-bold mt-1">🌙 오늘 마감 {fmtTime(x.todayClose)}</div>
-      </div>
-    ))}</>;
-  }
-  if (tab === "aed") {
-    return <>{items.map((x, i) => (
-      <div key={i} className="card p-3">
-        <div className="font-extrabold text-ink">❤️ {x.name}</div>
-        <div className="text-xs text-ink/70 mt-1">📍 {x.address || x.place}</div>
-        {x.tel && <div className="text-xs text-ink/70">☎ {x.tel}</div>}
-      </div>
-    ))}</>;
-  }
-  if (tab === "screening") {
-    return <>
-      {items.map((x: any, i: number) => (
-        <div key={i} className="card p-3">
-          <div className="font-extrabold text-ink">🩺 {x.name}</div>
-          <div className="text-xs text-ink/70 mt-1">📍 {x.address}</div>
-          <div className="text-xs text-ink/70">☎ {x.tel}</div>
-          <div className="text-xs text-mint font-bold mt-1">🕐 {x.hours}</div>
-        </div>
-      ))}
-      {data.links && (
-        <div className="card p-3 bg-mint/20 text-xs">
-          {data.links.map((l: any) => (
-            <a key={l.href} href={l.href} target="_blank" rel="noopener" className="block text-ink underline">{l.label}</a>
-          ))}
-        </div>
-      )}
-    </>;
-  }
-  if (tab === "seoul") {
-    const filtered = data._gu ? items.filter((x: any) => (x.AREANM || "").includes(data._gu)) : items;
-    return <>{filtered.slice(0, 50).map((x: any, i: number) => (
-      <div key={i} className="card p-3">
-        <div className="font-extrabold text-ink text-sm">{x.SVCNM || x.SVCNAME}</div>
-        <div className="text-xs text-rose mt-0.5">{x.AREANM} · {x.PLACENM}</div>
-        <div className="text-xs text-ink/70 mt-1">접수 {x.SVCOPNBGNDT?.slice(0,10)} ~ {x.SVCOPNENDDT?.slice(0,10)}</div>
-        <div className="text-xs text-mint font-bold mt-1">{x.SVCSTATNM} · {x.PAYATNM}</div>
-        {x.SVCURL && <a href={x.SVCURL} target="_blank" rel="noopener" className="text-xs text-sky underline mt-1 inline-block">예약하러 가기 →</a>}
-      </div>
-    ))}</>;
-  }
+  if (tab === "aed") return <AedCard it={item} />;
+  if (tab === "night") return <NightCard it={item} />;
+  if (tab === "screening") return <ScreeningCard it={item} />;
+  if (tab === "seoul") return <SeoulCard it={item} />;
   return null;
 }
 
-function fmtTime(t: string) {
-  if (!t || t.length < 4) return "-";
-  return `${t.slice(0,2)}:${t.slice(2,4)}`;
+function EmergencyCard({ it }: { it: any }) {
+  const beds = num(it.hvec), op = num(it.hvoc), ward = num(it.hvgc);
+  const ambulance = it.hvamyn === "Y";
+  const pedAvail = num(it.hvncc) > 0 || it.hvincuayn === "Y" || it.hvventisoayn === "Y";
+  const pedItems = pediatricItems(it);
+  return (
+    <article className="med-card">
+      <div className="med-card-top">
+        <h3>{it.dutyName}</h3>
+        {Number.isNaN(beds) ? null : beds > 0
+          ? <span className="med-bed ok">병상 {beds}</span>
+          : <span className="med-bed full">포화</span>}
+      </div>
+      <p className="meta">입력시각: {it.hvidate || "-"}{pedAvail && <span style={{ color: "#6d28a8", fontWeight: 700 }}> · 🧒 소아 가용</span>}</p>
+      <ul className="med-stats">
+        <li><span>응급실 일반</span><b>{disp(beds)}</b></li>
+        <li><span>수술실</span><b>{disp(op)}</b></li>
+        <li><span>입원실 일반</span><b>{disp(ward)}</b></li>
+        <li><span>구급차</span><b>{ambulance ? "가용" : "불가"}</b></li>
+        <li><span>CT</span><b>{it.hvctayn === "Y" ? "○" : "×"}</b></li>
+        <li><span>MRI</span><b>{it.hvmriayn === "Y" ? "○" : "×"}</b></li>
+      </ul>
+      {pedItems.length > 0 && (
+        <div className="med-ped-row">
+          <span className="med-ped-label">🧒 소아 응급자원</span>
+          {pedItems.map((p) => (
+            <span key={p.t} className={`med-chip ${p.ok ? "" : "chip-no"}`}>{p.t}</span>
+          ))}
+        </div>
+      )}
+      {it.dutyTel3 && <div className="med-actions"><TelBtn n={it.dutyTel3} label="🚑 응급실" /></div>}
+    </article>
+  );
+}
+
+function NearbyCard({ it }: { it: any }) {
+  const d = num(it.distance);
+  const open = it.startTime && it.endTime ? `오늘 ${fmtTime(it.startTime)} ~ ${fmtTime(it.endTime)}` : "";
+  return (
+    <article className="med-card">
+      <div className="med-card-top">
+        <h3>{it.dutyName}</h3>
+        {!Number.isNaN(d) && <span className="med-bed ok">{d.toFixed(2)}km</span>}
+      </div>
+      <p className="addr">📍 {it.dutyAddr}</p>
+      <p className="meta">{it.dutyDivName || ""}{open && ` · ${open}`}</p>
+      <div className="med-actions">
+        <TelBtn n={it.dutyTel1} />
+        <MapBtn name={it.dutyName} lat={it.latitude} lon={it.longitude} />
+      </div>
+    </article>
+  );
+}
+
+function TraumaCard({ it }: { it: any }) {
+  return (
+    <article className="med-card">
+      <div className="med-card-top">
+        <h3>{it.dutyName}</h3>
+        {it.dutyEmclsName && <span className="med-bed ok">{it.dutyEmclsName}</span>}
+      </div>
+      <p className="addr">📍 {it.dutyAddr}</p>
+      <div className="med-actions">
+        <TelBtn n={it.dutyTel1} />
+        {it.dutyTel3 && <TelBtn n={it.dutyTel3} label="🚑 응급실" />}
+        <MapBtn name={it.dutyName} lat={it.wgs84Lat} lon={it.wgs84Lon} />
+      </div>
+    </article>
+  );
+}
+
+function SevereCard({ it }: { it: any }) {
+  const chips: string[] = [];
+  for (let n = 1; n <= 28; n++) {
+    const v = it["MKioskTy" + n] ?? it["mkioskty" + n];
+    if (isYes(v) && SEVERE_TYPES[String(n)]) chips.push(SEVERE_TYPES[String(n)]);
+  }
+  return (
+    <article className="med-card">
+      <div className="med-card-top">
+        <h3>{it.dutyName || it.hpid || "-"}</h3>
+        <span className={`med-bed ${chips.length ? "ok" : "full"}`}>수용 {chips.length}</span>
+      </div>
+      {chips.length ? (
+        <div className="mt-2">{chips.map((c) => <span key={c} className="med-chip">{c}</span>)}</div>
+      ) : (
+        <p className="meta">현재 수용 가능 항목 없음 또는 정보 미제공</p>
+      )}
+    </article>
+  );
+}
+
+function FacilityCard({ it }: { it: any }) {
+  return (
+    <article className="med-card">
+      <h3>{it.dutyName}</h3>
+      <p className="addr">📍 {it.dutyAddr}</p>
+      <p className="hours">🕒 {todayHours(it)}</p>
+      <div className="med-actions">
+        <TelBtn n={it.dutyTel1} />
+        <MapBtn name={it.dutyName} lat={it.wgs84Lat} lon={it.wgs84Lon} />
+      </div>
+    </article>
+  );
+}
+
+function AedCard({ it }: { it: any }) {
+  return (
+    <article className="med-card">
+      <h3>❤️ {it.name}</h3>
+      <p className="addr">📍 {it.address || it.place}</p>
+      {it.tel && <p className="meta">☎ {it.tel}</p>}
+    </article>
+  );
+}
+
+function NightCard({ it }: { it: any }) {
+  return (
+    <article className="med-card">
+      <div className="med-card-top">
+        <h3>🌙 {it.name}</h3>
+        <span className="med-bed ok">오늘 마감 {fmtTime(it.todayClose)}</span>
+      </div>
+      <p className="addr">📍 {it.address}</p>
+      {it.tel && <TelBtn n={it.tel} />}
+    </article>
+  );
+}
+
+function ScreeningCard({ it }: { it: any }) {
+  return (
+    <article className="med-card">
+      <h3>🩺 {it.name}</h3>
+      <p className="addr">📍 {it.address}</p>
+      <p className="meta">🕐 {it.hours}</p>
+      {it.tel && <div className="med-actions"><TelBtn n={it.tel} /></div>}
+    </article>
+  );
+}
+
+function SeoulCard({ it }: { it: any }) {
+  const stat = it.SVCSTATNM || "";
+  const statCls = stat === "접수중" ? "ok" : "full";
+  const rcpt = (it.RCPTBGNDT || it.RCPTENDDT) ? `${(it.RCPTBGNDT || "").slice(0, 16)} ~ ${(it.RCPTENDDT || "").slice(0, 16)}` : "";
+  return (
+    <article className="med-card">
+      <div className="med-card-top">
+        <h3>{decodeHtml(it.SVCNM || "")}</h3>
+        {stat && <span className={`med-bed ${statCls}`}>{stat}</span>}
+      </div>
+      <p className="addr">📍 {decodeHtml(it.PLACENM || "")}{it.AREANM && ` · ${it.AREANM}`}</p>
+      {rcpt && <p className="meta">🗓️ 접수 {rcpt}</p>}
+      {it.PAYATNM && <p className="meta">{it.PAYATNM}</p>}
+      {it.SVCURL && (
+        <div className="med-actions">
+          <a className="med-btn tel" href={decodeHtml(it.SVCURL)} target="_blank" rel="noopener">🔗 예약 페이지</a>
+        </div>
+      )}
+    </article>
+  );
+}
+
+function TelBtn({ n, label }: { n: string; label?: string }) {
+  if (!n) return null;
+  return <a className="med-btn tel" href={`tel:${String(n).replace(/[^0-9]/g, "")}`}>{label || `📞 ${n}`}</a>;
+}
+function MapBtn({ name, lat, lon }: { name: string; lat: any; lon: any }) {
+  if (!lat || !lon) return null;
+  return <a className="med-btn map" href={`https://map.kakao.com/link/map/${encodeURIComponent(name)},${lat},${lon}`} target="_blank" rel="noopener">🗺️ 지도</a>;
+}
+
+function num(v: any): number { return v === undefined || v === "" || v === null ? NaN : Number(v); }
+function disp(v: number): string { return Number.isNaN(v) ? "-" : String(v); }
+function fmtTime(t: string): string { return t && t.length === 4 ? `${t.slice(0, 2)}:${t.slice(2, 4)}` : t || "-"; }
+function isYes(v: any): boolean { return v === "Y" || v === "y" || v === true || v === "true"; }
+
+function todayHours(it: any): string {
+  const days = ["", "월", "화", "수", "목", "금", "토", "일"];
+  const jsDay = new Date().getDay();
+  const n = jsDay === 0 ? 7 : jsDay;
+  const s = it[`dutyTime${n}s`], c = it[`dutyTime${n}c`];
+  if (!s || !c) return "운영시간 정보 없음";
+  return `오늘(${days[n]}) ${fmtTime(s)} ~ ${fmtTime(c)}`;
+}
+
+function pediatricItems(it: any): { ok: boolean; t: string }[] {
+  const items: { ok: boolean; t: string }[] = [];
+  if (it.hvncc !== undefined && it.hvncc !== "") {
+    const n = num(it.hvncc);
+    items.push({ ok: !Number.isNaN(n) && n > 0, t: `신생아중환자실 ${disp(n)}병상` });
+  }
+  if (it.hvincuayn !== undefined) items.push({ ok: it.hvincuayn === "Y", t: `인큐베이터 ${it.hvincuayn === "Y" ? "가능" : "불가"}` });
+  if (it.hvventisoayn !== undefined) items.push({ ok: it.hvventisoayn === "Y", t: `소아 인공호흡기 ${it.hvventisoayn === "Y" ? "가능" : "불가"}` });
+  return items;
+}
+
+function decodeHtml(s: string): string {
+  if (!s) return "";
+  return s.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&middot;/g, "·");
 }
