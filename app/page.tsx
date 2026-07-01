@@ -2,15 +2,6 @@ import Link from "next/link";
 import { HERO, SUPPORTS, MISS_TOP7 } from "@/lib/data";
 import TodayPick from "@/components/TodayPick";
 
-const QUICK = [
-  { href: "/timeline", title: "신청 타임라인", desc: "임신 확인부터 출산 후 6개월까지", icon: "📅", color: "bg-rose/40" },
-  { href: "/support", title: "지원금 총정리", desc: "현금·바우처·휴직 모두 한 눈에", icon: "💝", color: "bg-peach/60" },
-  { href: "/calendar", title: "개월별 가이드", desc: "0~24개월 발달·접종·꿀팁", icon: "👶", color: "bg-lavender/60" },
-  { href: "/checklist", title: "준비물 체크리스트", desc: "꼭·나중에·사지 마세요", icon: "🎀", color: "bg-mint/60" },
-  { href: "/utility", title: "공과금 혜택", desc: "전기·가스·난방 감면", icon: "💡", color: "bg-butter/60" },
-  { href: "/calculator", title: "지원금 계산기", desc: "내가 받을 금액 합산", icon: "🧮", color: "bg-sky/60" },
-];
-
 export default function Home() {
   return (
     <div className="space-y-12">
@@ -33,20 +24,6 @@ export default function Home() {
               🧮 내 지원금 계산하기
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* QUICK CARDS */}
-      <section>
-        <h2 className="text-2xl font-extrabold text-ink mb-4">🎈 빠른 메뉴</h2>
-        <div className="grid md:grid-cols-3 gap-4">
-          {QUICK.map((q) => (
-            <Link key={q.href} href={q.href} className={`btn-pop card p-6 ${q.color}`}>
-              <div className="text-4xl mb-2">{q.icon}</div>
-              <div className="font-extrabold text-ink text-lg">{q.title}</div>
-              <div className="text-sm text-ink/70 mt-1">{q.desc}</div>
-            </Link>
-          ))}
         </div>
       </section>
 
