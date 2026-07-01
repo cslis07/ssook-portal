@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HERO, SUPPORTS, MISS_TOP7 } from "@/lib/data";
+import TodayPick from "@/components/TodayPick";
 
 const QUICK = [
   { href: "/timeline", title: "신청 타임라인", desc: "임신 확인부터 출산 후 6개월까지", icon: "📅", color: "bg-rose/40" },
@@ -48,6 +49,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* 오늘의 공공서비스 픽 */}
+      <TodayPick />
 
       {/* TOP 지원금 */}
       <section>
