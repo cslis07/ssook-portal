@@ -48,8 +48,9 @@ export async function GET(req: Request) {
     }));
     return Response.json({
       source: "live",
-      notice: mapped.length >= 50 ? "상위 50개 어린이집만 표시돼요." : undefined,
+      notice: mapped.length >= 50 ? "아이사랑 API는 지역당 최대 50곳까지 제공해요." : undefined,
       items: mapped,
+      total: mapped.length,
     });
   } catch (e: any) {
     return Response.json({ source: "sample", notice: `API 오류: ${e.message}`, items: SAMPLE });

@@ -3,8 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { LOCAL_FEATURES } from "@/lib/local-data";
 import { CHILDCARE_REGIONS } from "@/lib/childcare-regions";
+import Pager from "@/components/Pager";
 
 type Feature = (typeof LOCAL_FEATURES)[number];
+type Result = { source: string; notice?: string; items: any[]; total?: number; page?: number; pageSize?: number };
+
+const CLIENT_SIZE = 12; // 클라이언트 분할 페이지 크기
 
 export default function LocalPage() {
   const [active, setActive] = useState<Feature | null>(null);
@@ -13,7 +17,8 @@ export default function LocalPage() {
   const [arcode, setArcode] = useState("");
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{ source: string; notice?: string; items: any[] } | null>(null);
+  const [result, setResult] = useState<Result | null>(null);
+  const [clientPage, setClientPage] = useState(1); // 클라이언트 분할용(어린이집·교통사고)
 
   const guList = useMemo(() => CHILDCARE_REGIONS[sido] || [], [sido]);
   const hasRegion = !!sido && !!guName;
@@ -43,10 +48,13 @@ export default function LocalPage() {
     setArcode("");
   };
 
-  const search = async (f: Feature) => {
+  // 서버 페이지네이션 대상: 예방접종(clinic)
+  const isServerPaged = (f: Feature | null) => f?.id === "clinic";
+
+  const search = async (f: Feature, page = 1) => {
     if (f.endpoint.startsWith("http")) { window.open(f.endpoint, "_blank"); return; }
     setLoading(true);
-    setResult(null);
+    if (page === 1) { setResult(null); setClientPage(1); }
     try {
       const url = new URL(f.endpoint, window.location.origin);
       if (f.searchType === "sigungu") {
@@ -54,8 +62,10 @@ export default function LocalPage() {
         else url.searchParams.set("region", guName);
       }
       if (f.searchType === "keyword" && keyword) url.searchParams.set("q", keyword);
+      if (isServerPaged(f)) url.searchParams.set("page", String(page));
       const r = await fetch(url);
-      setResult(await r.json());
+      const data: Result = await r.json();
+      setResult({ ...data, page });
     } catch (e: any) {
       setResult({ source: "error", notice: e.message, items: [] });
     }
@@ -65,6 +75,7 @@ export default function LocalPage() {
   const open = (f: Feature) => {
     setResult(null);
     setKeyword("");
+    setClientPage(1);
     if (f.endpoint.startsWith("http")) { window.open(f.endpoint, "_blank"); return; }
     setActive(f);
   };
@@ -176,13 +187,35 @@ export default function LocalPage() {
                 )}
                 {result.items.length === 0 ? (
                   <p className="text-center text-ink/60 py-4">결과가 없어요.</p>
-                ) : (
-                  <div className="grid md:grid-cols-2 gap-2">
-                    {result.items.map((it: any, i: number) => (
-                      <ResultCard key={i} feature={active.id} item={it} />
-                    ))}
-                  </div>
-                )}
+                ) : (() => {
+                  const serverPaged = isServerPaged(active);
+                  const pageSize = result.pageSize || CLIENT_SIZE;
+                  const total = result.total ?? result.items.length;
+                  const cur = serverPaged ? (result.page || 1) : clientPage;
+                  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+                  const shown = serverPaged
+                    ? result.items
+                    : result.items.slice((clientPage - 1) * CLIENT_SIZE, clientPage * CLIENT_SIZE);
+                  return (
+                    <>
+                      <p className="text-xs text-ink/50 px-1">총 {total.toLocaleString()}건 · {cur}/{totalPages}페이지</p>
+                      <div className="grid md:grid-cols-2 gap-2">
+                        {shown.map((it: any, i: number) => (
+                          <ResultCard key={i} feature={active.id} item={it} />
+                        ))}
+                      </div>
+                      <Pager
+                        page={cur}
+                        totalPages={totalPages}
+                        loading={loading}
+                        onPage={(p) => {
+                          if (serverPaged) search(active, p);
+                          else { setClientPage(p); }
+                        }}
+                      />
+                    </>
+                  );
+                })()}
               </div>
             )}
           </div>

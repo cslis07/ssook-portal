@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { REGIONS, SEVERE_TYPES } from "@/lib/regions";
+import Pager from "@/components/Pager";
 
 type TabId = "medical" | "aed" | "night" | "screening";
 type ModeId =
@@ -52,6 +53,14 @@ export default function MedicalPage() {
 
   const [status, setStatus] = useState<{ msg: string; type?: "ok" | "warn" | "error" | "loading" }>({ msg: "" });
   const [items, setItems] = useState<any[]>([]);
+  // 페이지네이션
+  const [clientPage, setClientPage] = useState(1); // 목록 표시용(20/페이지)
+  const [srvPage, setSrvPage] = useState(1);        // 병의원·약국 서버 페이지
+  const [srvTotal, setSrvTotal] = useState(0);
+  const PAGE_SIZE = 20;
+
+  // 서버 페이지네이션 대상(대량 목록): 병·의원, 약국(지역)
+  const isServerPaged = modeId === "hospitalAll" || modeId === "pharmacyRegion";
 
   const sigunguList = useMemo(() => REGIONS[sido] || [], [sido]);
 
@@ -73,12 +82,21 @@ export default function MedicalPage() {
     setModeId(id);
     setItems([]);
     setStatus({ msg: "" });
+    setClientPage(1);
+    setSrvPage(1);
+    setSrvTotal(0);
   }
 
-  async function searchRegion() {
+  async function searchRegion(page = 1) {
     if (!sido) return setStatus({ msg: "시/도를 선택하세요.", type: "warn" });
     if (mode.sigunguRequired && !sigungu) return setStatus({ msg: "이 조회는 시/군/구를 선택해야 합니다.", type: "warn" });
-    const params: Record<string, string> = { service: mode.service, op: mode.op, numOfRows: "50" };
+    const serverPaged = mode.id === "hospitalAll" || mode.id === "pharmacyRegion";
+    // 서버 페이지네이션: 20건씩. 그 외(응급실·중증)는 정렬/필터 위해 100건 받아 클라이언트 분할.
+    const params: Record<string, string> = {
+      service: mode.service, op: mode.op,
+      numOfRows: serverPaged ? String(PAGE_SIZE) : "100",
+      pageNo: serverPaged ? String(page) : "1",
+    };
     if (mode.id === "realtime" || mode.id === "severe") {
       params.STAGE1 = sido;
       params.STAGE2 = sigungu;
@@ -89,6 +107,7 @@ export default function MedicalPage() {
       params.ORD = "NAME";
       if (mode.keyword && keyword) params.QN = keyword;
     }
+    if (serverPaged) setSrvPage(page);
     await runQuery(params);
   }
 
@@ -109,6 +128,7 @@ export default function MedicalPage() {
   async function runQuery(params: Record<string, string>, sortByDistance = false) {
     setStatus({ msg: "조회 중…", type: "loading" });
     setItems([]);
+    setClientPage(1);
     try {
       const qs = new URLSearchParams(params).toString();
       const r = await fetch(`/api/medical?${qs}`);
@@ -127,7 +147,8 @@ export default function MedicalPage() {
         if (!list.length) return setStatus({ msg: "해당 조건의 병원이 없습니다.", type: "warn" });
       }
       setItems(list);
-      setStatus({ msg: `총 ${data.totalCount}건 중 ${list.length}건 표시${note ? " · " + note : ""}`, type: "ok" });
+      setSrvTotal(Number(data.totalCount) || list.length);
+      setStatus({ msg: `총 ${data.totalCount ?? list.length}건${note ? " · " + note : ""}`, type: "ok" });
     } catch (e: any) {
       setStatus({ msg: `오류: ${e.message}`, type: "error" });
     }
@@ -136,6 +157,7 @@ export default function MedicalPage() {
   async function searchSimple(url: string) {
     setStatus({ msg: "조회 중…", type: "loading" });
     setItems([]);
+    setClientPage(1);
     try {
       const r = await fetch(url);
       const data = await r.json();
@@ -282,14 +304,34 @@ export default function MedicalPage() {
       {tab === "medical" && mode.hint && <p className="med-hint">{mode.hint}</p>}
       {status.msg && <div className={`med-status ${status.type || ""}`}>{status.msg}</div>}
 
-      {/* 결과 그리드 */}
-      {items.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pb-8">
-          {items.map((it, i) => (
-            <ResultCard key={i} tab={tab} modeId={modeId} item={it} />
-          ))}
-        </div>
-      )}
+      {/* 결과 그리드 + 페이지네이션 */}
+      {items.length > 0 && (() => {
+        // 병·의원/약국(지역)은 서버 페이지네이션, 그 외는 클라이언트 분할
+        const serverPaged = isServerPaged && tab === "medical";
+        const total = serverPaged ? srvTotal : items.length;
+        const cur = serverPaged ? srvPage : clientPage;
+        const totalPages = Math.max(1, Math.ceil((serverPaged ? total : items.length) / PAGE_SIZE));
+        const shown = serverPaged ? items : items.slice((clientPage - 1) * PAGE_SIZE, clientPage * PAGE_SIZE);
+        return (
+          <div className="pb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {shown.map((it, i) => (
+                <ResultCard key={i} tab={tab} modeId={modeId} item={it} />
+              ))}
+            </div>
+            <Pager
+              page={cur}
+              totalPages={totalPages}
+              loading={status.type === "loading"}
+              onPage={(p) => {
+                if (serverPaged) searchRegion(p);
+                else setClientPage(p);
+                if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
+          </div>
+        );
+      })()}
 
       <footer className="text-xs text-ink/60 border-t border-rose/20 pt-3">
         <p>출처: 국립중앙의료원 · 행안부 · 서울 열린데이터광장 (data.go.kr · openapi.seoul.go.kr)</p>

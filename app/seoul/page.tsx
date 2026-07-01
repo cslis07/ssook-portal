@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { REGIONS } from "@/lib/regions";
+import Pager from "@/components/Pager";
+
+const PAGE_SIZE = 20;
 
 const SEOUL_CATS = [
   { id: "all", label: "전체" },
@@ -21,10 +24,12 @@ export default function SeoulReservePage() {
   const [kw, setKw] = useState("");
   const [status, setStatus] = useState<{ msg: string; type?: "ok" | "warn" | "error" | "loading" }>({ msg: "" });
   const [items, setItems] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
 
   async function search() {
     setStatus({ msg: "조회 중…", type: "loading" });
     setItems([]);
+    setPage(1);
     try {
       const r = await fetch(`/api/seoul-reserve?cat=${cat}&start=1&end=1000`);
       const data = await r.json();
@@ -34,8 +39,8 @@ export default function SeoulReservePage() {
       if (stat) rows = rows.filter((x) => (x.SVCSTATNM || "") === stat);
       if (kw) rows = rows.filter((x) => decodeHtml(x.SVCNM || "").includes(kw));
       if (!rows.length) return setStatus({ msg: "조회 결과가 없습니다. (필터를 완화해 보세요)", type: "warn" });
-      setItems(rows.slice(0, 200));
-      setStatus({ msg: `전체 ${data.total}건 · 조건 일치 ${rows.length}건 · 상위 ${Math.min(200, rows.length)}건 표시`, type: "ok" });
+      setItems(rows);
+      setStatus({ msg: `전체 ${data.total}건 · 조건 일치 ${rows.length}건`, type: "ok" });
     } catch (e: any) {
       setStatus({ msg: `오류: ${e.message}`, type: "error" });
     }
@@ -91,8 +96,16 @@ export default function SeoulReservePage() {
       {status.msg && <div className={`med-status ${status.type || ""}`}>{status.msg}</div>}
 
       {items.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pb-8">
-          {items.map((it, i) => <SeoulCard key={i} it={it} />)}
+        <div className="pb-8">
+          <p className="text-xs text-ink/50 px-1 mb-2">{items.length.toLocaleString()}건 · {page}/{Math.ceil(items.length / PAGE_SIZE)}페이지</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {items.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((it, i) => <SeoulCard key={i} it={it} />)}
+          </div>
+          <Pager
+            page={page}
+            totalPages={Math.ceil(items.length / PAGE_SIZE)}
+            onPage={(p) => { setPage(p); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+          />
         </div>
       )}
 
