@@ -255,7 +255,7 @@ export default function MedicalPage() {
                 </div>
               )}
               <div className="md:col-span-4 flex justify-end">
-                <button className="med-search-btn" onClick={searchRegion}>조회</button>
+                <button className="med-search-btn" onClick={() => searchRegion(1)}>조회</button>
               </div>
             </div>
           ) : (
