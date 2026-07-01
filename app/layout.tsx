@@ -3,8 +3,32 @@ import type { Metadata } from "next";
 import NavBar from "@/components/NavBar";
 
 export const metadata: Metadata = {
-  title: "쑥쑥 포털 · 2026 출산·육아 올인원",
-  description: "지원금부터 준비물, 개월별 가이드까지 — 부모를 위한 다정한 안내서",
+  metadataBase: new URL("https://ssook-portal.vercel.app"),
+  title: {
+    default: "쑥쑥 포털 · 2026 출산·육아 지원금 올인원",
+    template: "%s · 쑥쑥 포털",
+  },
+  description:
+    "2026년 부모급여·첫만남이용권·아동수당부터 출산 준비물, 개월별 가이드, 우리 동네 어린이집·의료까지. 우리 가족이 받을 지원금을 계산해보세요.",
+  keywords: [
+    "2026 부모급여", "첫만남이용권", "아동수당", "출산지원금", "출산 준비물",
+    "육아 지원금", "지원금 계산기", "출산 혜택", "산후조리비", "육아휴직",
+  ],
+  applicationName: "쑥쑥 포털",
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    siteName: "쑥쑥 포털",
+    title: "쑥쑥 포털 · 2026 출산·육아 지원금 올인원",
+    description:
+      "우리 가족이 받을 2026년 출산·육아 지원금을 계산해보세요. 지원금·준비물·개월별 가이드·우리 동네 정보까지 한 곳에.",
+    url: "https://ssook-portal.vercel.app",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "쑥쑥 포털 · 2026 출산·육아 지원금 올인원",
+    description: "우리 가족이 받을 2026년 출산·육아 지원금을 계산해보세요 🌱",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

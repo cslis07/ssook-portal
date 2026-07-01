@@ -125,6 +125,7 @@ export default function CalculatorPage() {
               </li>
             ))}
           </ul>
+          <ShareButton total={Math.round(result.total)} order={birthOrder} />
           <p className="text-xs text-ink/60 mt-4">
             * 어린이집 이용 시 부모급여 일부는 보육료 바우처로 지급돼 실제 현금 입금액은 줄어듭니다.
             * 지자체 출산축하금·산후조리비·산후도우미·세액공제는 별도예요.
@@ -132,6 +133,41 @@ export default function CalculatorPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+function ShareButton({ total, order }: { total: number; order: "first" | "second" | "third" }) {
+  const [copied, setCopied] = useState(false);
+  const orderKo = order === "first" ? "첫째" : order === "second" ? "둘째" : "셋째";
+  const amount = total.toLocaleString();
+
+  async function onShare() {
+    const url = "https://ssook-portal.vercel.app/calculator";
+    const text = `우리 아기(${orderKo}) 2026년 예상 출산·육아 지원금 약 ${amount}만원! 🍼\n쑥쑥 포털에서 우리 가족 받을 금액도 계산해보세요 🌱`;
+    // 모바일: 네이티브 공유 시트
+    if (typeof navigator !== "undefined" && (navigator as any).share) {
+      try {
+        await (navigator as any).share({ title: "쑥쑥 포털 · 지원금 계산기", text, url });
+        return;
+      } catch { /* 취소 시 무시 */ }
+    }
+    // 데스크톱: 클립보드 복사
+    try {
+      await navigator.clipboard.writeText(`${text}\n${url}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.prompt("아래 내용을 복사해 공유하세요", `${text}\n${url}`);
+    }
+  }
+
+  return (
+    <button
+      onClick={onShare}
+      className="w-full btn-pop bg-ink text-cream mt-5 py-3 rounded-full font-extrabold shadow-soft"
+    >
+      {copied ? "✅ 복사됐어요! 붙여넣기 하세요" : `📤 "약 ${amount}만원" 결과 공유하기`}
+    </button>
   );
 }
 
