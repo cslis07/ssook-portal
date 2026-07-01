@@ -12,6 +12,7 @@ const links = [
   { href: "/local", label: "우리 동네", icon: "🗺️" },
   { href: "/medical", label: "의료/약국", icon: "🏥" },
   { href: "/seoul", label: "서울 예약", icon: "🎫" },
+  { href: "/guide.html", label: "이용가이드", icon: "📖", external: true },
 ];
 
 export default function NavBar() {
@@ -25,16 +26,27 @@ export default function NavBar() {
           <span>쑥쑥 포털</span>
         </Link>
         <div className="flex gap-1 flex-wrap ml-auto">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="btn-pop px-3 py-1.5 rounded-full text-sm font-semibold text-ink hover:bg-rose/30 transition"
-            >
-              <span className="mr-1">{l.icon}</span>
-              {l.label}
-            </Link>
-          ))}
+          {links.map((l) =>
+            l.external ? (
+              <a
+                key={l.href}
+                href={l.href}
+                className="btn-pop px-3 py-1.5 rounded-full text-sm font-semibold text-ink hover:bg-rose/30 transition"
+              >
+                <span className="mr-1">{l.icon}</span>
+                {l.label}
+              </a>
+            ) : (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="btn-pop px-3 py-1.5 rounded-full text-sm font-semibold text-ink hover:bg-rose/30 transition"
+              >
+                <span className="mr-1">{l.icon}</span>
+                {l.label}
+              </Link>
+            )
+          )}
         </div>
       </nav>
     </header>
