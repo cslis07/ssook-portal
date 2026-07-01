@@ -1,30 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { LOCAL_FEATURES, SIGUNGU_TOP } from "@/lib/local-data";
+import { useEffect, useMemo, useState } from "react";
+import { LOCAL_FEATURES } from "@/lib/local-data";
+import { CHILDCARE_REGIONS } from "@/lib/childcare-regions";
 
 type Feature = (typeof LOCAL_FEATURES)[number];
 
 export default function LocalPage() {
   const [active, setActive] = useState<Feature | null>(null);
-  const [region, setRegion] = useState("");
+  const [sido, setSido] = useState("");
+  const [guName, setGuName] = useState("");
+  const [arcode, setArcode] = useState("");
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ source: string; notice?: string; items: any[] } | null>(null);
-  const [savedRegion, setSavedRegion] = useState("");
+
+  const guList = useMemo(() => CHILDCARE_REGIONS[sido] || [], [sido]);
+  const hasRegion = !!sido && !!guName;
+  const regionLabel = hasRegion ? `${sido} ${guName}` : "";
 
   useEffect(() => {
     try {
-      const r = localStorage.getItem("ssook-region") || "";
-      setSavedRegion(r);
-      setRegion(r);
+      const raw = localStorage.getItem("ssook-region-v2");
+      if (raw) {
+        const o = JSON.parse(raw);
+        if (o.sido) setSido(o.sido);
+        if (o.guName) setGuName(o.guName);
+        if (o.arcode) setArcode(o.arcode);
+      }
     } catch {}
   }, []);
 
-  const saveRegion = (r: string) => {
-    setRegion(r);
-    setSavedRegion(r);
-    try { localStorage.setItem("ssook-region", r); } catch {}
+  const pickGu = (code: string) => {
+    const gu = guList.find((g) => g.arcode === code);
+    setArcode(code);
+    setGuName(gu?.name || "");
+    try { localStorage.setItem("ssook-region-v2", JSON.stringify({ sido, guName: gu?.name || "", arcode: code })); } catch {}
+  };
+  const pickSido = (s: string) => {
+    setSido(s);
+    setGuName("");
+    setArcode("");
   };
 
   const search = async (f: Feature) => {
@@ -33,7 +49,10 @@ export default function LocalPage() {
     setResult(null);
     try {
       const url = new URL(f.endpoint, window.location.origin);
-      if (f.searchType === "sigungu" && region) url.searchParams.set("region", region.split(" ").pop() || region);
+      if (f.searchType === "sigungu") {
+        if (f.regionParam === "arcode") url.searchParams.set("arcode", arcode);
+        else url.searchParams.set("region", guName);
+      }
       if (f.searchType === "keyword" && keyword) url.searchParams.set("q", keyword);
       const r = await fetch(url);
       setResult(await r.json());
@@ -44,13 +63,10 @@ export default function LocalPage() {
   };
 
   const open = (f: Feature) => {
-    setActive(f);
     setResult(null);
     setKeyword("");
-    if (f.endpoint.startsWith("http")) {
-      window.open(f.endpoint, "_blank");
-      setActive(null);
-    }
+    if (f.endpoint.startsWith("http")) { window.open(f.endpoint, "_blank"); return; }
+    setActive(f);
   };
 
   return (
@@ -63,19 +79,30 @@ export default function LocalPage() {
         </p>
       </header>
 
-      {/* REGION PICKER */}
+      {/* REGION PICKER — 전국 시도 → 시군구 */}
       <div className="card p-4 md:p-5">
         <label className="text-xs md:text-sm font-bold text-ink/60 mb-2 block">📍 우리 동네 선택</label>
-        <select
-          value={savedRegion}
-          onChange={(e) => saveRegion(e.target.value)}
-          className="w-full md:max-w-sm p-3 rounded-2xl border-2 border-rose/30 bg-white text-ink font-semibold text-base"
-        >
-          <option value="">시군구를 선택해주세요</option>
-          {SIGUNGU_TOP.map((s) => (<option key={s} value={s}>{s}</option>))}
-        </select>
-        {savedRegion && (
-          <p className="text-xs text-ink/60 mt-2">✓ <b>{savedRegion}</b> 기준으로 검색됩니다 (다음에도 기억해요)</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:max-w-lg">
+          <select
+            value={sido}
+            onChange={(e) => pickSido(e.target.value)}
+            className="p-3 rounded-2xl border-2 border-rose/30 bg-white text-ink font-semibold"
+          >
+            <option value="">시·도</option>
+            {Object.keys(CHILDCARE_REGIONS).map((s) => (<option key={s} value={s}>{s}</option>))}
+          </select>
+          <select
+            value={arcode}
+            onChange={(e) => pickGu(e.target.value)}
+            disabled={!sido}
+            className="p-3 rounded-2xl border-2 border-rose/30 bg-white text-ink font-semibold disabled:opacity-50"
+          >
+            <option value="">시·군·구</option>
+            {guList.map((g) => (<option key={g.arcode} value={g.arcode}>{g.name}</option>))}
+          </select>
+        </div>
+        {hasRegion && (
+          <p className="text-xs text-ink/60 mt-2">✓ <b>{regionLabel}</b> 기준으로 검색됩니다 (다음에도 기억해요)</p>
         )}
       </div>
 
@@ -126,13 +153,13 @@ export default function LocalPage() {
               </div>
             ) : (
               <div className="mb-3">
-                {region ? (
+                {hasRegion ? (
                   <button
                     onClick={() => search(active)}
                     className="w-full btn-pop bg-rose text-white p-3 rounded-2xl font-bold"
-                  >📍 {region} 에서 찾기</button>
+                  >📍 {regionLabel} 에서 찾기</button>
                 ) : (
-                  <p className="text-sm text-ink/60 p-3 bg-butter/40 rounded-2xl">먼저 위에서 우리 동네를 선택해주세요.</p>
+                  <p className="text-sm text-ink/60 p-3 bg-butter/40 rounded-2xl">먼저 위에서 우리 동네(시·도 → 시·군·구)를 선택해주세요.</p>
                 )}
               </div>
             )}
@@ -163,56 +190,64 @@ export default function LocalPage() {
       )}
 
       <div className="card p-4 bg-lavender/30 text-xs text-ink/70">
-        <b>ℹ️ 실시간 데이터 안내</b><br />
-        대부분의 정부 API는 사용자별 인증키가 필요해요. 키 없이는 샘플 데이터로 화면을 보여드립니다.
-        실시간 데이터를 원하면 Vercel 환경변수 <code className="bg-white px-1 rounded">DATA_API_KEY</code> 에
-        data.go.kr 일반 인증키를 설정해주세요.
+        <b>ℹ️ 데이터 안내</b><br />
+        어린이집은 <b>아이사랑(childcare.go.kr)</b> 실시간 데이터로 전국 조회돼요.
+        놀이터·예방접종·교통사고 등 일부 정보는 정부 API 키(<code className="bg-white px-1 rounded">DATA_API_KEY</code>)가 있으면 실데이터,
+        없으면 샘플로 표시됩니다.
       </div>
     </div>
   );
 }
 
 function ResultCard({ feature, item }: { feature: string; item: any }) {
-  return (
-    <div className="card p-3">
-      {feature === "daycare" && (
-        <>
-          <div className="font-extrabold text-ink">{item.name}</div>
-          <div className="text-xs text-rose font-bold mt-0.5">{item.type} · 정원 {item.capacity} / 현원 {item.current}</div>
-          <div className="text-xs text-ink/70 mt-1">📍 {item.address}</div>
-          {item.tel && <div className="text-xs text-ink/70">☎ {item.tel}</div>}
-        </>
-      )}
-      {feature === "clinic" && (
-        <>
-          <div className="font-extrabold text-ink">{item.name}</div>
-          <div className="text-xs text-ink/70 mt-1">📍 {item.address}</div>
-          {item.tel && <div className="text-xs text-ink/70">☎ {item.tel}</div>}
-          <div className="text-xs text-mint mt-1 font-bold">💉 {item.vaccines}</div>
-        </>
-      )}
-      {feature === "playground" && (
-        <>
-          <div className="font-extrabold text-ink">{item.name}</div>
-          <div className="text-xs text-mint font-bold mt-0.5">등급: {item.grade} · 점검 {item.lastCheck}</div>
-          <div className="text-xs text-ink/70 mt-1">🎠 {item.facilities}</div>
-          <div className="text-xs text-ink/70">📍 {item.address}</div>
-        </>
-      )}
-      {feature === "accident" && (
-        <>
-          <div className="font-extrabold text-ink">⚠️ {item.location}</div>
-          <div className="text-xs text-rose font-bold mt-0.5">{item.year}년 사고 {item.accidents}건 · 부상 {item.injured}명 · 사망 {item.deaths}명</div>
-          <div className="text-xs text-ink/60 mt-1">{item.type}</div>
-        </>
-      )}
-      {feature === "snack" && (
-        <>
-          <div className="font-extrabold text-ink">{item.product}</div>
-          <div className="text-xs text-rose mt-0.5">{item.maker} · {item.category}</div>
-          <div className="text-xs text-ink/70 mt-1">인증 {item.certDate} ~ {item.expireDate}</div>
-        </>
-      )}
-    </div>
-  );
+  if (feature === "daycare") {
+    return (
+      <div className="card p-3">
+        <div className="font-extrabold text-ink">{item.name}</div>
+        {item.capacity && <div className="text-xs text-rose font-bold mt-0.5">정원 {item.capacity}명</div>}
+        {item.address && <div className="text-xs text-ink/70 mt-1">📍 {item.address}</div>}
+        {item.tel && <div className="text-xs text-ink/70">☎ {item.tel}</div>}
+        {item.home && <a href={item.home.startsWith("http") ? item.home : `https://${item.home}`} target="_blank" rel="noopener" className="text-xs text-sky underline">홈페이지 →</a>}
+      </div>
+    );
+  }
+  if (feature === "clinic") {
+    return (
+      <div className="card p-3">
+        <div className="font-extrabold text-ink">{item.name}</div>
+        <div className="text-xs text-ink/70 mt-1">📍 {item.address}</div>
+        {item.tel && <div className="text-xs text-ink/70">☎ {item.tel}</div>}
+        {item.vaccines && <div className="text-xs text-mint font-bold mt-1">💉 {item.vaccines}</div>}
+      </div>
+    );
+  }
+  if (feature === "playground") {
+    return (
+      <div className="card p-3">
+        <div className="font-extrabold text-ink">{item.name}</div>
+        {item.grade && <div className="text-xs text-mint font-bold mt-0.5">등급 {item.grade}{item.lastCheck ? ` · 점검 ${item.lastCheck}` : ""}</div>}
+        {item.facilities && <div className="text-xs text-ink/70 mt-1">🎠 {item.facilities}</div>}
+        {item.address && <div className="text-xs text-ink/70">📍 {item.address}</div>}
+      </div>
+    );
+  }
+  if (feature === "accident") {
+    return (
+      <div className="card p-3">
+        <div className="font-extrabold text-ink">⚠️ {item.location}</div>
+        <div className="text-xs text-rose font-bold mt-0.5">{item.year}년 사고 {item.accidents}건 · 부상 {item.injured}명 · 사망 {item.deaths}명</div>
+        {item.type && <div className="text-xs text-ink/60 mt-1">{item.type}</div>}
+      </div>
+    );
+  }
+  if (feature === "snack") {
+    return (
+      <div className="card p-3">
+        <div className="font-extrabold text-ink">{item.product}</div>
+        <div className="text-xs text-rose mt-0.5">{item.maker}{item.category ? ` · ${item.category}` : ""}</div>
+        {(item.certDate || item.expireDate) && <div className="text-xs text-ink/70 mt-1">인증 {item.certDate} ~ {item.expireDate}</div>}
+      </div>
+    );
+  }
+  return null;
 }

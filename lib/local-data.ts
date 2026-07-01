@@ -7,18 +7,21 @@ export type LocalFeature = {
   apiSource: string;
   endpoint: string;
   searchType: "sigungu" | "keyword" | "location";
+  // sigungu 검색 시 전달 방식: "arcode"(어린이집 childcare 코드) | "name"(시군구명, 기본)
+  regionParam?: "arcode" | "name";
 };
 
 export const LOCAL_FEATURES: LocalFeature[] = [
   {
     id: "daycare",
     title: "어린이집 찾기",
-    desc: "우리 동네 어린이집 정원·현원·유형 조회",
+    desc: "우리 동네 어린이집 정원·연락처 조회",
     icon: "🏫",
     color: "bg-rose/40",
-    apiSource: "보건복지부 (전국 어린이집 정보 표준데이터)",
+    apiSource: "보건복지부 아이사랑 (전국 어린이집 정보 cpmsapi021)",
     endpoint: "/api/daycare",
     searchType: "sigungu",
+    regionParam: "arcode",
   },
   {
     id: "clinic",
