@@ -51,7 +51,7 @@ export async function GET(req: Request) {
       notice: mapped.length >= 50 ? "아이사랑 API는 지역당 최대 50곳까지 제공해요." : undefined,
       items: mapped,
       total: mapped.length,
-    });
+    }, { headers: { "cache-control": "public, s-maxage=3600, stale-while-revalidate=86400" } });
   } catch (e: any) {
     return Response.json({ source: "sample", notice: `API 오류: ${e.message}`, items: SAMPLE });
   }

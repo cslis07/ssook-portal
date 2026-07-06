@@ -32,20 +32,41 @@ export async function GET(req: Request) {
   }
 
   try {
-    const r = await fetch(url, { signal: AbortSignal.timeout(12000) });
+    // 서울 OpenAPI가 느려(수 초) 30분 캐시. 목록은 필요한 필드만 남겨 6.5MB→~0.5MB로 축소.
+    const r = await fetch(url, { signal: AbortSignal.timeout(12000), next: { revalidate: 1800 } });
     const text = await r.text();
     let json: any;
     try { json = JSON.parse(text); } catch { return Response.json({ error: "서울 OpenAPI 비정상 응답", raw: text.slice(0, 300) }, { status: 502 }); }
     const root = json[svc] || json;
-    const rows = Array.isArray(root?.row) ? root.row : [];
-    return Response.json({
+    const raw = Array.isArray(root?.row) ? root.row : [];
+    // 상세조회(detail)는 전체 필드 유지, 목록은 슬림화
+    const rows = detail ? raw : raw.map(slim);
+    const body = JSON.stringify({
       code: root?.RESULT?.CODE ?? json?.RESULT?.CODE ?? "",
       message: root?.RESULT?.MESSAGE ?? json?.RESULT?.MESSAGE ?? "",
       total: Number(root?.list_total_count ?? rows.length),
       rows,
     });
+    return new Response(body, {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        // CDN 엣지 캐시: 30분 신선 + 1시간 stale-while-revalidate
+        "cache-control": "public, s-maxage=1800, stale-while-revalidate=3600",
+      },
+    });
   } catch (err: any) {
     const msg = err?.name === "TimeoutError" ? "응답 시간 초과" : String(err?.message || err);
     return Response.json({ error: msg }, { status: 500 });
   }
+}
+
+// 목록 표시에 필요한 필드만 추림 (DTLCONT·좌표 등 대용량 필드 제거)
+const KEEP = [
+  "SVCID", "SVCNM", "SVCSTATNM", "PAYATNM", "USETGTINFO", "MINCLASSNM", "MAXCLASSNM",
+  "PLACENM", "AREANM", "SVCURL", "IMGURL", "SVCOPNBGNDT", "SVCOPNENDDT", "RCPTBGNDT", "RCPTENDDT",
+];
+function slim(row: any) {
+  const o: any = {};
+  for (const k of KEEP) if (row[k] !== undefined) o[k] = row[k];
+  return o;
 }

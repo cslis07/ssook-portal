@@ -36,7 +36,7 @@ export async function GET(req: Request) {
       source: "live",
       notice: items.length ? `${year}년 기준` : "이 지역 사고 다발지점 데이터가 없어요. (안전한 동네예요!)",
       items,
-    });
+    }, { headers: { "cache-control": "public, s-maxage=86400, stale-while-revalidate=604800" } });
   } catch (e: any) {
     return sample(`API 오류: ${e.message}`);
   }

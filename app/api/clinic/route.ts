@@ -38,7 +38,7 @@ export async function GET(req: Request) {
       page,
       pageSize: PAGE_SIZE,
       notice: mapped.length ? undefined : "이 지역 위탁기관 결과가 없어요.",
-    });
+    }, { headers: { "cache-control": "public, s-maxage=3600, stale-while-revalidate=86400" } });
   } catch (e: any) {
     return sample(`API 오류: ${e.message}`);
   }
