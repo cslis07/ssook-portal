@@ -79,3 +79,4 @@ html, body {
 .med-group-label { font-size: 12px; font-weight: 700; color: var(--med-muted); letter-spacing: .2px; }
 .med-ped-row { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--med-border); }
 .med-ped-label { display: block; font-size: 13px; font-weight: 700; color: #6d28a8; margin-bottom: 6px; }
+.med-ped-none { display: inline-block; font-size: 12.5px; font-weight: 600; color: var(--med-muted, #64748b); background: #f1f5f9; padding: 5px 11px; border-radius: 999px; }

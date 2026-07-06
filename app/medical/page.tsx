@@ -378,12 +378,16 @@ function EmergencyCard({ it }: { it: any }) {
         <li><span>MRI</span><b>{it.hvmriayn === "Y" ? "○" : "×"}</b></li>
       </ul>
       {pedItems.length > 0 && (
-        <div className="med-ped-row">
-          <span className="med-ped-label">🧒 소아 응급자원</span>
-          {pedItems.map((p) => (
-            <span key={p.t} className={`med-chip ${p.ok ? "" : "chip-no"}`}>{p.t}</span>
-          ))}
-        </div>
+        pedItems.some((p) => p.ok) ? (
+          <div className="med-ped-row">
+            <span className="med-ped-label">🧒 소아 가용</span>
+            {pedItems.map((p) => (
+              <span key={p.t} className={`med-chip ${p.ok ? "" : "chip-no"}`}>{p.t}</span>
+            ))}
+          </div>
+        ) : (
+          <div className="med-ped-row"><span className="med-ped-none">🧒 소아 응급 가용 자원 없음</span></div>
+        )
       )}
       {it.dutyTel3 && <div className="med-actions"><TelBtn n={it.dutyTel3} label="🚑 응급실" /></div>}
     </article>
