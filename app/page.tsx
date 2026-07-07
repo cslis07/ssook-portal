@@ -32,6 +32,21 @@ export default function Home() {
 
       {/* 오늘의 공공서비스 픽 */}
       <TodayPick />
+
+      {/* 약 안전 검색 바로가기 */}
+      <Link
+        href="/medical?tab=drug"
+        className="btn-pop card p-6 flex items-center gap-4 bg-gradient-to-r from-mint/40 to-sky/30"
+      >
+        <div className="text-5xl shrink-0">💊</div>
+        <div className="flex-1">
+          <div className="font-extrabold text-ink text-lg">우리 아기·엄마 약 안전 검색</div>
+          <div className="text-sm text-ink/70 mt-0.5">
+            타이레놀·부루펜·판콜… 효능·주의사항·상호작용과 🤰 임신·수유 주의를 바로 확인하세요.
+          </div>
+        </div>
+        <div className="text-2xl text-ink/40 shrink-0">→</div>
+      </Link>
     </div>
   );
 }

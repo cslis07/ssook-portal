@@ -66,6 +66,12 @@ export default function MedicalPage() {
 
   const sigunguList = useMemo(() => REGIONS[sido] || [], [sido]);
 
+  // URL ?tab= 로 딥링크 진입 (예: /medical?tab=drug)
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get("tab");
+    if (t && ["medical", "drug", "aed", "night", "screening"].includes(t)) setTab(t as TabId);
+  }, []);
+
   useEffect(() => {
     try {
       const raw = localStorage.getItem("ssook-med-region");
