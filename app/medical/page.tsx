@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { REGIONS, SEVERE_TYPES } from "@/lib/regions";
 import Pager from "@/components/Pager";
 
-type TabId = "medical" | "aed" | "night" | "screening";
+type TabId = "medical" | "drug" | "aed" | "night" | "screening";
 type ModeId =
   | "realtime" | "erNearby" | "trauma" | "severe"
   | "hospitalAll" | "baby"
@@ -35,6 +35,7 @@ const MEDICAL_MODES: Mode[] = [
 
 const TABS: { id: TabId; label: string }[] = [
   { id: "medical", label: "🏥 의료" },
+  { id: "drug", label: "💊 약 안전" },
   { id: "aed", label: "❤️ AED" },
   { id: "night", label: "🌙 심야약국" },
   { id: "screening", label: "🩺 선별진료소" },
@@ -50,6 +51,7 @@ export default function MedicalPage() {
   const [keyword, setKeyword] = useState("");
   const [bedSort, setBedSort] = useState<"" | "free" | "full">("");
   const [severeType, setSevereType] = useState("");
+  const [drugQ, setDrugQ] = useState(""); // 약 안전 검색어
 
   const [status, setStatus] = useState<{ msg: string; type?: "ok" | "warn" | "error" | "loading" }>({ msg: "" });
   const [items, setItems] = useState<any[]>([]);
@@ -149,6 +151,26 @@ export default function MedicalPage() {
       setItems(list);
       setSrvTotal(Number(data.totalCount) || list.length);
       setStatus({ msg: `총 ${data.totalCount ?? list.length}건${note ? " · " + note : ""}`, type: "ok" });
+    } catch (e: any) {
+      setStatus({ msg: `오류: ${e.message}`, type: "error" });
+    }
+  }
+
+  async function searchDrug(page = 1) {
+    const q = drugQ.trim();
+    if (!q) return setStatus({ msg: "약 이름을 입력하세요. (예: 타이레놀, 판콜)", type: "warn" });
+    setStatus({ msg: "조회 중…", type: "loading" });
+    if (page === 1) { setItems([]); setClientPage(1); }
+    setSrvPage(page);
+    try {
+      const r = await fetch(`/api/drug?q=${encodeURIComponent(q)}&page=${page}`);
+      const data = await r.json();
+      if (data.error) throw new Error(data.error);
+      const list: any[] = data.items || [];
+      if (!list.length) return setStatus({ msg: "검색 결과가 없어요. 제품명을 다시 확인해주세요.", type: "warn" });
+      setItems(list);
+      setSrvTotal(Number(data.total) || list.length);
+      setStatus({ msg: `총 ${data.total ?? list.length}건`, type: "ok" });
     } catch (e: any) {
       setStatus({ msg: `오류: ${e.message}`, type: "error" });
     }
@@ -300,14 +322,29 @@ export default function MedicalPage() {
         </div>
       )}
 
+      {/* 약 안전 검색 */}
+      {tab === "drug" && (
+        <div className="med-card space-y-2">
+          <label className="med-field"><span className="block mb-1">💊 약 이름으로 검색 (식약처 e약은요)</span></label>
+          <div className="flex gap-2">
+            <input className="med-input" type="text" value={drugQ}
+              onChange={(e) => setDrugQ(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && searchDrug(1)}
+              placeholder="예: 타이레놀, 판콜, 어린이부루펜" />
+            <button className="med-search-btn shrink-0" onClick={() => searchDrug(1)}>검색</button>
+          </div>
+          <p className="med-hint">효능·복용법·주의사항·상호작용·부작용을 확인하고, 🤰 임신·수유 관련 주의는 자동 표시돼요.</p>
+        </div>
+      )}
+
       {/* 힌트·상태 */}
       {tab === "medical" && mode.hint && <p className="med-hint">{mode.hint}</p>}
       {status.msg && <div className={`med-status ${status.type || ""}`}>{status.msg}</div>}
 
       {/* 결과 그리드 + 페이지네이션 */}
       {items.length > 0 && (() => {
-        // 병·의원/약국(지역)은 서버 페이지네이션, 그 외는 클라이언트 분할
-        const serverPaged = isServerPaged && tab === "medical";
+        // 병·의원/약국(지역)·약 안전은 서버 페이지네이션, 그 외는 클라이언트 분할
+        const serverPaged = (isServerPaged && tab === "medical") || tab === "drug";
         const total = serverPaged ? srvTotal : items.length;
         const cur = serverPaged ? srvPage : clientPage;
         const totalPages = Math.max(1, Math.ceil((serverPaged ? total : items.length) / PAGE_SIZE));
@@ -324,7 +361,8 @@ export default function MedicalPage() {
               totalPages={totalPages}
               loading={status.type === "loading"}
               onPage={(p) => {
-                if (serverPaged) searchRegion(p);
+                if (tab === "drug") searchDrug(p);
+                else if (serverPaged) searchRegion(p);
                 else setClientPage(p);
                 if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
               }}
@@ -334,8 +372,14 @@ export default function MedicalPage() {
       })()}
 
       <footer className="text-xs text-ink/60 border-t border-rose/20 pt-3">
-        <p>출처: 국립중앙의료원 · 행안부 · 서울 열린데이터광장 (data.go.kr · openapi.seoul.go.kr)</p>
-        <p>실시간 정보는 의료기관 입력 시점 기준이며 실제와 다를 수 있습니다. 응급상황 시 <strong>119</strong>.</p>
+        {tab === "drug" ? (
+          <p>출처: 식품의약품안전처 e약은요 (data.go.kr). 본 정보는 일반 안내이며 의사·약사의 진료·복약지도를 대체하지 않습니다. <strong>임신·수유 중이거나 영유아 복용 시 반드시 전문가와 상담하세요.</strong></p>
+        ) : (
+          <>
+            <p>출처: 국립중앙의료원 · 행안부 · 서울 열린데이터광장 (data.go.kr · openapi.seoul.go.kr)</p>
+            <p>실시간 정보는 의료기관 입력 시점 기준이며 실제와 다를 수 있습니다. 응급상황 시 <strong>119</strong>.</p>
+          </>
+        )}
       </footer>
     </div>
   );
@@ -349,10 +393,53 @@ function ResultCard({ tab, modeId, item }: { tab: TabId; modeId: ModeId; item: a
     if (modeId === "severe") return <SevereCard it={item} />;
     return <FacilityCard it={item} />;
   }
+  if (tab === "drug") return <DrugCard it={item} />;
   if (tab === "aed") return <AedCard it={item} />;
   if (tab === "night") return <NightCard it={item} />;
   if (tab === "screening") return <ScreeningCard it={item} />;
   return null;
+}
+
+function DrugCard({ it }: { it: any }) {
+  const rows: { label: string; icon: string; text: string }[] = [
+    { label: "효능", icon: "💡", text: it.efficacy },
+    { label: "복용법", icon: "🥄", text: it.howto },
+    { label: "경고", icon: "🚨", text: it.warn },
+    { label: "주의사항", icon: "⚠️", text: it.caution },
+    { label: "상호작용", icon: "🔀", text: it.interact },
+    { label: "부작용", icon: "🤕", text: it.side },
+    { label: "보관법", icon: "📦", text: it.storage },
+  ].filter((r) => r.text);
+  return (
+    <article className="med-card">
+      <div className="flex items-start gap-3">
+        {it.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={it.image} alt="" className="w-16 h-12 object-contain rounded-lg bg-white shrink-0" loading="lazy" />
+        ) : <div className="w-16 h-12 grid place-items-center text-2xl shrink-0">💊</div>}
+        <div className="min-w-0">
+          <h3 className="leading-snug">{it.name}</h3>
+          <p className="text-xs text-med-muted" style={{ color: "var(--med-muted)" }}>{it.company}</p>
+        </div>
+      </div>
+      {it.pregnancyNote && (
+        <div className="mt-2 text-xs font-bold rounded-lg px-2 py-1.5" style={{ background: "#fdeaea", color: "#a13030" }}>
+          🤰 임신·수유 관련 주의 문구가 포함돼 있어요. 아래 주의사항·상호작용을 꼭 확인하고 의사·약사와 상담하세요.
+        </div>
+      )}
+      <details className="mt-2">
+        <summary className="cursor-pointer text-sm font-bold" style={{ color: "var(--med-primary-dark)" }}>상세 정보 펼치기</summary>
+        <div className="mt-2 space-y-2">
+          {rows.map((r) => (
+            <div key={r.label}>
+              <div className="text-xs font-extrabold" style={{ color: "var(--med-ink)" }}>{r.icon} {r.label}</div>
+              <p className="text-xs whitespace-pre-line" style={{ color: "var(--med-muted)" }}>{r.text}</p>
+            </div>
+          ))}
+        </div>
+      </details>
+    </article>
+  );
 }
 
 function EmergencyCard({ it }: { it: any }) {
