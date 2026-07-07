@@ -2,51 +2,60 @@ import Link from "next/link";
 import { HERO } from "@/lib/data";
 import TodayPick from "@/components/TodayPick";
 
+// 홈 바로가기 — 부모가 자주 쓰는 기능 (딥링크 포함)
+const SHORTCUTS = [
+  { href: "/medical?tab=drug", icon: "💊", title: "약 안전 검색", desc: "임신·수유·아기 복용 주의", color: "bg-mint/50" },
+  { href: "/medical?tab=night", icon: "🌙", title: "심야·응급", desc: "지금 문 연 약국·응급실", color: "bg-rose/40" },
+  { href: "/local", icon: "🗺️", title: "우리 동네", desc: "어린이집·예방접종·안전", color: "bg-lavender/50" },
+  { href: "/calendar", icon: "👶", title: "개월별 가이드", desc: "발달·접종·꿀팁", color: "bg-peach/60" },
+  { href: "/checklist", icon: "🎀", title: "준비물 체크", desc: "꼭·나중에·사지마세요", color: "bg-butter/60" },
+  { href: "/growth", icon: "🌷", title: "월령별 성장", desc: "이른둥이~36개월", color: "bg-sky/50" },
+];
+
 export default function Home() {
   return (
-    <div className="space-y-12">
-      {/* HERO */}
-      <section className="relative overflow-hidden card p-8 md:p-12 dotbg">
-        <div className="absolute -top-6 -right-6 text-7xl opacity-30">🌷</div>
-        <div className="absolute -bottom-6 -left-6 text-7xl opacity-20">🌼</div>
+    <div className="space-y-6">
+      {/* HERO (컴팩트) */}
+      <section className="relative overflow-hidden card px-5 py-5 md:px-7 md:py-6 dotbg">
+        <div className="absolute -top-4 -right-3 text-5xl opacity-25 pointer-events-none">🌷</div>
         <div className="relative">
-          <span className="chip bg-rose/40 text-ink">2026 기준 · 최신</span>
-          <h1 className="mt-3 text-4xl md:text-5xl font-extrabold text-ink leading-tight">
-            {HERO.brand} <span className="text-rose">🌱</span>
-          </h1>
-          <p className="mt-2 text-lg md:text-xl text-ink/80 font-semibold">{HERO.tagline}</p>
-          <p className="mt-1 text-ink/60">{HERO.subtitle}</p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/timeline" className="btn-pop bg-ink text-cream px-5 py-3 rounded-full font-bold shadow-soft">
-              📅 신청 타임라인 보기
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-2xl md:text-3xl font-extrabold text-ink">
+              {HERO.brand} <span className="text-rose">🌱</span>
+            </h1>
+            <span className="chip bg-rose/40 text-ink">2026 기준 · 최신</span>
+          </div>
+          <p className="mt-1 text-sm md:text-base text-ink/70 font-semibold">{HERO.tagline} · {HERO.subtitle}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link href="/timeline" className="btn-pop bg-ink text-cream px-4 py-2 rounded-full text-sm font-bold shadow-soft">
+              📅 신청 타임라인
             </Link>
-            <Link href="/calculator" className="btn-pop bg-white border-2 border-ink/10 text-ink px-5 py-3 rounded-full font-bold">
-              🧮 내 지원금 계산하기
+            <Link href="/calculator" className="btn-pop bg-white border-2 border-ink/10 text-ink px-4 py-2 rounded-full text-sm font-bold">
+              🧮 지원금 계산
             </Link>
-            <Link href="/support" className="btn-pop bg-rose text-white px-5 py-3 rounded-full font-bold shadow-soft">
-              💝 핵심 지원금 한눈에
+            <Link href="/support" className="btn-pop bg-rose text-white px-4 py-2 rounded-full text-sm font-bold shadow-soft">
+              💝 핵심 지원금
             </Link>
           </div>
         </div>
       </section>
 
+      {/* 바로가기 그리드 */}
+      <section>
+        <h2 className="text-lg font-extrabold text-ink mb-2 px-1">🚀 바로가기</h2>
+        <div className="grid grid-cols-3 md:grid-cols-6 gap-2.5">
+          {SHORTCUTS.map((s) => (
+            <Link key={s.href} href={s.href} className={`btn-pop card p-3 md:p-4 text-center ${s.color}`}>
+              <div className="text-3xl md:text-4xl">{s.icon}</div>
+              <div className="font-extrabold text-ink text-xs md:text-sm mt-1.5 leading-tight">{s.title}</div>
+              <div className="text-[10px] md:text-xs text-ink/60 mt-0.5 leading-snug hidden sm:block">{s.desc}</div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* 오늘의 공공서비스 픽 */}
       <TodayPick />
-
-      {/* 약 안전 검색 바로가기 */}
-      <Link
-        href="/medical?tab=drug"
-        className="btn-pop card p-6 flex items-center gap-4 bg-gradient-to-r from-mint/40 to-sky/30"
-      >
-        <div className="text-5xl shrink-0">💊</div>
-        <div className="flex-1">
-          <div className="font-extrabold text-ink text-lg">우리 아기·엄마 약 안전 검색</div>
-          <div className="text-sm text-ink/70 mt-0.5">
-            타이레놀·부루펜·판콜… 효능·주의사항·상호작용과 🤰 임신·수유 주의를 바로 확인하세요.
-          </div>
-        </div>
-        <div className="text-2xl text-ink/40 shrink-0">→</div>
-      </Link>
     </div>
   );
 }
