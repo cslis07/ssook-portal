@@ -1,4 +1,10 @@
 import { MONTHS, VACCINES } from "@/lib/data";
+import CalendarPersonalize from "@/components/CalendarPersonalize";
+
+function monthRange(label: string): [number, number] {
+  const nums = label.replace("개월", "").split("~").map((s) => parseInt(s, 10));
+  return nums.length === 2 ? [nums[0], nums[1]] : [nums[0], nums[0]];
+}
 
 export default function CalendarPage() {
   return (
@@ -9,9 +15,13 @@ export default function CalendarPage() {
         <p className="text-ink/70 mt-2">아이마다 속도는 다르지만, 시기별 준비 포인트를 모았어요.</p>
       </header>
 
+      <CalendarPersonalize />
+
       <section className="grid md:grid-cols-2 gap-4">
-        {MONTHS.map((m) => (
-          <div key={m.month} className="card p-5">
+        {MONTHS.map((m) => {
+          const [lo, hi] = monthRange(m.month);
+          return (
+          <div key={m.month} id={`m-${lo}`} data-lo={lo} data-hi={hi} className="card p-5 scroll-mt-24 transition">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 grid place-items-center rounded-full bg-rose/40 font-extrabold text-ink">
                 {m.month.replace("개월", "M").replace("~", "-")}
@@ -27,7 +37,8 @@ export default function CalendarPage() {
               <p className="text-ink/70 mt-1 text-sm">🩺 <b>영유아검진:</b> {m.checkup}</p>
             )}
           </div>
-        ))}
+          );
+        })}
       </section>
 
       <section>

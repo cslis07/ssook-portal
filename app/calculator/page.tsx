@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { loadBaby } from "@/lib/baby";
 
 export default function CalculatorPage() {
   const [birthOrder, setBirthOrder] = useState<"first" | "second" | "third">("first");
@@ -9,6 +10,17 @@ export default function CalculatorPage() {
   const [careType, setCareType] = useState<"home" | "daycare">("home");
   const [period, setPeriod] = useState(24);
   const [heating, setHeating] = useState<"none" | "citygas" | "district">("citygas");
+  const [prefilled, setPrefilled] = useState(false);
+
+  // 아기 프로필이 있으면 출생순위·지역·다태아 자동 채움
+  useEffect(() => {
+    const b = loadBaby();
+    if (!b) return;
+    setBirthOrder(b.birthOrder);
+    setRegion(b.region);
+    setTwins(b.twins);
+    setPrefilled(true);
+  }, []);
 
   const result = useMemo(() => {
     const months0 = Math.min(12, period);
@@ -60,6 +72,7 @@ export default function CalculatorPage() {
         <span className="chip bg-sky/60 text-ink">지원금 계산기</span>
         <h1 className="text-3xl md:text-4xl font-extrabold text-ink mt-2">🧮 우리 가족 받을 금액</h1>
         <p className="text-ink/70 mt-2">중앙정부 대표 지원금만 합산했어요. 지자체·산후도우미·세제 혜택은 별도예요.</p>
+        {prefilled && <p className="text-xs text-mint font-bold mt-1">✓ 우리 아기 프로필로 자동 채웠어요</p>}
       </header>
 
       <section className="card p-6 grid md:grid-cols-2 gap-6">

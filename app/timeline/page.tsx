@@ -1,12 +1,4 @@
-import { TIMELINE } from "@/lib/data";
-
-const colorMap: Record<string, string> = {
-  rose: "bg-rose/40",
-  lavender: "bg-lavender/50",
-  mint: "bg-mint/50",
-  peach: "bg-peach/60",
-  butter: "bg-butter/50",
-};
+import TimelineChecklist from "@/components/TimelineChecklist";
 
 export default function TimelinePage() {
   return (
@@ -14,30 +6,10 @@ export default function TimelinePage() {
       <header>
         <span className="chip bg-rose/40 text-ink">신청 타임라인</span>
         <h1 className="text-3xl md:text-4xl font-extrabold text-ink mt-2">📅 언제 무엇을 신청해야 할까?</h1>
-        <p className="text-ink/70 mt-2">임신 확인부터 출산 후 6개월까지 — 놓치면 손해예요.</p>
+        <p className="text-ink/70 mt-2">임신 확인부터 출산 후 6개월까지 — 체크하면 진행률이 저장돼요.</p>
       </header>
 
-      <div className="relative pl-8">
-        <div className="absolute left-3 top-2 bottom-2 w-1 bg-rose/40 rounded-full" />
-        {TIMELINE.map((step) => (
-          <div key={step.phase} className="relative mb-8">
-            <div className="absolute -left-8 top-2 w-7 h-7 rounded-full bg-white border-4 border-rose grid place-items-center text-sm">
-              {step.icon}
-            </div>
-            <div className={`card p-6 ${colorMap[step.color]}`}>
-              <h2 className="text-xl font-extrabold text-ink">{step.phase}</h2>
-              <ul className="mt-3 space-y-2">
-                {step.items.map((item) => (
-                  <li key={item} className="flex gap-2">
-                    <span className="text-rose font-bold">✓</span>
-                    <span className="text-ink/85">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        ))}
-      </div>
+      <TimelineChecklist />
 
       <div className="card p-6 bg-rose/20">
         <h3 className="font-extrabold text-ink mb-2">⏰ 절대 잊지 마세요</h3>

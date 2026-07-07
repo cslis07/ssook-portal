@@ -1,6 +1,11 @@
 import "./globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import NavBar from "@/components/NavBar";
+import ServiceWorker from "@/components/ServiceWorker";
+
+export const viewport: Viewport = {
+  themeColor: "#FFB5C5",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ssook-portal.vercel.app"),
@@ -35,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body>
+        <ServiceWorker />
         <NavBar />
         <main className="max-w-6xl mx-auto px-4 py-8">{children}</main>
         <footer className="text-center text-xs text-ink/60 py-10">

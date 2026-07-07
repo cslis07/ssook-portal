@@ -36,6 +36,7 @@ const GROUPS: Group[] = [
     items: [
       { href: "/local", label: "우리 동네", icon: "🗺️" },
       { href: "/medical", label: "의료 / 약국", icon: "🏥" },
+      { href: "/fever", label: "해열제 용량", icon: "🌡️" },
       { href: "/seoul", label: "서울 예약", icon: "🎫" },
     ],
   },
