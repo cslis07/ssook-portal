@@ -15,6 +15,7 @@ const GROUPS: Group[] = [
     items: [
       { href: "/timeline", label: "신청 타임라인", icon: "📅" },
       { href: "/support", label: "지원금 총정리", icon: "💝" },
+      { href: "/localgov", label: "지자체 지원금", icon: "🏘️" },
       { href: "/calculator", label: "지원금 계산기", icon: "🧮" },
       { href: "/utility", label: "공과금 혜택", icon: "💡" },
     ],

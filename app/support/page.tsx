@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SUPPORTS } from "@/lib/data";
 
 const catColor: Record<string, string> = {
@@ -42,12 +43,12 @@ export default function SupportPage() {
         <p className="text-ink/80 text-sm">
           전국 227개 시·군·구가 자체 출산지원금을 운영합니다. 같은 조건이어도 수백만~수천만원 차이가 날 수 있어요.
         </p>
-        <p className="text-ink/80 text-sm mt-2">
-          👉 <b>아이사랑 포털 (childcare.go.kr)</b> → 출산 → 출산지원금 에서 거주지로 검색하세요.
-        </p>
         <p className="text-ink/60 text-xs mt-2">
           거주기간(6개월·1년), 분할지급, 신청기한(30·90·365일) 조건이 지역마다 다르니 시·군·구청 확인 필수.
         </p>
+        <Link href="/localgov" className="inline-block mt-3 btn-pop bg-ink text-cream px-4 py-2 rounded-full text-sm font-bold">
+          🏘️ 우리 지역 출산지원금 찾기 →
+        </Link>
       </div>
     </div>
   );
