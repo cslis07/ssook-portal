@@ -425,7 +425,7 @@ function DrugCard({ it }: { it: any }) {
         ) : <div className="w-16 h-12 grid place-items-center text-2xl shrink-0">💊</div>}
         <div className="min-w-0">
           <h3 className="leading-snug">{it.name}</h3>
-          <p className="text-xs text-med-muted" style={{ color: "var(--med-muted)" }}>{it.company}</p>
+          <p className="text-xs" style={{ color: "var(--med-muted)" }}>{it.company}</p>
         </div>
       </div>
       {it.pregnancyNote && (

@@ -254,31 +254,12 @@ function ResultCard({ feature, item }: { feature: string; item: any }) {
       </div>
     );
   }
-  if (feature === "playground") {
-    return (
-      <div className="card p-3">
-        <div className="font-extrabold text-ink">{item.name}</div>
-        {item.grade && <div className="text-xs text-mint font-bold mt-0.5">등급 {item.grade}{item.lastCheck ? ` · 점검 ${item.lastCheck}` : ""}</div>}
-        {item.facilities && <div className="text-xs text-ink/70 mt-1">🎠 {item.facilities}</div>}
-        {item.address && <div className="text-xs text-ink/70">📍 {item.address}</div>}
-      </div>
-    );
-  }
   if (feature === "accident") {
     return (
       <div className="card p-3">
         <div className="font-extrabold text-ink">⚠️ {item.location}</div>
         <div className="text-xs text-rose font-bold mt-0.5">{item.year}년 사고 {item.accidents}건 · 부상 {item.injured}명 · 사망 {item.deaths}명</div>
         {item.type && <div className="text-xs text-ink/60 mt-1">{item.type}</div>}
-      </div>
-    );
-  }
-  if (feature === "snack") {
-    return (
-      <div className="card p-3">
-        <div className="font-extrabold text-ink">{item.product}</div>
-        <div className="text-xs text-rose mt-0.5">{item.maker}{item.category ? ` · ${item.category}` : ""}</div>
-        {(item.certDate || item.expireDate) && <div className="text-xs text-ink/70 mt-1">인증 {item.certDate} ~ {item.expireDate}</div>}
       </div>
     );
   }
