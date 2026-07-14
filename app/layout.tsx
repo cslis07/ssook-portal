@@ -46,6 +46,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="text-center text-xs text-ink/60 py-10">
           <p>🌱 쑥쑥 포털 · 2026년 기준 정부·공공기관 자료 요약</p>
           <p className="mt-1">최종 신청 전에는 복지로 · 정부24 · 관할 보건소·주민센터에서 다시 확인해주세요.</p>
+          <p className="mt-2">
+            <a href="/privacy" className="underline hover:text-rose">개인정보 처리방침 · 이용안내</a>
+            <span className="mx-2">·</span>
+            <a href="/guide.html" className="underline hover:text-rose">이용가이드</a>
+          </p>
         </footer>
       </body>
     </html>

@@ -4,9 +4,9 @@ const BASE = "https://ssook-portal.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
-    "", "/timeline", "/support", "/calculator", "/utility",
+    "", "/timeline", "/support", "/localgov", "/calculator", "/utility",
     "/calendar", "/growth", "/checklist",
-    "/local", "/medical", "/seoul",
+    "/local", "/medical", "/fever", "/seoul", "/privacy",
   ];
   return [
     ...routes.map((path) => ({

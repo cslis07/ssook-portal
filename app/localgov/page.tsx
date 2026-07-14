@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { CHILDCARE_REGIONS } from "@/lib/childcare-regions";
+import { govSupportFor } from "@/lib/localgov-data";
 
 // 2026 대표 사례 (거주지·조건에 따라 크게 다름. 참고용 — 반드시 관할 확인)
 const EXAMPLES = [
@@ -20,6 +21,8 @@ export default function LocalGovPage() {
   const guList = useMemo(() => (CHILDCARE_REGIONS[sido] || []).map((g) => g.name), [sido]);
   const region = [sido, gu].filter(Boolean).join(" ");
   const q = encodeURIComponent(`${region} 2026 출산지원금`);
+  const support = useMemo(() => govSupportFor(sido, gu), [sido, gu]);
+  const hasStructured = support.sido.length > 0 || support.gu.length > 0;
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
@@ -48,8 +51,20 @@ export default function LocalGovPage() {
         </div>
 
         {region ? (
-          <div className="mt-4 space-y-2">
-            <p className="text-sm font-bold text-ink">🔎 <span className="text-rose">{region}</span> 출산지원금 바로 확인</p>
+          <div className="mt-4 space-y-3">
+            {/* 확인된 실제 금액 */}
+            {hasStructured && (
+              <div className="rounded-2xl border-2 border-mint/50 bg-mint/10 p-4">
+                <div className="text-sm font-extrabold text-ink mb-2">💰 확인된 지원 <span className="text-xs text-ink/50 font-semibold">(2026 기준)</span></div>
+                <div className="space-y-2">
+                  {support.gu.map((p, i) => <ProgramRow key={`g${i}`} p={p} badge={`${gu} 자체`} badgeColor="bg-rose text-white" />)}
+                  {support.sido.map((p, i) => <ProgramRow key={`s${i}`} p={p} badge={`${sido.replace(/(특별시|광역시|특별자치시|특별자치도|도)$/, "")} 공통`} badgeColor="bg-lavender/70 text-ink" />)}
+                </div>
+                <p className="text-xs text-ink/50 mt-2">위 금액 외 <b>{gu || "시·군·구"} 자체 추가 지원</b>이 더 있을 수 있어요. 아래에서 꼭 확인하세요.</p>
+              </div>
+            )}
+
+            <p className="text-sm font-bold text-ink">🔎 <span className="text-rose">{region}</span> 전체 지원 확인</p>
             <div className="grid sm:grid-cols-2 gap-2">
               <LinkBtn href="https://www.childcare.go.kr/?menuno=279" icon="📋" title="아이사랑 공식 공고" desc="지자체별 2026 출산지원금 게시판" />
               <LinkBtn href={`https://search.naver.com/search.naver?query=${q}`} icon="🟢" title="네이버 검색" desc={`"${region} 2026 출산지원금"`} />
@@ -77,7 +92,7 @@ export default function LocalGovPage() {
 
       {/* 대표 사례 */}
       <section>
-        <h3 className="font-extrabold text-ink mb-2 px-1">💡 2026 대표 사례 (참고용)</h3>
+        <h3 className="font-extrabold text-ink mb-2 px-1">💡 지역별 편차 — 2026 대표 사례</h3>
         <div className="space-y-2">
           {EXAMPLES.map((e, i) => (
             <div key={i} className="card p-4">
@@ -93,6 +108,19 @@ export default function LocalGovPage() {
         ⚠️ 지자체 출산지원금은 금액·조건이 자주 바뀌고 지역 편차가 매우 큽니다. 위 사례는 2026년 공개자료 기준 <b>참고용</b>이며,
         신청 전 반드시 <b>관할 시·군·구청·보건소</b>에서 최신 내용을 확인하세요. 중앙정부 지원금은 <a className="text-rose font-bold underline" href="/calculator">계산기</a>에서 합산할 수 있어요.
       </div>
+    </div>
+  );
+}
+
+function ProgramRow({ p, badge, badgeColor }: { p: { name: string; amount: string; cond?: string }; badge: string; badgeColor: string }) {
+  return (
+    <div className="bg-white rounded-xl p-3">
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className={`chip ${badgeColor} shrink-0`}>{badge}</span>
+        <span className="font-extrabold text-ink text-sm">{p.name}</span>
+      </div>
+      <div className="text-rose font-bold text-sm mt-1">{p.amount}</div>
+      {p.cond && <div className="text-xs text-ink/55 mt-0.5">{p.cond}</div>}
     </div>
   );
 }
