@@ -27,9 +27,15 @@ export default function BabyProfile() {
         <div>
           <div className="text-sm text-ink/60 font-semibold">🍼 {name}</div>
           {born ? (
-            <div className="text-2xl md:text-3xl font-extrabold text-ink mt-0.5">
-              생후 {months}개월 <span className="text-rose">D+{days}</span>
-            </div>
+            days < 0 ? (
+              <div className="text-2xl md:text-3xl font-extrabold text-ink mt-0.5">
+                곧 만나요 <span className="text-rose">D{days}</span>
+              </div>
+            ) : (
+              <div className="text-2xl md:text-3xl font-extrabold text-ink mt-0.5">
+                생후 {months}개월 <span className="text-rose">D+{days}</span>
+              </div>
+            )
           ) : (
             <div className="text-2xl md:text-3xl font-extrabold text-ink mt-0.5">
               출산 예정 <span className="text-rose">{days > 0 ? `D-${days}` : "D-DAY"}</span>
