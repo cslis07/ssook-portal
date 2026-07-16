@@ -4,7 +4,7 @@ import Link from "next/link";
 const MENU = [
   { href: "/support", icon: "💝", label: "지원금혜택", bg: "bg-rose/40" },
   { href: "/calculator", icon: "🧮", label: "지원금계산기", bg: "bg-peach/60" },
-  { href: "/timeline", icon: "📅", label: "신청 타임라인", bg: "bg-lavender/50" },
+  { href: "/timeline", icon: "📅", label: "시기별 신청 할 일", bg: "bg-lavender/50" },
   { href: "/localgov", icon: "🏘️", label: "지자체 지원금", bg: "bg-mint/50" },
   { href: "/calendar", icon: "👶", label: "개월별 가이드", bg: "bg-butter/60" },
   { href: "/growth", icon: "🌷", label: "월령별 성장", bg: "bg-sky/50" },
