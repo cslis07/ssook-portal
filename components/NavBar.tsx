@@ -68,7 +68,11 @@ export default function NavBar() {
   return (
     <header ref={navRef} className="sticky top-0 z-50 backdrop-blur bg-cream/85 border-b-2 border-rose/30">
       <nav className="max-w-6xl mx-auto px-4 py-2.5 flex items-center gap-2">
-        {/* 좌측: 아기 정보 버튼 */}
+        {/* 좌측: 홈 버튼(모바일 전용 — 데스크톱은 메뉴에 🏠 홈 있음) + 아기 정보 버튼 */}
+        <Link href="/" aria-label="홈으로"
+          className="btn-pop md:hidden w-9 h-9 grid place-items-center rounded-full bg-white border-2 border-rose/30 text-base shrink-0">
+          🏠
+        </Link>
         <BabyButton />
 
         {/* 우측 클러스터 */}

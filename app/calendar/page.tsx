@@ -44,16 +44,36 @@ export default function CalendarPage() {
       <section>
         <h2 className="text-2xl font-extrabold text-ink mb-3">💉 국가예방접종 일정 (전액 무료)</h2>
         <div className="card p-6">
-          <ul className="grid md:grid-cols-2 gap-x-6 gap-y-2">
-            {VACCINES.map((v) => (
-              <li key={v.name} className="flex justify-between border-b border-rose/20 py-2">
-                <span className="font-bold text-ink">{v.name}</span>
-                <span className="text-ink/70 text-sm">{v.when}</span>
-              </li>
-            ))}
+          <ul className="grid md:grid-cols-2 gap-x-6 gap-y-1">
+            {VACCINES.map((v) =>
+              v.detail ? (
+                <li key={v.name} className="border-b border-rose/20">
+                  <details className="group py-2">
+                    <summary className="flex justify-between items-center gap-2 cursor-pointer list-none">
+                      <span className="font-bold text-ink">{v.name}</span>
+                      <span className="text-ink/70 text-sm text-right shrink-0">
+                        {v.when} <span className="text-ink/30 text-xs group-open:hidden">▾</span><span className="text-ink/30 text-xs hidden group-open:inline">▴</span>
+                      </span>
+                    </summary>
+                    <div className="mt-2 mb-1 rounded-xl bg-rose/10 p-3 text-xs text-ink/80 space-y-1">
+                      {v.detail.how && <p>💉 <b>접종방법:</b> {v.detail.how}</p>}
+                      {v.detail.side && <p>🌡️ <b>이상반응:</b> {v.detail.side}</p>}
+                      {v.detail.no && <p>⛔ <b>접종 금기:</b> {v.detail.no}</p>}
+                    </div>
+                  </details>
+                </li>
+              ) : (
+                <li key={v.name} className="flex justify-between border-b border-rose/20 py-2">
+                  <span className="font-bold text-ink">{v.name}</span>
+                  <span className="text-ink/70 text-sm">{v.when}</span>
+                </li>
+              )
+            )}
           </ul>
           <p className="text-xs text-ink/60 mt-4">
             👉 보건소·지정 의료기관 무료. <b>예방접종도우미 nip.kdca.go.kr</b> 또는 'The건강보험' 앱에서 아이별 일정 확인.
+            백신명을 누르면 접종방법·이상반응·금기사항이 펼쳐져요 (출처: 서울시 예방접종 종류별 실시방법).
+            이상반응이 심하면 접종기관 또는 소아과에 바로 문의하세요.
           </p>
         </div>
       </section>
