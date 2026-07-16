@@ -77,8 +77,8 @@ function ProfileModal({ initial, onClose, onSave, onClear }: {
   const [region, setRegion] = useState<Baby["region"]>(initial?.region || "metro");
 
   return (
-    <div className="fixed inset-0 z-[60] bg-ink/40 flex items-end md:items-center justify-center" onClick={onClose}>
-      <div className="bg-cream w-full max-w-[290px] max-h-[75vh] overflow-y-auto rounded-t-blob md:rounded-blob p-3"
+    <div className="fixed inset-0 z-[60] bg-ink/40 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-cream w-full max-w-[290px] max-h-[75vh] overflow-y-auto rounded-blob p-3"
         onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-sm font-extrabold text-ink">🍼 우리 아기 정보 <span className="font-semibold text-[10px] text-ink/40">(기기에만 저장)</span></h2>

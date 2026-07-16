@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "try{seen=!!sessionStorage.getItem('ssook-splash')}catch(e){}",
               "if(seen){s.classList.add('splash-skip');return}",
               "try{sessionStorage.setItem('ssook-splash','1')}catch(e){}",
-              "setTimeout(function(){s.classList.add('splash-done')},1600)})();",
+              "setTimeout(function(){s.classList.add('splash-done')},1200)})();",
             ].join(""),
           }}
         />
