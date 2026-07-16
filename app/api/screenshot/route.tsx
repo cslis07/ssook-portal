@@ -37,7 +37,7 @@ export async function GET(req: Request) {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
           <div style={{ width: 120, height: 120, borderRadius: 120, background: "#FFB5C5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 68 }}>🌱</div>
-          <div style={{ fontSize: 76, fontWeight: 900 }}>쑥쑥 포털</div>
+          <div style={{ fontSize: 76, fontWeight: 900 }}>아이쑥쑥</div>
         </div>
         <div style={{ fontSize: 40, fontWeight: 700, color: "#6b5a5c", marginTop: 28 }}>2026 출산·육아 올인원</div>
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 22, marginTop: 70, maxWidth: narrow ? 900 : 1500 }}>

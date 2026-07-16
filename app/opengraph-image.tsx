@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "쑥쑥 포털 · 2026 출산·육아 지원금 올인원";
+export const alt = "아이쑥쑥 · 2026 출산·육아 지원금 올인원";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -31,7 +31,7 @@ export default function OG() {
           >
             🌱
           </div>
-          <div style={{ fontSize: 52, fontWeight: 900 }}>쑥쑥 포털</div>
+          <div style={{ fontSize: 52, fontWeight: 900 }}>아이쑥쑥</div>
         </div>
         <div style={{ fontSize: 68, fontWeight: 900, marginTop: 40, lineHeight: 1.2 }}>
           2026 출산·육아

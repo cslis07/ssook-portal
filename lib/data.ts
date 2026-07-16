@@ -1,5 +1,5 @@
 export const HERO = {
-  brand: "쑥쑥 포털",
+  brand: "아이쑥쑥",
   tagline: "2026 대한민국 출산·육아 올인원",
   subtitle: "지원금부터 준비물, 개월별 가이드까지 한 곳에서 쑥쑥",
 };

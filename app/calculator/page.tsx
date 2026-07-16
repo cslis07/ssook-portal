@@ -156,11 +156,11 @@ function ShareButton({ total, order }: { total: number; order: "first" | "second
 
   async function onShare() {
     const url = "https://ssook-portal.vercel.app/calculator";
-    const text = `우리 아기(${orderKo}) 2026년 예상 출산·육아 지원금 약 ${amount}만원! 🍼\n쑥쑥 포털에서 우리 가족 받을 금액도 계산해보세요 🌱`;
+    const text = `우리 아기(${orderKo}) 2026년 예상 출산·육아 지원금 약 ${amount}만원! 🍼\n아이쑥쑥에서 우리 가족 받을 금액도 계산해보세요 🌱`;
     // 모바일: 네이티브 공유 시트
     if (typeof navigator !== "undefined" && (navigator as any).share) {
       try {
-        await (navigator as any).share({ title: "쑥쑥 포털 · 지원금 계산기", text, url });
+        await (navigator as any).share({ title: "아이쑥쑥 · 지원금 계산기", text, url });
         return;
       } catch { /* 취소 시 무시 */ }
     }

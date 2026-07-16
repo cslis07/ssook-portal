@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "개인정보 처리방침 · 이용안내",
-  description: "쑥쑥 포털 개인정보 처리방침과 정보 이용 관련 안내",
+  description: "아이쑥쑥 개인정보 처리방침과 정보 이용 관련 안내",
 };
 
 export default function PrivacyPage() {
@@ -15,7 +15,7 @@ export default function PrivacyPage() {
       </header>
 
       <Section title="1. 개인정보를 수집·저장하지 않습니다">
-        <p>쑥쑥 포털은 회원가입이 없으며, 이름·연락처·주민번호 등 <b>어떤 개인정보도 서버에 수집·전송하지 않습니다.</b></p>
+        <p>아이쑥쑥은 회원가입이 없으며, 이름·연락처·주민번호 등 <b>어떤 개인정보도 서버에 수집·전송하지 않습니다.</b></p>
         <p className="mt-2">아기 프로필(생년월일·출생순위·지역), 준비물 체크, 신청 진행 상태 등 입력한 정보는
           <b> 사용자 기기(브라우저 localStorage)에만 저장</b>되며 외부로 전송되지 않습니다. 브라우저 데이터를 지우면 함께 삭제됩니다.</p>
       </Section>

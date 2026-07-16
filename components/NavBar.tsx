@@ -72,7 +72,7 @@ export default function NavBar() {
           <span className="inline-block w-9 h-9 rounded-full bg-rose grid place-items-center shadow-soft">
             <span className="text-lg">🌱</span>
           </span>
-          <span>쑥쑥 포털</span>
+          <span>아이쑥쑥</span>
         </Link>
 
         {/* 데스크톱 메뉴 */}

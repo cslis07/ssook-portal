@@ -3,8 +3,8 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
-    name: "쑥쑥 포털 · 2026 출산·육아 올인원",
-    short_name: "쑥쑥 포털",
+    name: "아이쑥쑥 · 2026 출산·육아 올인원",
+    short_name: "아이쑥쑥",
     description: "2026 출산·육아 지원금, 준비물, 개월별 가이드, 우리 동네 의료·약 안전까지 한 곳에.",
     start_url: "/",
     scope: "/",
@@ -21,8 +21,8 @@ export default function manifest(): MetadataRoute.Manifest {
       { src: "/api/appicon?size=512", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
     screenshots: [
-      { src: "/api/screenshot?f=narrow", sizes: "1080x1920", type: "image/png", form_factor: "narrow", label: "쑥쑥 포털 주요 기능" },
-      { src: "/api/screenshot?f=wide", sizes: "1920x1080", type: "image/png", form_factor: "wide", label: "쑥쑥 포털 주요 기능" },
+      { src: "/api/screenshot?f=narrow", sizes: "1080x1920", type: "image/png", form_factor: "narrow", label: "아이쑥쑥 주요 기능" },
+      { src: "/api/screenshot?f=wide", sizes: "1920x1080", type: "image/png", form_factor: "wide", label: "아이쑥쑥 주요 기능" },
     ],
     // 앱 아이콘 롱프레스 → 바로가기 메뉴
     shortcuts: [
