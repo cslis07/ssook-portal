@@ -2,14 +2,14 @@ import Link from "next/link";
 
 // 홈 메인 메뉴 — 아이콘 그리드 허브 (전 기능 한눈에)
 const MENU = [
-  { href: "/support", icon: "💝", label: "지원금", bg: "bg-rose/40" },
-  { href: "/calculator", icon: "🧮", label: "계산기", bg: "bg-peach/60" },
+  { href: "/support", icon: "💝", label: "지원금혜택", bg: "bg-rose/40" },
+  { href: "/calculator", icon: "🧮", label: "지원금계산기", bg: "bg-peach/60" },
   { href: "/timeline", icon: "📅", label: "신청 타임라인", bg: "bg-lavender/50" },
   { href: "/localgov", icon: "🏘️", label: "지자체 지원금", bg: "bg-mint/50" },
   { href: "/calendar", icon: "👶", label: "개월별 가이드", bg: "bg-butter/60" },
   { href: "/growth", icon: "🌷", label: "월령별 성장", bg: "bg-sky/50" },
-  { href: "/checklist", icon: "🎀", label: "준비물", bg: "bg-rose/30" },
-  { href: "/utility", icon: "💡", label: "공과금", bg: "bg-peach/50" },
+  { href: "/checklist", icon: "🎀", label: "출산준비물", bg: "bg-rose/30" },
+  { href: "/utility", icon: "💡", label: "공과금혜택", bg: "bg-peach/50" },
   { href: "/local", icon: "🗺️", label: "우리 동네", bg: "bg-lavender/40" },
   { href: "/medical", icon: "🏥", label: "의료·약국", bg: "bg-mint/40" },
   { href: "/fever", icon: "🌡️", label: "해열제", bg: "bg-butter/50" },
