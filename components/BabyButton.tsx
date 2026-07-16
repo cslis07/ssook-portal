@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useBaby, ageMonths, ageDays, todayISO, type Baby } from "@/lib/baby";
 
 // NavBar 좌측 상단 버튼 — 미입력 시 "아기 정보 입력하기", 입력 시 아이 이름 표시
@@ -51,13 +52,15 @@ export default function BabyButton() {
         <span className="text-ink/30 text-xs">›</span>
       </button>
 
-      {open && (
+      {/* NavBar의 backdrop-blur가 fixed 기준을 헤더로 바꿔버리므로 body로 포털 렌더 */}
+      {open && createPortal(
         <ProfileModal
           initial={baby}
           onClose={() => setOpen(false)}
           onSave={(b) => { setBaby(b); setOpen(false); }}
           onClear={baby ? () => { setBaby(null); setOpen(false); } : undefined}
-        />
+        />,
+        document.body
       )}
     </>
   );

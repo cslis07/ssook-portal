@@ -49,11 +49,10 @@ const GUIDE: Item = { href: "/guide.html", label: "이용가이드", icon: "📖
 export default function NavBar() {
   const pathname = usePathname();
   const [openGroup, setOpenGroup] = useState<string | null>(null);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
 
   // 라우트 변경 시 닫기
-  useEffect(() => { setOpenGroup(null); setMobileOpen(false); }, [pathname]);
+  useEffect(() => { setOpenGroup(null); }, [pathname]);
 
   // 바깥 클릭 시 드롭다운 닫기
   useEffect(() => {
@@ -69,14 +68,14 @@ export default function NavBar() {
   return (
     <header ref={navRef} className="sticky top-0 z-50 backdrop-blur bg-cream/85 border-b-2 border-rose/30">
       <nav className="max-w-6xl mx-auto px-4 py-2.5 flex items-center gap-2">
-        {/* 좌측: 로고(아이콘) + 아기 정보 버튼 */}
+        {/* 좌측: 아기 정보 버튼 + 로고(아이콘) — 위치 교체 */}
+        <BabyButton />
         <Link href="/" className="flex items-center gap-1.5 font-extrabold text-ink shrink-0">
           <span className="inline-block w-9 h-9 rounded-full bg-rose grid place-items-center shadow-soft">
             <span className="text-lg">🌱</span>
           </span>
           <span className="hidden sm:inline text-lg">아이쑥쑥</span>
         </Link>
-        <BabyButton />
 
         {/* 우측 클러스터 */}
         <div className="ml-auto flex items-center gap-1">
@@ -113,48 +112,13 @@ export default function NavBar() {
             ))}
           </div>
 
-          {/* 이용가이드 버튼 (항상 노출) */}
+          {/* 이용가이드 버튼 (항상 노출 — 구 햄버거 자리) */}
           <a href={GUIDE.href}
             className="btn-pop flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold bg-white border-2 border-rose/30 text-ink hover:bg-rose/15 whitespace-nowrap">
             <span>📖</span><span>이용가이드</span>
           </a>
-
-          {/* 모바일 햄버거 */}
-          <button
-            onClick={(e) => { e.stopPropagation(); setMobileOpen((v) => !v); }}
-            className="md:hidden w-10 h-10 grid place-items-center rounded-full bg-white border-2 border-rose/30 text-ink text-lg shrink-0"
-            aria-label="메뉴"
-          >
-            {mobileOpen ? "✕" : "☰"}
-          </button>
         </div>
       </nav>
-
-      {/* 모바일 메뉴 패널 */}
-      {mobileOpen && (
-        <div className="md:hidden border-t-2 border-rose/20 bg-cream/95 px-4 py-3 space-y-3 max-h-[75vh] overflow-y-auto">
-          <Link href="/" className={`block px-3 py-2 rounded-xl font-bold ${pathname === "/" ? "bg-rose/30" : ""}`}>🏠 홈</Link>
-          {GROUPS.map((g) => (
-            <div key={g.id}>
-              <div className="text-xs font-extrabold text-ink/50 px-3 mb-1">{g.icon} {g.label}</div>
-              <div className="grid grid-cols-2 gap-1.5">
-                {g.items.map((it) => (
-                  <Link
-                    key={it.href}
-                    href={it.href}
-                    className={`px-3 py-2 rounded-xl text-sm font-semibold ${
-                      pathname === it.href ? "bg-rose/30 text-ink" : "bg-white/70 text-ink"
-                    }`}
-                  >
-                    <span className="mr-1">{it.icon}</span>{it.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
-          <a href={GUIDE.href} className="block px-3 py-2 rounded-xl font-bold bg-white/70 text-ink">📖 이용가이드</a>
-        </div>
-      )}
     </header>
   );
 }

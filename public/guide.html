@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>이용가이드 · 아이쑥쑥 🌱</title>
-<meta name="description" content="아이쑥쑥 사용법 — 지원금 계산기, 신청 타임라인, 개월별 가이드, 우리 동네 의료·놀이터, 서울 예약까지 한 페이지로." />
+<meta name="description" content="아이쑥쑥 사용법 — 아기 정보 맞춤, 지원금 계산기, 지자체 지원금, 개월별 가이드, 우리 동네 의료·약 안전, 해열제, 서울 예약까지 한 페이지로." />
 <meta property="og:title" content="아이쑥쑥 이용가이드" />
 <meta property="og:description" content="2026 출산·육아 올인원 — 기능별 사용법 안내" />
 <meta property="og:type" content="website" />
@@ -169,13 +169,15 @@ kbd{background:#fff;border:1px solid var(--border);border-bottom-width:2px;borde
 <section class="hero">
   <span class="badge">📖 이용가이드 · 2026 기준</span>
   <h1>아이쑥쑥 사용법 🌷</h1>
-  <p>지원금부터 준비물, 개월별 가이드, 우리 동네 의료·놀이터까지 — 한 페이지로 익히기</p>
+  <p>지원금부터 준비물, 개월별 가이드, 우리 동네 의료·약 안전까지 — 한 페이지로 익히기</p>
   <div class="chips">
+    <span class="chip">🍼 아기 맞춤</span>
     <span class="chip">💝 지원금 12종</span>
     <span class="chip">🧮 계산기</span>
     <span class="chip">👶 0~36개월 가이드</span>
     <span class="chip">🏥 실시간 의료</span>
-    <span class="chip">🗺️ 우리 동네</span>
+    <span class="chip">💊 약 안전 검색</span>
+    <span class="chip">🌡️ 해열제 용량</span>
   </div>
 </section>
 
@@ -184,10 +186,10 @@ kbd{background:#fff;border:1px solid var(--border);border-bottom-width:2px;borde
   <aside class="sidebar">
     <div class="sidebar-title">목차</div>
     <div class="sidebar-section">
-      <a class="sidebar-link" href="#sec-updates"><span class="sidebar-dot" style="background:var(--primary)"></span>수정된 사항</a>
+      <a class="sidebar-link" href="#sec-overview"><span class="sidebar-dot" style="background:var(--text3)"></span>화면 구성</a>
     </div>
     <div class="sidebar-section">
-      <a class="sidebar-link" href="#sec-overview"><span class="sidebar-dot" style="background:var(--text3)"></span>화면 구성</a>
+      <a class="sidebar-link" href="#sec-baby"><span class="sidebar-dot" style="background:var(--c6)"></span>아기 정보 맞춤</a>
     </div>
     <div class="sidebar-section">
       <a class="sidebar-link" href="#sec-miss"><span class="sidebar-dot" style="background:var(--primary)"></span>가장 많이 놓치는 7가지</a>
@@ -197,6 +199,7 @@ kbd{background:#fff;border:1px solid var(--border);border-bottom-width:2px;borde
       <div class="sidebar-sub">
         <a href="#sub-timeline">신청 타임라인</a>
         <a href="#sub-support">지원금 총정리</a>
+        <a href="#sub-localgov">지자체 지원금</a>
         <a href="#sub-calc">지원금 계산기</a>
       </div>
     </div>
@@ -218,51 +221,18 @@ kbd{background:#fff;border:1px solid var(--border);border-bottom-width:2px;borde
       <a class="sidebar-link" href="#sec-medical"><span class="sidebar-dot" style="background:var(--c5)"></span>의료 & 서울 예약</a>
       <div class="sidebar-sub">
         <a href="#sub-medical">의료 / 약국</a>
+        <a href="#sub-drug">약 안전 검색</a>
+        <a href="#sub-fever">해열제 용량</a>
         <a href="#sub-seoul">서울 예약</a>
       </div>
+    </div>
+    <div class="sidebar-section">
+      <a class="sidebar-link" href="#sec-app"><span class="sidebar-dot" style="background:var(--c6)"></span>앱으로 쓰기</a>
     </div>
   </aside>
 
   <!-- MAIN -->
   <main class="main">
-
-    <!-- 0. UPDATES -->
-    <section class="guide-section" id="sec-updates">
-      <div class="section-header sh-update">
-        <span class="section-icon">🔔</span>
-        <div><div class="section-title">수정된 사항</div><div class="section-subtitle">최근 업데이트 내역</div></div>
-      </div>
-      <div class="section-body">
-        <div class="update-card new">
-          <div class="update-head"><span class="update-date">2026.07.01</span><span class="update-badge">NEW</span></div>
-          <div class="update-title">🏥 우리 가족 의료 찾기 · 서울 예약 추가</div>
-          <div class="update-body">
-            국립중앙의료원 실시간 데이터로 응급실·병의원·약국을 조회합니다.
-            <ul>
-              <li>응급실 실시간 가용병상 · 내 주변(GPS) · 외상센터 · 중증질환 수용</li>
-              <li>🌙 달빛어린이병원 · 심야약국 · AED · 선별진료소</li>
-              <li>서울 공공서비스 예약(진료·문화·교육·체육·시설)을 별도 메뉴로 분리</li>
-            </ul>
-          </div>
-        </div>
-        <div class="update-card new">
-          <div class="update-head"><span class="update-date">2026.07.01</span><span class="update-badge">NEW</span></div>
-          <div class="update-title">🗺️ 우리 동네 · 🌷 월령별 성장 가이드</div>
-          <div class="update-body">
-            어린이집·예방접종 의료기관·놀이터·교통사고 다발지역·안전식품을 동네 기준으로 조회.
-            이른둥이~36개월 발달·놀이·주의 신호를 아이사랑 포털 데이터로 정리했어요.
-          </div>
-        </div>
-        <div class="update-card">
-          <div class="update-head"><span class="update-date">2026.06.30</span></div>
-          <div class="update-title">🧮 지원금 계산기 정확도 개선</div>
-          <div class="update-body">
-            부모급여 0세 어린이집 이용 시 보육료 차감(100만→약 42만) 반영,
-            3자녀 이상 도시가스·지역난방 다자녀 감면 합산 추가.
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- 1. OVERVIEW -->
     <section class="guide-section" id="sec-overview">
@@ -271,21 +241,40 @@ kbd{background:#fff;border:1px solid var(--border);border-bottom-width:2px;borde
         <div><div class="section-title">화면 구성 &amp; 메뉴</div><div class="section-subtitle">아이쑥쑥 전체 지도</div></div>
       </div>
       <div class="section-body">
-        <p>상단 메뉴에서 원하는 기능으로 바로 이동할 수 있어요. 크게 <strong>돈(지원금)</strong>, <strong>아기(성장)</strong>, <strong>동네(생활)</strong> 세 갈래예요.</p>
+        <p>홈 최상단의 <strong>🌈 전체 메뉴</strong>(아이콘 12개)에서 모든 기능으로 바로 이동해요. 상단바에는 <strong>🍼 아기 정보 버튼</strong>(왼쪽)과 <strong>📖 이용가이드 버튼</strong>(오른쪽)이 항상 있어요.</p>
         <ul class="func-list">
-          <li><span class="fi">🏠</span><div><span class="ft">홈</span><span class="fd">오늘의 공공서비스 픽 + 바로가기 버튼</span></div></li>
+          <li><span class="fi">💝</span><div><span class="ft">지원금혜택</span><span class="fd">현금·바우처·감면·휴직 12종 총정리</span></div></li>
+          <li><span class="fi">🧮</span><div><span class="ft">지원금계산기</span><span class="fd">우리 가족 예상 수령액 합산 + 공유</span></div></li>
           <li><span class="fi">📅</span><div><span class="ft">신청 타임라인</span><span class="fd">임신 확인부터 출산 후 6개월까지 할 일</span></div></li>
-          <li><span class="fi">💝</span><div><span class="ft">지원금 총정리</span><span class="fd">현금·바우처·감면·휴직 12종</span></div></li>
+          <li><span class="fi">🏘️</span><div><span class="ft">지자체 지원금</span><span class="fd">서울 자치구 실제 금액 + 전 지역 검색</span></div></li>
           <li><span class="fi">👶</span><div><span class="ft">개월별 가이드</span><span class="fd">0~24개월 발달·꿀팁·예방접종·검진</span></div></li>
           <li><span class="fi">🌷</span><div><span class="ft">월령별 성장</span><span class="fd">이른둥이~36개월 발달 단계별 안내</span></div></li>
-          <li><span class="fi">🎀</span><div><span class="ft">준비물</span><span class="fd">꼭·나중에·사지마세요 체크리스트</span></div></li>
-          <li><span class="fi">💡</span><div><span class="ft">공과금 혜택</span><span class="fd">전기·가스·난방·에너지바우처</span></div></li>
-          <li><span class="fi">🧮</span><div><span class="ft">계산기</span><span class="fd">우리 가족 예상 수령액 합산</span></div></li>
-          <li><span class="fi">🗺️</span><div><span class="ft">우리 동네</span><span class="fd">어린이집·놀이터·예방접종·안전정보</span></div></li>
-          <li><span class="fi">🏥</span><div><span class="ft">의료 / 약국</span><span class="fd">응급실·병의원·약국·AED·심야약국</span></div></li>
+          <li><span class="fi">🎀</span><div><span class="ft">출산준비물</span><span class="fd">꼭·나중에·사지마세요 체크리스트</span></div></li>
+          <li><span class="fi">💡</span><div><span class="ft">공과금혜택</span><span class="fd">전기·가스·난방·에너지바우처</span></div></li>
+          <li><span class="fi">🗺️</span><div><span class="ft">우리 동네</span><span class="fd">어린이집·예방접종기관·안전정보·대공원</span></div></li>
+          <li><span class="fi">🏥</span><div><span class="ft">의료·약국</span><span class="fd">응급실·야간 소아진료·약국·약 안전 검색</span></div></li>
+          <li><span class="fi">🌡️</span><div><span class="ft">해열제</span><span class="fd">몸무게별 아세트아미노펜·이부프로펜 용량</span></div></li>
           <li><span class="fi">🎫</span><div><span class="ft">서울 예약</span><span class="fd">서울시 공공서비스 예약</span></div></li>
         </ul>
+        <p>홈 하단의 <strong>🎯 오늘의 공공서비스 픽</strong>은 카테고리(영유아·아동·가족 등)를 고르면 서울시 공공예약 중 오늘의 추천을 뽑아드려요.</p>
         <div class="tip">💡 지역·검색 조건은 브라우저에 저장돼요. 다음에 방문해도 우리 동네가 그대로 기억됩니다.</div>
+      </div>
+    </section>
+
+    <!-- 1.2 아기 정보 맞춤 -->
+    <section class="guide-section" id="sec-baby">
+      <div class="section-header sh-6">
+        <span class="section-icon">🍼</span>
+        <div><div class="section-title">아기 정보 맞춤</div><div class="section-subtitle">한 번 입력하면 전체가 우리 아기 기준으로</div></div>
+      </div>
+      <div class="section-body">
+        <p>상단바 왼쪽의 <strong>아기 정보 버튼</strong>을 누르면 애칭·생년월일(또는 출산 예정일)·출생 순위·거주 지역·다태아 여부를 입력할 수 있어요. 입력한 정보는 <strong>내 기기에만 저장</strong>되고 서버로 전송되지 않아요.</p>
+        <div class="steps">
+          <div class="step"><div class="step-num" style="background:var(--c6)">1</div><div class="step-body"><div class="step-label">아기 정보 입력</div><div class="step-text">상단바 🍼 버튼 → 애칭·날짜·순위·지역 입력 후 저장</div></div></div>
+          <div class="step"><div class="step-num" style="background:var(--c6)">2</div><div class="step-body"><div class="step-label">자동 맞춤</div><div class="step-text">개월별 가이드가 현재 개월로 스크롤되고, 접종·검진 D-day가 계산돼요</div></div></div>
+          <div class="step"><div class="step-num" style="background:var(--c6)">3</div><div class="step-body"><div class="step-label">계산기 프리필</div><div class="step-text">지원금 계산기에 출생 순위·지역·다태아 조건이 자동으로 채워져요</div></div></div>
+        </div>
+        <div class="tip tip-green">✅ 상단바에 아기 이름과 <strong>생후 개월수</strong>가 항상 표시돼요. 수정·삭제도 같은 버튼에서 할 수 있어요.</div>
       </div>
     </section>
 
@@ -333,6 +322,14 @@ kbd{background:#fff;border:1px solid var(--border);border-bottom-width:2px;borde
           </tbody>
         </table>
         <div class="tip tip-amber">💡 지자체 출산축하금은 지역마다 수백만원씩 차이나요. <code>아이사랑 포털</code>에서 거주지로 꼭 검색하세요.</div>
+
+        <h3 id="sub-localgov">🏘️ 지자체 지원금</h3>
+        <p>정부 지원금과 <strong>별도로</strong> 시·군·구가 주는 출산축하금·양육지원금을 모았어요.</p>
+        <ul class="func-list">
+          <li><span class="fi">🏙️</span><div><span class="ft">서울 25개 자치구</span><span class="fd">자치구별 실제 지원 금액을 구조화해서 바로 비교</span></div></li>
+          <li><span class="fi">🔍</span><div><span class="ft">전국 검색</span><span class="fd">그 외 지역은 대표 사례와 공식 검색 링크로 확인</span></div></li>
+        </ul>
+        <div class="tip">💡 지자체 지원금은 <strong>거주기간 요건</strong>이 붙는 경우가 많아요. 이사 계획이 있다면 먼저 확인하세요.</div>
 
         <h3 id="sub-calc">🧮 지원금 계산기</h3>
         <p>우리 가족 조건을 넣으면 예상 수령액을 실시간으로 합산해줘요.</p>
@@ -401,13 +398,11 @@ kbd{background:#fff;border:1px solid var(--border);border-bottom-width:2px;borde
         <div><div class="section-title">우리 동네</div><div class="section-subtitle">내 주변 아기 정보</div></div>
       </div>
       <div class="section-body">
-        <p>동네(시군구)를 한 번 고르면 어린이집부터 놀이터 안전까지 6가지를 바로 조회해요.</p>
+        <p>동네(시군구)를 한 번 고르면 어린이집부터 안전정보까지 4가지를 바로 조회해요.</p>
         <div class="feat-grid">
           <div class="feat-card"><div class="feat-card-icon">🏫</div><div class="feat-card-title">어린이집 찾기</div><div class="feat-card-desc">정원·현원·유형</div></div>
           <div class="feat-card"><div class="feat-card-icon">💉</div><div class="feat-card-title">예방접종 기관</div><div class="feat-card-desc">국가접종 위탁 의료기관</div></div>
-          <div class="feat-card"><div class="feat-card-icon">🎠</div><div class="feat-card-title">놀이터 정보</div><div class="feat-card-desc">안전점검·우수시설</div></div>
           <div class="feat-card"><div class="feat-card-icon">🚧</div><div class="feat-card-title">교통사고 다발지역</div><div class="feat-card-desc">어린이보호구역 통계</div></div>
-          <div class="feat-card"><div class="feat-card-icon">🍪</div><div class="feat-card-title">안전한 식품</div><div class="feat-card-desc">품질인증 기호식품</div></div>
           <div class="feat-card"><div class="feat-card-icon">🎪</div><div class="feat-card-title">어린이대공원</div><div class="feat-card-desc">진행 행사·체험</div></div>
         </div>
         <div class="tip">💡 선택한 동네는 저장돼요. 각 기능을 눌러 하단 시트에서 결과를 확인하세요.</div>
@@ -425,15 +420,44 @@ kbd{background:#fff;border:1px solid var(--border);border-bottom-width:2px;borde
         <p>탭으로 나뉜 공공의료 조회. 시/도·시/군/구를 고른 뒤 원하는 모드를 선택하세요.</p>
         <ul class="func-list">
           <li><span class="fi">🚑</span><div><span class="ft">응급실</span><span class="fd">실시간 가용병상 · 내 주변(GPS) · 외상센터 · 중증질환 수용</span></div></li>
-          <li><span class="fi">🏥</span><div><span class="ft">병·의원</span><span class="fd">전체 검색 + 🌙 달빛어린이병원(야간·휴일 소아)</span></div></li>
-          <li><span class="fi">💊</span><div><span class="ft">약국</span><span class="fd">지역 검색 · 내 주변 · 🌙 심야약국</span></div></li>
-          <li><span class="fi">❤️</span><div><span class="ft">AED</span><span class="fd">자동심장충격기 위치</span></div></li>
+          <li><span class="fi">🌙</span><div><span class="ft">야간·휴일 소아진료</span><span class="fd">달빛어린이병원 — 밤·주말에 아이가 아플 때</span></div></li>
+          <li><span class="fi">🏥</span><div><span class="ft">병·의원</span><span class="fd">지역별 전체 검색</span></div></li>
+          <li><span class="fi">💊</span><div><span class="ft">약국</span><span class="fd">지역 검색 · 내 주변 · 🌙 심야약국(요일 자동 반영)</span></div></li>
+          <li><span class="fi">🧪</span><div><span class="ft">선별진료소</span><span class="fd">운영 안내</span></div></li>
         </ul>
         <div class="tip tip-warn">🆘 실시간 정보는 의료기관 입력 시점 기준이라 실제와 다를 수 있어요. 응급상황 시 <strong>119</strong>에 신고하세요.</div>
+
+        <h3 id="sub-drug">💊 약 안전 검색</h3>
+        <p>의료·약국 페이지의 <strong>약 안전 검색</strong> 탭에서 약 이름을 검색하면 식약처 <code>e약은요</code> 데이터로 효능·용법·주의사항을 보여줘요.</p>
+        <ul class="func-list">
+          <li><span class="fi">🔍</span><div><span class="ft">약 이름으로 검색</span><span class="fd">예: 타이레놀, 챔프, 부루펜</span></div></li>
+          <li><span class="fi">⚠️</span><div><span class="ft">주의사항 확인</span><span class="fd">복용 전 주의 대상·함께 먹으면 안 되는 약·보관법</span></div></li>
+        </ul>
+        <div class="tip tip-warn">⚠️ 검색 결과는 참고용이에요. 아기 복용 전에는 반드시 소아과 의사·약사와 상담하세요.</div>
+
+        <h3 id="sub-fever">🌡️ 해열제 용량</h3>
+        <p>아기 <strong>몸무게</strong>를 입력하면 아세트아미노펜(타이레놀 계열)·이부프로펜(부루펜 계열) 시럽의 1회 권장 용량을 계산해줘요.</p>
+        <div class="tip tip-warn">⚠️ 교차복용 간격·1일 최대 횟수를 꼭 지키고, 생후 4개월 미만 발열은 바로 병원으로 가세요.</div>
 
         <h3 id="sub-seoul">🎫 서울 예약</h3>
         <p>서울시 공공서비스 예약을 카테고리(진료·문화·교육·체육·시설)로 조회하고, 자치구·접수상태·서비스명으로 좁혀요.</p>
         <div class="tip tip-green">✅ 카드의 <strong>예약 페이지</strong> 버튼을 누르면 서울시 공식 예약 화면으로 바로 이동합니다.</div>
+      </div>
+    </section>
+
+    <!-- 7. APP -->
+    <section class="guide-section" id="sec-app">
+      <div class="section-header sh-6">
+        <span class="section-icon">📱</span>
+        <div><div class="section-title">앱으로 쓰기</div><div class="section-subtitle">홈 화면에 설치하면 앱처럼</div></div>
+      </div>
+      <div class="section-body">
+        <p>아이쑥쑥은 설치형 웹앱(PWA)이에요. 홈 화면에 추가하면 주소창 없이 앱처럼 열리고, 접속했던 화면은 오프라인에서도 다시 볼 수 있어요.</p>
+        <div class="steps">
+          <div class="step"><div class="step-num" style="background:var(--c6)">1</div><div class="step-body"><div class="step-label">안드로이드 (Chrome)</div><div class="step-text">브라우저 메뉴(⋮) → <code>홈 화면에 추가</code> 또는 <code>앱 설치</code></div></div></div>
+          <div class="step"><div class="step-num" style="background:var(--c6)">2</div><div class="step-body"><div class="step-label">아이폰 (Safari)</div><div class="step-text">공유 버튼 → <code>홈 화면에 추가</code></div></div></div>
+        </div>
+        <div class="tip">💡 앱 아이콘을 <strong>길게 누르면</strong> 지원금 계산기·해열제·우리 동네로 바로 가는 단축 메뉴가 떠요.</div>
       </div>
     </section>
 
@@ -452,14 +476,15 @@ kbd{background:#fff;border:1px solid var(--border);border-bottom-width:2px;borde
 <div class="toc-drawer" id="toc-drawer" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="toc-drawer-panel">
     <div class="sidebar-title">목차</div>
-    <div class="sidebar-section"><a class="sidebar-link" href="#sec-updates" onclick="closeDrawer()"><span class="sidebar-dot" style="background:var(--primary)"></span>수정된 사항</a></div>
     <div class="sidebar-section"><a class="sidebar-link" href="#sec-overview" onclick="closeDrawer()"><span class="sidebar-dot" style="background:var(--text3)"></span>화면 구성</a></div>
+    <div class="sidebar-section"><a class="sidebar-link" href="#sec-baby" onclick="closeDrawer()"><span class="sidebar-dot" style="background:var(--c6)"></span>아기 정보 맞춤</a></div>
     <div class="sidebar-section"><a class="sidebar-link" href="#sec-miss" onclick="closeDrawer()"><span class="sidebar-dot" style="background:var(--primary)"></span>가장 많이 놓치는 7가지</a></div>
     <div class="sidebar-section"><a class="sidebar-link" href="#sec-support" onclick="closeDrawer()"><span class="sidebar-dot" style="background:var(--c1)"></span>지원금 &amp; 신청</a></div>
     <div class="sidebar-section"><a class="sidebar-link" href="#sec-growth" onclick="closeDrawer()"><span class="sidebar-dot" style="background:var(--c2)"></span>아기 키우기</a></div>
     <div class="sidebar-section"><a class="sidebar-link" href="#sec-utility" onclick="closeDrawer()"><span class="sidebar-dot" style="background:var(--c3)"></span>공과금 혜택</a></div>
     <div class="sidebar-section"><a class="sidebar-link" href="#sec-local" onclick="closeDrawer()"><span class="sidebar-dot" style="background:var(--c4)"></span>우리 동네</a></div>
     <div class="sidebar-section"><a class="sidebar-link" href="#sec-medical" onclick="closeDrawer()"><span class="sidebar-dot" style="background:var(--c5)"></span>의료 &amp; 서울 예약</a></div>
+    <div class="sidebar-section"><a class="sidebar-link" href="#sec-app" onclick="closeDrawer()"><span class="sidebar-dot" style="background:var(--c6)"></span>앱으로 쓰기</a></div>
   </div>
 </div>
 

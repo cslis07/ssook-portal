@@ -39,11 +39,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body>
-        {/* SW 등록 조기화 — hydration 대기 없이 즉시 등록(PWABuilder 등 스캐너 검출 포함) */}
+        {/* 스플래시 — 앱 진입 시 새싹이 자라는 로딩 화면(세션당 1회) */}
+        <div id="splash" aria-hidden="true">
+          <div className="splash-inner">
+            <span className="splash-badge"><span className="splash-sprout">🌱</span></span>
+            <div className="splash-name">아이쑥쑥</div>
+            <div className="splash-sub">2026 출산·육아 올인원</div>
+          </div>
+        </div>
+        {/* SW 등록 조기화(스캐너 검출 포함) + 스플래시 제어 */}
         <script
           dangerouslySetInnerHTML={{
-            __html:
+            __html: [
               "if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}",
+              "(function(){var s=document.getElementById('splash');if(!s)return;var seen=false;",
+              "try{seen=!!sessionStorage.getItem('ssook-splash')}catch(e){}",
+              "if(seen){s.classList.add('splash-skip');return}",
+              "try{sessionStorage.setItem('ssook-splash','1')}catch(e){}",
+              "setTimeout(function(){s.classList.add('splash-done')},1600)})();",
+            ].join(""),
           }}
         />
         <NavBar />
