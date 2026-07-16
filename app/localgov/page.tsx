@@ -32,6 +32,9 @@ export default function LocalGovPage() {
         <p className="text-ink/70 text-sm md:text-base mt-1">
           같은 조건이어도 사는 지역에 따라 <b>수백만~수천만원</b> 차이가 나요. 우리 동네를 정확히 확인하세요.
         </p>
+        <div className="mt-3 text-sm bg-butter/40 rounded-2xl px-4 py-3 text-ink/80">
+          🚧 현재 <b>서울 지역</b> 실제 금액만 조회돼요. 타 지역은 향후 업데이트 예정이며, 아래 <b>검색 링크</b>로 바로 확인할 수 있어요.
+        </div>
       </header>
 
       {/* 지역 선택 */}

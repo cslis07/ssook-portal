@@ -222,12 +222,6 @@ export default function LocalPage() {
         </div>
       )}
 
-      <div className="card p-4 bg-lavender/30 text-xs text-ink/70">
-        <b>ℹ️ 데이터 안내</b><br />
-        어린이집은 <b>아이사랑(childcare.go.kr)</b> 실시간 데이터로 전국 조회돼요.
-        놀이터·예방접종·교통사고 등 일부 정보는 정부 API 키(<code className="bg-white px-1 rounded">DATA_API_KEY</code>)가 있으면 실데이터,
-        없으면 샘플로 표시됩니다.
-      </div>
     </div>
   );
 }

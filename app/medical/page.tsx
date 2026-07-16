@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { REGIONS, SEVERE_TYPES } from "@/lib/regions";
 import Pager from "@/components/Pager";
 
-type TabId = "medical" | "drug" | "aed" | "night" | "screening";
+type TabId = "medical" | "drug" | "night" | "screening";
 type ModeId =
   | "realtime" | "erNearby" | "trauma" | "severe"
   | "hospitalAll" | "baby"
@@ -28,7 +28,7 @@ const MEDICAL_MODES: Mode[] = [
   { id: "trauma", group: "🚑 응급실", service: "emergency", label: "🚨 외상센터", input: "region", op: "getStrmListInfoInqire" },
   { id: "severe", group: "🚑 응급실", service: "emergency", label: "🆘 중증질환 수용", input: "region", op: "getSrsillDissAceptncPosblInfoInqire", sigunguRequired: true, hint: "🆘 시/군/구까지 선택하세요. 특정 중증질환 수용 병원만 보려면 질환을 선택하세요." },
   { id: "hospitalAll", group: "🏥 병·의원", service: "hospital", label: "병·의원", input: "region", op: "getHsptlMdcncListInfoInqire", keyword: true },
-  { id: "baby", group: "🏥 병·의원", service: "hospital", label: "🌙 달빛어린이병원", input: "region", op: "getBabyListInfoInqire", hint: "🌙 달빛어린이병원은 야간·휴일 소아 진료 기관입니다." },
+  { id: "baby", group: "🏥 병·의원", service: "hospital", label: "🌙 야간·휴일 소아진료", input: "region", op: "getBabyListInfoInqire", hint: "🌙 달빛어린이병원 — 야간·휴일에 소아 진료를 하는 병원이에요." },
   { id: "pharmacyRegion", group: "💊 약국", service: "pharmacy", label: "지역 검색", input: "region", op: "getParmacyListInfoInqire", keyword: true },
   { id: "phNearby", group: "💊 약국", service: "pharmacy", label: "📍 내 주변", input: "geo", op: "getParmacyLcinfoInqire" },
 ];
@@ -36,7 +36,6 @@ const MEDICAL_MODES: Mode[] = [
 const TABS: { id: TabId; label: string }[] = [
   { id: "medical", label: "🏥 의료" },
   { id: "drug", label: "💊 약 안전" },
-  { id: "aed", label: "❤️ AED" },
   { id: "night", label: "🌙 심야약국" },
   { id: "screening", label: "🩺 선별진료소" },
 ];
@@ -69,7 +68,7 @@ export default function MedicalPage() {
   // URL ?tab= 로 딥링크 진입 (예: /medical?tab=drug)
   useEffect(() => {
     const t = new URLSearchParams(window.location.search).get("tab");
-    if (t && ["medical", "drug", "aed", "night", "screening"].includes(t)) setTab(t as TabId);
+    if (t && ["medical", "drug", "night", "screening"].includes(t)) setTab(t as TabId);
   }, []);
 
   useEffect(() => {
@@ -292,8 +291,8 @@ export default function MedicalPage() {
         </div>
       )}
 
-      {/* AED / 심야약국 / 선별진료소: 시/도·시/군/구 + 검색 */}
-      {(tab === "aed" || tab === "night") && (
+      {/* 심야약국: 시/도·시/군/구 + 검색 */}
+      {tab === "night" && (
         <div className="med-card grid grid-cols-1 md:grid-cols-4 gap-3">
           <div className="med-field">
             <label>시/도</label>
@@ -313,7 +312,7 @@ export default function MedicalPage() {
           </div>
           <div className="md:col-span-2 flex md:items-end">
             <button className="med-search-btn w-full md:w-auto md:ml-auto"
-              onClick={() => searchSimple(`/api/${tab === "aed" ? "aed" : "night-pharmacy"}?${new URLSearchParams({ sido, sigungu })}`)}>
+              onClick={() => searchSimple(`/api/night-pharmacy?${new URLSearchParams({ sido, sigungu })}`)}>
               조회
             </button>
           </div>
@@ -345,7 +344,14 @@ export default function MedicalPage() {
 
       {/* 힌트·상태 */}
       {tab === "medical" && mode.hint && <p className="med-hint">{mode.hint}</p>}
-      {status.msg && <div className={`med-status ${status.type || ""}`}>{status.msg}</div>}
+      {status.type === "loading" ? (
+        <div className="flex items-center gap-2 med-status loading">
+          <span className="inline-block w-4 h-4 border-2 border-rose/40 border-t-rose rounded-full animate-spin" />
+          {tab === "drug" ? "약 정보를 불러오는 중…" : "조회 중…"}
+        </div>
+      ) : (
+        status.msg && <div className={`med-status ${status.type || ""}`}>{status.msg}</div>
+      )}
 
       {/* 결과 그리드 + 페이지네이션 */}
       {items.length > 0 && (() => {
@@ -400,7 +406,6 @@ function ResultCard({ tab, modeId, item }: { tab: TabId; modeId: ModeId; item: a
     return <FacilityCard it={item} />;
   }
   if (tab === "drug") return <DrugCard it={item} />;
-  if (tab === "aed") return <AedCard it={item} />;
   if (tab === "night") return <NightCard it={item} />;
   if (tab === "screening") return <ScreeningCard it={item} />;
   return null;
@@ -554,16 +559,6 @@ function FacilityCard({ it }: { it: any }) {
         <TelBtn n={it.dutyTel1} />
         <MapBtn name={it.dutyName} lat={it.wgs84Lat} lon={it.wgs84Lon} />
       </div>
-    </article>
-  );
-}
-
-function AedCard({ it }: { it: any }) {
-  return (
-    <article className="med-card">
-      <h3>❤️ {it.name}</h3>
-      <p className="addr">📍 {it.address || it.place}</p>
-      {it.tel && <p className="meta">☎ {it.tel}</p>}
     </article>
   );
 }
