@@ -13,7 +13,7 @@ const MENU = [
   { href: "/local", icon: "🗺️", label: "우리 동네", bg: "bg-lavender/40" },
   { href: "/medical", icon: "🏥", label: "의료·약국", bg: "bg-mint/40" },
   { href: "/fever", icon: "🌡️", label: "해열제", bg: "bg-butter/50" },
-  { href: "/seoul", icon: "🎫", label: "서울 예약", bg: "bg-sky/40" },
+  { href: "/seoul", icon: "🎫", label: "공공서비스예약", bg: "bg-sky/40" },
 ];
 
 export default function HomeMenu() {

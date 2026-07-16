@@ -78,56 +78,52 @@ function ProfileModal({ initial, onClose, onSave, onClear }: {
 
   return (
     <div className="fixed inset-0 z-[60] bg-ink/40 flex items-end md:items-center justify-center" onClick={onClose}>
-      <div className="bg-cream w-full max-w-sm max-h-[80vh] overflow-y-auto rounded-t-blob md:rounded-blob p-4"
+      <div className="bg-cream w-full max-w-[290px] max-h-[75vh] overflow-y-auto rounded-t-blob md:rounded-blob p-3"
         onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-extrabold text-ink">🍼 우리 아기 정보</h2>
-          <button onClick={onClose} className="text-ink/50 text-2xl leading-none px-2">×</button>
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-sm font-extrabold text-ink">🍼 우리 아기 정보 <span className="font-semibold text-[10px] text-ink/40">(기기에만 저장)</span></h2>
+          <button onClick={onClose} className="text-ink/50 text-xl leading-none px-1">×</button>
         </div>
-        <p className="text-xs text-ink/60 mb-3">한 번만 입력하면 가이드·접종 D-day·계산기가 우리 아기 기준으로 맞춰져요. (기기에만 저장)</p>
 
-        <div className="space-y-2.5">
-          <div>
-            <label className="text-xs font-bold text-ink/60 block mb-1">애칭 (선택)</label>
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="예: 콩이"
-              className="w-full px-3 py-2 rounded-xl border-2 border-rose/30 bg-white text-sm" />
-          </div>
-          <div className="flex gap-1.5">
-            <Pill on={mode === "born"} onClick={() => setMode("born")}>이미 태어났어요</Pill>
-            <Pill on={mode === "due"} onClick={() => setMode("due")}>출산 예정이에요</Pill>
+        <div className="space-y-2">
+          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="애칭 (선택) — 예: 콩이"
+            className="w-full px-2.5 py-1.5 rounded-lg border-2 border-rose/30 bg-white text-xs" />
+          <div className="flex gap-1">
+            <Pill on={mode === "born"} onClick={() => setMode("born")}>태어났어요</Pill>
+            <Pill on={mode === "due"} onClick={() => setMode("due")}>출산 예정</Pill>
           </div>
           <div>
-            <label className="text-xs font-bold text-ink/60 block mb-1">{mode === "born" ? "생년월일" : "출산 예정일"}</label>
+            <label className="text-[10px] font-bold text-ink/50 block mb-0.5">{mode === "born" ? "생년월일" : "출산 예정일"}</label>
             <input type="date" value={date} onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border-2 border-rose/30 bg-white text-sm" />
+              className="w-full px-2.5 py-1.5 rounded-lg border-2 border-rose/30 bg-white text-xs" />
           </div>
           <div>
-            <label className="text-xs font-bold text-ink/60 block mb-1">출생 순위</label>
-            <div className="flex gap-1.5">
+            <label className="text-[10px] font-bold text-ink/50 block mb-0.5">출생 순위</label>
+            <div className="flex gap-1">
               <Pill on={birthOrder === "first"} onClick={() => setBirthOrder("first")}>첫째</Pill>
               <Pill on={birthOrder === "second"} onClick={() => setBirthOrder("second")}>둘째</Pill>
               <Pill on={birthOrder === "third"} onClick={() => setBirthOrder("third")}>셋째+</Pill>
             </div>
           </div>
           <div>
-            <label className="text-xs font-bold text-ink/60 block mb-1">거주 지역 (아동수당 기준)</label>
-            <div className="flex flex-wrap gap-1.5">
+            <label className="text-[10px] font-bold text-ink/50 block mb-0.5">거주 지역 (아동수당 기준)</label>
+            <div className="flex flex-wrap gap-1">
               <Pill on={region === "metro"} onClick={() => setRegion("metro")}>수도권</Pill>
               <Pill on={region === "nonmetro"} onClick={() => setRegion("nonmetro")}>비수도권</Pill>
-              <Pill on={region === "depop"} onClick={() => setRegion("depop")}>인구감소·특별</Pill>
+              <Pill on={region === "depop"} onClick={() => setRegion("depop")}>인구감소</Pill>
             </div>
           </div>
-          <div className="flex gap-1.5">
+          <div className="flex gap-1">
             <Pill on={!twins} onClick={() => setTwins(false)}>단태아</Pill>
-            <Pill on={twins} onClick={() => setTwins(true)}>다태아(쌍둥이)</Pill>
+            <Pill on={twins} onClick={() => setTwins(true)}>다태아</Pill>
           </div>
         </div>
 
-        <div className="mt-4 flex items-center gap-2">
+        <div className="mt-3 flex items-center gap-1.5">
           <button onClick={() => onSave({ name, mode, date, birthOrder, twins, region })}
-            className="btn-pop bg-rose text-white px-5 py-2 rounded-full font-bold flex-1 text-sm">저장하기</button>
+            className="btn-pop bg-rose text-white px-4 py-1.5 rounded-full font-bold flex-1 text-xs">저장하기</button>
           {onClear && (
-            <button onClick={onClear} className="btn-pop bg-white border-2 border-ink/10 text-ink/60 px-4 py-2 rounded-full font-bold text-sm">삭제</button>
+            <button onClick={onClear} className="btn-pop bg-white border-2 border-ink/10 text-ink/60 px-3 py-1.5 rounded-full font-bold text-xs">삭제</button>
           )}
         </div>
       </div>
@@ -138,7 +134,7 @@ function ProfileModal({ initial, onClose, onSave, onClear }: {
 function Pill({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button onClick={onClick}
-      className={`btn-pop px-2.5 py-1.5 rounded-full text-xs font-bold border-2 ${
+      className={`btn-pop px-2 py-1 rounded-full text-[11px] font-bold border-2 ${
         on ? "bg-rose text-white border-rose" : "bg-white text-ink border-rose/30"
       }`}>
       {children}
