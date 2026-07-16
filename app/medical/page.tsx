@@ -202,7 +202,7 @@ export default function MedicalPage() {
       <header className="px-1">
         <span className="chip bg-rose/40 text-ink">공공의료 정보</span>
         <h1 className="text-2xl md:text-4xl font-extrabold text-ink mt-2">🏥 우리 가족 의료 찾기</h1>
-        <p className="text-ink/70 text-sm md:text-base mt-1">국립중앙의료원 · 실시간 가용병상 · 외상센터 · 달빛어린이병원 · AED · 심야약국 · 서울 예약</p>
+        <p className="text-ink/70 text-sm md:text-base mt-1">국립중앙의료원 · 실시간 가용병상 · 외상센터 · 야간·휴일 소아진료 · 약 안전 · 심야약국</p>
       </header>
 
       {/* 상위 탭 */}
