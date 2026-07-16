@@ -115,8 +115,8 @@ export default function NavBar() {
 
           {/* 이용가이드 버튼 (항상 노출) */}
           <a href={GUIDE.href}
-            className="btn-pop flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold bg-white border-2 border-rose/30 text-ink hover:bg-rose/15">
-            <span>📖</span><span className="hidden sm:inline">이용가이드</span>
+            className="btn-pop flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold bg-white border-2 border-rose/30 text-ink hover:bg-rose/15 whitespace-nowrap">
+            <span>📖</span><span>이용가이드</span>
           </a>
 
           {/* 모바일 햄버거 */}

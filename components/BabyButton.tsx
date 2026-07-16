@@ -1,12 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useBaby, ageMonths, ageDays, todayISO, type Baby } from "@/lib/baby";
 
 // NavBar 좌측 상단 버튼 — 미입력 시 "아기 정보 입력하기", 입력 시 아이 이름 표시
 export default function BabyButton() {
   const [baby, setBaby, ready] = useBaby();
   const [open, setOpen] = useState(false);
+
+  // 아직 아기 정보를 입력하지 않았으면 팝업으로 유도 (세션당 1회)
+  useEffect(() => {
+    if (!ready || baby) return;
+    try {
+      if (!sessionStorage.getItem("ssook-baby-prompted")) {
+        setOpen(true);
+        sessionStorage.setItem("ssook-baby-prompted", "1");
+      }
+    } catch {
+      setOpen(true);
+    }
+  }, [ready, baby]);
 
   const born = baby?.mode === "born";
   const name = baby?.name?.trim() || "우리 아기";
