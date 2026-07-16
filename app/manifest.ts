@@ -9,12 +9,20 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/",
     scope: "/",
     display: "standalone",
+    display_override: ["standalone", "minimal-ui"],
     orientation: "portrait",
     dir: "ltr",
     background_color: "#FFF8F0",
     theme_color: "#FFB5C5",
     lang: "ko",
     categories: ["health", "lifestyle", "medical"],
+    // 앱 아이콘 재클릭 시 새 창 대신 기존 창 재사용
+    launch_handler: { client_mode: "navigate-existing" },
+    // 네이티브(TWA) 앱 ID 명시 — PWA를 우선 유지(prefer=false)
+    prefer_related_applications: false,
+    related_applications: [
+      { platform: "play", id: "app.vercel.ssook_portal.twa" },
+    ],
     icons: [
       { src: "/api/appicon?size=192", sizes: "192x192", type: "image/png", purpose: "any" },
       { src: "/api/appicon?size=512", sizes: "512x512", type: "image/png", purpose: "any" },

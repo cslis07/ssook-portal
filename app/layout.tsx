@@ -1,7 +1,6 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import NavBar from "@/components/NavBar";
-import ServiceWorker from "@/components/ServiceWorker";
 
 export const viewport: Viewport = {
   themeColor: "#FFB5C5",
@@ -40,7 +39,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body>
-        <ServiceWorker />
+        {/* SW 등록 조기화 — hydration 대기 없이 즉시 등록(PWABuilder 등 스캐너 검출 포함) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}",
+          }}
+        />
         <NavBar />
         <main className="max-w-6xl mx-auto px-4 py-8">{children}</main>
         <footer className="text-center text-xs text-ink/60 py-10">

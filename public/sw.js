@@ -1,5 +1,5 @@
 // 쑥쑥 포털 서비스워커 — 앱 셸 오프라인 캐시 (최소 구성)
-const CACHE = "ssook-v1";
+const CACHE = "ssook-v2";
 const SHELL = ["/", "/calculator", "/fever", "/checklist", "/timeline"];
 
 self.addEventListener("install", (e) => {
