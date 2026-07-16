@@ -68,11 +68,8 @@ export default function NavBar() {
   return (
     <header ref={navRef} className="sticky top-0 z-50 backdrop-blur bg-cream/85 border-b-2 border-rose/30">
       <nav className="max-w-6xl mx-auto px-4 py-2.5 flex items-center gap-2">
-        {/* 좌측: 아기 정보 버튼 + 로고(텍스트) */}
+        {/* 좌측: 아기 정보 버튼 */}
         <BabyButton />
-        <Link href="/" className="font-extrabold text-ink shrink-0 text-lg">
-          아이쑥쑥
-        </Link>
 
         {/* 우측 클러스터 */}
         <div className="ml-auto flex items-center gap-1">
