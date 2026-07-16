@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import BabyButton from "@/components/BabyButton";
 
 type Item = { href: string; label: string; icon: string; external?: boolean };
 type Group = { id: string; label: string; icon: string; items: Item[] };
@@ -67,58 +68,66 @@ export default function NavBar() {
 
   return (
     <header ref={navRef} className="sticky top-0 z-50 backdrop-blur bg-cream/85 border-b-2 border-rose/30">
-      <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-3">
-        <Link href="/" className="flex items-center gap-2 font-extrabold text-ink text-xl shrink-0">
+      <nav className="max-w-6xl mx-auto px-4 py-2.5 flex items-center gap-2">
+        {/* 좌측: 로고(아이콘) + 아기 정보 버튼 */}
+        <Link href="/" className="flex items-center gap-1.5 font-extrabold text-ink shrink-0">
           <span className="inline-block w-9 h-9 rounded-full bg-rose grid place-items-center shadow-soft">
             <span className="text-lg">🌱</span>
           </span>
-          <span>아이쑥쑥</span>
+          <span className="hidden sm:inline text-lg">아이쑥쑥</span>
         </Link>
+        <BabyButton />
 
-        {/* 데스크톱 메뉴 */}
-        <div className="ml-auto hidden md:flex items-center gap-1">
-          <NavLink href="/" active={pathname === "/"}>🏠 홈</NavLink>
-          {GROUPS.map((g) => (
-            <div key={g.id} className="relative">
-              <button
-                onClick={(e) => { e.stopPropagation(); setOpenGroup(openGroup === g.id ? null : g.id); }}
-                className={`btn-pop px-3 py-1.5 rounded-full text-sm font-semibold transition ${
-                  openGroup === g.id || isActiveGroup(g) ? "bg-rose/40 text-ink" : "text-ink hover:bg-rose/25"
-                }`}
-              >
-                <span className="mr-1">{g.icon}</span>{g.label}
-                <span className="ml-1 text-xs opacity-60">▾</span>
-              </button>
-              {openGroup === g.id && (
-                <div className="absolute right-0 mt-2 w-52 card p-2 shadow-pop z-50">
-                  {g.items.map((it) => (
-                    <Link
-                      key={it.href}
-                      href={it.href}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold transition ${
-                        pathname === it.href ? "bg-rose/30 text-ink" : "text-ink hover:bg-rose/15"
-                      }`}
-                    >
-                      <span>{it.icon}</span>{it.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-          <a href={GUIDE.href} className="btn-pop px-3 py-1.5 rounded-full text-sm font-semibold text-ink hover:bg-rose/25">
-            <span className="mr-1">{GUIDE.icon}</span>{GUIDE.label}
+        {/* 우측 클러스터 */}
+        <div className="ml-auto flex items-center gap-1">
+          {/* 데스크톱 메뉴 */}
+          <div className="hidden md:flex items-center gap-1">
+            <NavLink href="/" active={pathname === "/"}>🏠 홈</NavLink>
+            {GROUPS.map((g) => (
+              <div key={g.id} className="relative">
+                <button
+                  onClick={(e) => { e.stopPropagation(); setOpenGroup(openGroup === g.id ? null : g.id); }}
+                  className={`btn-pop px-3 py-1.5 rounded-full text-sm font-semibold transition ${
+                    openGroup === g.id || isActiveGroup(g) ? "bg-rose/40 text-ink" : "text-ink hover:bg-rose/25"
+                  }`}
+                >
+                  <span className="mr-1">{g.icon}</span>{g.label}
+                  <span className="ml-1 text-xs opacity-60">▾</span>
+                </button>
+                {openGroup === g.id && (
+                  <div className="absolute right-0 mt-2 w-52 card p-2 shadow-pop z-50">
+                    {g.items.map((it) => (
+                      <Link
+                        key={it.href}
+                        href={it.href}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold transition ${
+                          pathname === it.href ? "bg-rose/30 text-ink" : "text-ink hover:bg-rose/15"
+                        }`}
+                      >
+                        <span>{it.icon}</span>{it.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* 이용가이드 버튼 (항상 노출) */}
+          <a href={GUIDE.href}
+            className="btn-pop flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold bg-white border-2 border-rose/30 text-ink hover:bg-rose/15">
+            <span>📖</span><span className="hidden sm:inline">이용가이드</span>
           </a>
-        </div>
 
-        {/* 모바일 햄버거 */}
-        <button
-          onClick={(e) => { e.stopPropagation(); setMobileOpen((v) => !v); }}
-          className="ml-auto md:hidden w-10 h-10 grid place-items-center rounded-full bg-white border-2 border-rose/30 text-ink text-lg"
-          aria-label="메뉴"
-        >
-          {mobileOpen ? "✕" : "☰"}
-        </button>
+          {/* 모바일 햄버거 */}
+          <button
+            onClick={(e) => { e.stopPropagation(); setMobileOpen((v) => !v); }}
+            className="md:hidden w-10 h-10 grid place-items-center rounded-full bg-white border-2 border-rose/30 text-ink text-lg shrink-0"
+            aria-label="메뉴"
+          >
+            {mobileOpen ? "✕" : "☰"}
+          </button>
+        </div>
       </nav>
 
       {/* 모바일 메뉴 패널 */}
