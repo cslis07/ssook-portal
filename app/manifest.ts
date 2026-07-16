@@ -21,7 +21,11 @@ export default function manifest(): MetadataRoute.Manifest {
     // 네이티브(TWA) 앱 ID 명시 — PWA를 우선 유지(prefer=false)
     prefer_related_applications: false,
     related_applications: [
-      { platform: "play", id: "app.vercel.ssook_portal.twa" },
+      {
+        platform: "play",
+        id: "app.vercel.ssook_portal.twa",
+        url: "https://play.google.com/store/apps/details?id=app.vercel.ssook_portal.twa",
+      },
     ],
     icons: [
       { src: "/api/appicon?size=192", sizes: "192x192", type: "image/png", purpose: "any" },
