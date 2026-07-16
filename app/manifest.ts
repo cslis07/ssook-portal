@@ -20,6 +20,10 @@ export default function manifest(): MetadataRoute.Manifest {
       { src: "/api/appicon?size=512", sizes: "512x512", type: "image/png", purpose: "any" },
       { src: "/api/appicon?size=512", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
+    screenshots: [
+      { src: "/api/screenshot?f=narrow", sizes: "1080x1920", type: "image/png", form_factor: "narrow", label: "쑥쑥 포털 주요 기능" },
+      { src: "/api/screenshot?f=wide", sizes: "1920x1080", type: "image/png", form_factor: "wide", label: "쑥쑥 포털 주요 기능" },
+    ],
     // 앱 아이콘 롱프레스 → 바로가기 메뉴
     shortcuts: [
       { name: "지원금 계산기", short_name: "계산기", url: "/calculator", icons: [{ src: "/api/appicon?size=192", sizes: "192x192" }] },
