@@ -86,7 +86,7 @@ export default function LocalPage() {
         <span className="chip bg-sky/60 text-ink">우리 동네</span>
         <h1 className="text-2xl md:text-4xl font-extrabold text-ink mt-2">🗺️ 내 주변 아기 정보</h1>
         <p className="text-ink/70 mt-1 text-sm md:text-base">
-          어린이집·놀이터·예방접종·안전정보를 한 곳에서.
+          예방접종 기관·교통안전·어린이대공원 정보를 한 곳에서.
         </p>
       </header>
 

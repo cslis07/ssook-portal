@@ -12,17 +12,18 @@ export type LocalFeature = {
 };
 
 export const LOCAL_FEATURES: LocalFeature[] = [
-  {
-    id: "daycare",
-    title: "어린이집 찾기",
-    desc: "우리 동네 어린이집 정원·연락처 조회",
-    icon: "🏫",
-    color: "bg-rose/40",
-    apiSource: "보건복지부 아이사랑 (전국 어린이집 정보 cpmsapi021)",
-    endpoint: "/api/daycare",
-    searchType: "sigungu",
-    regionParam: "arcode",
-  },
+  // 🔒 어린이집 찾기(daycare)는 숨김 처리됨 — 필요 시 아래 블록을 복원.
+  // {
+  //   id: "daycare",
+  //   title: "어린이집 찾기",
+  //   desc: "우리 동네 어린이집 정원·연락처 조회",
+  //   icon: "🏫",
+  //   color: "bg-rose/40",
+  //   apiSource: "보건복지부 아이사랑 (전국 어린이집 정보 cpmsapi021)",
+  //   endpoint: "/api/daycare",
+  //   searchType: "sigungu",
+  //   regionParam: "arcode",
+  // },
   {
     id: "clinic",
     title: "예방접종 의료기관",
