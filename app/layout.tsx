@@ -62,10 +62,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <NavBar />
         <main className="max-w-6xl mx-auto px-4 py-8">{children}</main>
-        <footer className="text-center text-xs text-ink/60 py-10">
-          <p>🌱 아이쑥쑥 · 2026년 기준 정부·공공기관 자료 요약</p>
-          <p className="mt-1">최종 신청 전에는 복지로 · 정부24 · 관할 보건소·주민센터에서 다시 확인해주세요.</p>
-          <p className="mt-2">
+        <footer className="text-center text-xs text-ink/60 py-10 px-4">
+          <p>🌱 아이쑥쑥 · 2026년 기준 정부·공공기관 공개 자료 요약</p>
+          <p className="mt-1 font-semibold text-ink/70">
+            ※ 본 앱은 정부·공공기관이 운영하거나 정부와 제휴한 앱이 아니며, 어떠한 정부 기관도 대표하지 않습니다.
+          </p>
+          <p className="mt-1">앱의 정보는 아래 공식 출처의 공개 자료를 요약·안내한 참고용입니다. 최종 신청 전에는 반드시 공식 사이트·관할 기관에서 확인하세요.</p>
+          <div className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1">
+            <a href="https://www.bokjiro.go.kr" target="_blank" rel="noopener" className="underline hover:text-rose">복지로</a>
+            <a href="https://www.gov.kr" target="_blank" rel="noopener" className="underline hover:text-rose">정부24</a>
+            <a href="https://www.mohw.go.kr" target="_blank" rel="noopener" className="underline hover:text-rose">보건복지부</a>
+            <a href="https://nip.kdca.go.kr" target="_blank" rel="noopener" className="underline hover:text-rose">예방접종도우미</a>
+            <a href="https://www.nhis.or.kr" target="_blank" rel="noopener" className="underline hover:text-rose">국민건강보험공단</a>
+            <a href="https://www.childcare.go.kr" target="_blank" rel="noopener" className="underline hover:text-rose">아이사랑</a>
+          </div>
+          <p className="mt-3">
             <a href="/privacy" className="underline hover:text-rose">개인정보 처리방침 · 이용안내</a>
             <span className="mx-2">·</span>
             <a href="/guide.html" className="underline hover:text-rose">이용가이드</a>
