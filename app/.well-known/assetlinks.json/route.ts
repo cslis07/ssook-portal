@@ -8,17 +8,21 @@ export const dynamic = "force-static";
 
 export function GET() {
   const pkg = process.env.TWA_PACKAGE?.trim();
-  const sha = process.env.TWA_SHA256?.trim();
+  // 콤마로 구분해 여러 지문 지원 (Play 앱 서명 키 + 업로드 키를 함께 넣으면 안전)
+  const shas = (process.env.TWA_SHA256 ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
 
   const statements =
-    pkg && sha
+    pkg && shas.length
       ? [
           {
             relation: ["delegate_permission/common.handle_all_urls"],
             target: {
               namespace: "android_app",
               package_name: pkg,
-              sha256_cert_fingerprints: [sha],
+              sha256_cert_fingerprints: shas,
             },
           },
         ]
