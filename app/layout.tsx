@@ -4,6 +4,8 @@ import NavBar from "@/components/NavBar";
 
 export const viewport: Viewport = {
   themeColor: "#FFB5C5",
+  // Android 15+ edge-to-edge 대응 — 시스템 바 뒤까지 그리고 safe-area로 인셋 처리
+  viewportFit: "cover",
 };
 
 export const metadata: Metadata = {
@@ -61,8 +63,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <NavBar />
-        <main className="max-w-6xl mx-auto px-4 py-8">{children}</main>
-        <footer className="text-center text-xs text-ink/60 py-10 px-4">
+        <main className="max-w-6xl mx-auto py-8 px-gutter-safe">{children}</main>
+        <footer className="text-center text-xs text-ink/60 pt-10 pb-gutter-safe px-gutter-safe">
           <p>🌱 아이쑥쑥 · 2026년 기준 정부·공공기관 공개 자료 요약</p>
           <p className="mt-1 font-semibold text-ink/70">
             ※ 본 앱은 정부·공공기관이 운영하거나 정부와 제휴한 앱이 아니며, 어떠한 정부 기관도 대표하지 않습니다.

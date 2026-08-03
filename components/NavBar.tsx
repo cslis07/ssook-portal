@@ -66,7 +66,7 @@ export default function NavBar() {
   const isActiveGroup = (g: Group) => g.items.some((it) => pathname === it.href);
 
   return (
-    <header ref={navRef} className="sticky top-0 z-50 backdrop-blur bg-cream/85 border-b-2 border-rose/30">
+    <header ref={navRef} className="sticky top-0 z-50 backdrop-blur bg-cream/85 border-b-2 border-rose/30 pt-safe px-safe">
       <nav className="max-w-6xl mx-auto px-4 py-2.5 flex items-center gap-2">
         {/* 좌측: 홈 버튼(모바일 전용 — 데스크톱은 메뉴에 🏠 홈 있음) + 아기 정보 버튼 */}
         <Link href="/" aria-label="홈으로"

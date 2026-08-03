@@ -10,7 +10,8 @@ export default function manifest(): MetadataRoute.Manifest {
     scope: "/",
     display: "standalone",
     display_override: ["standalone", "minimal-ui"],
-    orientation: "portrait",
+    // Android 16부터 대형화면(폴더블·태블릿)에서 방향 제한이 무시됨 → 제한하지 않음
+    orientation: "any",
     dir: "ltr",
     background_color: "#FFF8F0",
     theme_color: "#FFB5C5",

@@ -12,6 +12,22 @@ html, body {
   min-height: 100%;
 }
 
+/* ---- Android 15+ edge-to-edge 안전 영역(노치·상태바·제스처바) ---- */
+.pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+/* 푸터용 — 기본 여백에 제스처바 인셋을 더함 */
+.pb-gutter-safe { padding-bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px)); }
+/* 자식이 자체 좌우 여백을 갖는 컨테이너용(순수 인셋) */
+.px-safe {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+/* 본문·푸터용 — 기본 여백 1rem을 보장하면서 인셋이 더 크면 그만큼 확보 */
+.px-gutter-safe {
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+}
+
 /* ---- 스플래시: 새싹이 자라는 앱 진입 화면 ---- */
 #splash {
   position: fixed;
