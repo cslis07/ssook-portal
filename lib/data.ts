@@ -58,7 +58,7 @@ export const TIMELINE = [
     color: "mint",
     icon: "🌿",
     items: [
-      "아기침대·카시트·속싸개 등 필수 준비물 (체크리스트 참고)",
+      "카시트·속싸개 등 필수 준비물 (체크리스트 참고)",
       "출산가방 준비 (산모/아기/보호자)",
       "보건소 유축기 예약 (선착순 마감 주의)",
       "출산 예정 40일 전 → 산모·신생아 건강관리 신청",
@@ -127,11 +127,11 @@ export const CHECKLIST: { mustHave: ChecklistCategory[]; later: ChecklistItem[];
       title: "수면",
       icon: "🛏️",
       items: [
-        { name: "아기침대 (단단한 매트리스)", note: "범퍼·베개·포지셔너 NO" },
         { name: "방수커버", qty: "1~2개" },
         { name: "고정형 침대시트", qty: "2~3장" },
         { name: "수면조끼 / 슬립색", note: "계절에 맞게" },
-        { name: "속싸개", qty: "2~3개" },
+        { name: "속싸개", qty: "2~3개", note: "병원·조리원에서 주기도 함" },
+        { name: "방수패드", qty: "미니·미듐 몇 장", note: "수유·기저귀 교환 때 유용" },
       ],
     },
     {
@@ -139,11 +139,16 @@ export const CHECKLIST: { mustHave: ChecklistCategory[]; later: ChecklistItem[];
       icon: "🧷",
       items: [
         { name: "신생아 기저귀", qty: "1~2팩", note: "샘플로 핏 테스트 후" },
-        { name: "무향 물티슈" },
+        { name: "무향 물티슈", qty: "넉넉히" },
         { name: "방수 기저귀 교환매트" },
-        { name: "발진크림" },
+        { name: "발진크림 (비판텐 등)" },
+        { name: "수딩젤" },
+        { name: "베이비 로션·바디워시", note: "아토팜·제로이드·프리마쥬 등" },
+        { name: "아기 전용 세탁세제" },
         { name: "디지털 체온계" },
         { name: "콧물흡입기 + 생리식염수" },
+        { name: "아기 손톱가위 / 손톱깎이 세트" },
+        { name: "면봉" },
         { name: "아기 욕조 + 후드타월", qty: "타월 2장" },
       ],
     },
@@ -151,10 +156,11 @@ export const CHECKLIST: { mustHave: ChecklistCategory[]; later: ChecklistItem[];
       title: "의류",
       icon: "👕",
       items: [
-        { name: "배냇저고리 / 바디수트", qty: "5~7벌" },
+        { name: "배냇저고리 / 바디수트", qty: "5~7벌", note: "선물로 많이 받음" },
         { name: "우주복·내의", qty: "3~5벌" },
-        { name: "손수건", qty: "20장" },
+        { name: "손수건", qty: "20~40장" },
         { name: "턱받이·트림수건", qty: "5장+" },
+        { name: "아기양말", qty: "몇 켤레" },
         { name: "계절용 외출복", qty: "1~2벌" },
       ],
     },
@@ -162,9 +168,10 @@ export const CHECKLIST: { mustHave: ChecklistCategory[]; later: ChecklistItem[];
       title: "수유",
       icon: "🍼",
       items: [
-        { name: "젖병", qty: "2~4개" },
-        { name: "신생아용 젖꼭지" },
-        { name: "젖병솔 + 건조대" },
+        { name: "젖병", qty: "160ml·240ml", note: "조리원 제공품 써보고 브랜드 결정" },
+        { name: "신생아용 젖꼭지", note: "1단계부터 단계별" },
+        { name: "젖병세제 + 젖병솔·젖꼭지솔" },
+        { name: "젖병 건조대·보관함" },
         { name: "수유쿠션" },
         { name: "모유저장팩", qty: "소량" },
       ],
@@ -174,22 +181,38 @@ export const CHECKLIST: { mustHave: ChecklistCategory[]; later: ChecklistItem[];
       icon: "🚗",
       items: [
         { name: "뒤보기 카시트", note: "법적 필수" },
-        { name: "유모차 또는 신생아 호환 바구니" },
+        { name: "바구니 카시트", note: "퇴원·외출 시 필요" },
+        { name: "유모차", note: "디럭스 절충형 多 · 당근 중고 추천(리안·스토케)" },
         { name: "아기띠는 출산 후 직접 착용 후 구매" },
+      ],
+    },
+    {
+      title: "외출·놀이·기타",
+      icon: "🧸",
+      items: [
+        { name: "기저귀 가방" },
+        { name: "온·습도계" },
+        { name: "초점책" },
+        { name: "타이니 모빌" },
+        { name: "쪽쪽이", qty: "2개" },
+        { name: "아기 수납장·정리함" },
       ],
     },
   ],
   later: [
     { name: "유축기", note: "보건소 대여 먼저 확인" },
-    { name: "분유포트" },
+    { name: "분유포트", note: "자동출수·일반 전기포트 비교 후" },
     { name: "젖병소독기", note: "열탕·식기세척기로 대체 가능" },
     { name: "역류방지쿠션" },
+    { name: "짱구베개", note: "100일 이후" },
+    { name: "아기 침구 세트", note: "100일 이후" },
     { name: "바운서" },
     { name: "아기 모니터" },
     { name: "기저귀 쓰레기통" },
     { name: "가습기" },
   ],
   avoid: [
+    { name: "아기침대 꽉 채우는 범퍼·베개·포지셔너", note: "질식 위험 (매트리스는 단단한 것만)" },
     { name: "수면 포지셔너", note: "질식 위험" },
     { name: "신생아 베개" },
     { name: "침대 범퍼" },
@@ -200,6 +223,70 @@ export const CHECKLIST: { mustHave: ChecklistCategory[]; later: ChecklistItem[];
     { name: "손싸개 장기 사용", note: "감각 발달 방해" },
   ],
 };
+
+// 출산가방(병원·조리원) 체크리스트 — 산모 / 아기 / 보호자
+export const HOSPITAL_BAG: ChecklistCategory[] = [
+  {
+    title: "산모",
+    icon: "🤰",
+    items: [
+      { name: "산모수첩 · 신분증 · 조리원 계약서" },
+      { name: "구부러지는 빨대컵 / 텀블러" },
+      { name: "세면도구", note: "칫솔·치약·폼클렌징·바디워시·샴푸·샤워타올" },
+      { name: "기초케어 · 튼살크림 · 바디로션" },
+      { name: "수건", qty: "6장" },
+      { name: "속옷", qty: "6세트" },
+      { name: "오버나이트 · 맘스안심팬티 · 팬티라이너", qty: "각 1팩" },
+      { name: "수유패드", qty: "넉넉히", note: "물 적셔 얼려 가슴 찜질에도" },
+      { name: "회음부 방석" },
+      { name: "손목보호대 · 압박레깅스 · 수면양말" },
+      { name: "영양제 · 겉옷 · 지퍼백 · 물티슈 · 휴지" },
+    ],
+  },
+  {
+    title: "아기",
+    icon: "👶",
+    items: [
+      { name: "배냇저고리 · 속싸개 · 겉싸개", note: "병원·조리원 제공 많음 — 퇴원복 위주" },
+      { name: "신생아 기저귀 · 물티슈" },
+      { name: "손수건", qty: "5장+" },
+      { name: "바구니 카시트", note: "퇴원 시 필수" },
+    ],
+  },
+  {
+    title: "보호자",
+    icon: "🧑",
+    items: [
+      { name: "세면도구 · 갈아입을 옷" },
+      { name: "간식 · 휴대폰 충전기" },
+    ],
+  },
+];
+
+// 준비물 관련 꿀팁 (절약·신청 정보)
+export const CHECKLIST_TIPS: { icon: string; title: string; body: string; link?: { label: string; url: string } }[] = [
+  {
+    icon: "🛍️",
+    title: "맘큐 임산부 체험키트",
+    body: "배송비(약 3,500원)만으로 하기스 기저귀·맘스안심팬티·물티슈·라이너 등 샘플을 받을 수 있어요. '임산부 체험키트'로 신청하면 되고, 맘스안심팬티는 조리원 준비물로 챙기기 좋아요. 추천인을 입력하면 5천원이 적립돼요.",
+    link: { label: "momq.co.kr", url: "https://www.momq.co.kr" },
+  },
+  {
+    icon: "🚗",
+    title: "유모차·카시트는 중고도 OK",
+    body: "사용 기간이 길지 않아 당근 등 중고 거래를 추천해요. 리안·스토케가 특히 인기이고, 디럭스 절충형을 많이 사용해요.",
+  },
+  {
+    icon: "🍼",
+    title: "젖병은 조리원 제공품부터",
+    body: "아이마다 맞는 브랜드가 달라요. 조리원에서 주는 젖병을 써보다가 아이에게 맞는 걸로 바꾸는 것을 추천해요.",
+  },
+  {
+    icon: "💡",
+    title: "고효율 가전 구매비용 지원",
+    body: "1등급 가전제품 구매비의 10%를 돌려받을 수 있어요(출산 가정도 대상). 매해 초 예산이 소진되기 전 선착순이라 가전은 출산 후 구매가 유리해요. 네이버에 '고효율 가전제품 구매비용 지원사업'을 검색하면 한전 신청 링크가 나와요.",
+  },
+];
 
 export const UTILITY = [
   {

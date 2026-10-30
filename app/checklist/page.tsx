@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CHECKLIST } from "@/lib/data";
+import { CHECKLIST, HOSPITAL_BAG, CHECKLIST_TIPS } from "@/lib/data";
 
 const STORAGE_KEY = "ssook-checklist-v1";
 
@@ -82,6 +82,64 @@ export default function ChecklistPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section>
+        <h2 className="text-2xl font-extrabold text-ink mb-3">🧳 출산가방 (병원·조리원)</h2>
+        <p className="text-ink/60 text-sm mb-3">입원·조리원 입소 때 챙길 것들. 산모·아기 용품은 병원에서 제공되는 경우도 있으니 미리 확인하세요.</p>
+        <div className="grid md:grid-cols-3 gap-4">
+          {HOSPITAL_BAG.map((cat) => (
+            <div key={cat.title} className="card p-5">
+              <div className="font-extrabold text-ink mb-3 flex items-center gap-2">
+                <span className="text-2xl">{cat.icon}</span> {cat.title}
+              </div>
+              <ul className="space-y-2">
+                {cat.items.map((item) => {
+                  const k = `bag:${cat.title}:${item.name}`;
+                  const isOn = checked[k];
+                  return (
+                    <li key={item.name}>
+                      <label className="flex items-start gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={!!isOn}
+                          onChange={() => toggle(k)}
+                          className="mt-1 w-5 h-5 accent-rose"
+                        />
+                        <div className={isOn ? "line-through text-ink/40" : ""}>
+                          <span className="font-semibold text-ink">{item.name}</span>
+                          {item.qty && <span className="text-ink/60 ml-1 text-sm">({item.qty})</span>}
+                          {item.note && <div className="text-xs text-ink/55 mt-0.5">{item.note}</div>}
+                        </div>
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-2xl font-extrabold text-ink mb-3">💡 준비물 꿀팁</h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          {CHECKLIST_TIPS.map((tip) => (
+            <div key={tip.title} className="card p-5 bg-butter/20">
+              <div className="font-extrabold text-ink flex items-center gap-2">
+                <span className="text-xl">{tip.icon}</span> {tip.title}
+              </div>
+              <p className="text-sm text-ink/75 mt-2 leading-relaxed">{tip.body}</p>
+              {tip.link && (
+                <a href={tip.link.url} target="_blank" rel="noopener"
+                  className="inline-block mt-2 text-sm font-bold text-rose underline">
+                  {tip.link.label} →
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-ink/45 mt-3">※ 체험키트·지원사업 등은 운영사·정부 정책에 따라 조건이 바뀔 수 있어요. 신청 전 공식 페이지에서 확인하세요.</p>
       </section>
 
       <section>
