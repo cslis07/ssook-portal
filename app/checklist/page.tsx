@@ -30,6 +30,13 @@ export default function ChecklistPage() {
   );
   const pct = Math.round((doneMust / totalMust) * 100);
 
+  const totalBag = HOSPITAL_BAG.reduce((n, c) => n + c.items.length, 0);
+  const doneBag = HOSPITAL_BAG.reduce(
+    (n, c) => n + c.items.filter((i) => checked[`bag:${c.title}:${i.name}`]).length,
+    0
+  );
+  const pctBag = Math.round((doneBag / totalBag) * 100);
+
   return (
     <div className="space-y-8">
       <header>
@@ -87,6 +94,15 @@ export default function ChecklistPage() {
       <section>
         <h2 className="text-2xl font-extrabold text-ink mb-3">🧳 출산가방 (병원·조리원)</h2>
         <p className="text-ink/60 text-sm mb-3">입원·조리원 입소 때 챙길 것들. 산모·아기 용품은 병원에서 제공되는 경우도 있으니 미리 확인하세요.</p>
+        <div className="card p-5 bg-mint/20 mb-4">
+          <div className="flex justify-between items-center mb-2">
+            <span className="font-extrabold text-ink">출산가방 진행률</span>
+            <span className="font-extrabold text-mint">{doneBag} / {totalBag} ({pctBag}%)</span>
+          </div>
+          <div className="w-full bg-white rounded-full h-3 overflow-hidden">
+            <div className="h-full bg-mint transition-all" style={{ width: `${pctBag}%` }} />
+          </div>
+        </div>
         <div className="grid md:grid-cols-3 gap-4">
           {HOSPITAL_BAG.map((cat) => (
             <div key={cat.title} className="card p-5">
