@@ -36,6 +36,9 @@ export default function CalculatorPage() {
         <h1 className="text-3xl md:text-4xl font-extrabold text-ink mt-2">🧮 우리 가족 받을 금액</h1>
         <p className="text-ink/70 mt-2">중앙정부 대표 지원금만 합산했어요. 지자체·산후도우미·세제 혜택은 별도예요.</p>
         {prefilled && <p className="text-xs text-mint font-bold mt-1">✓ 우리 아기 프로필로 자동 채웠어요</p>}
+        <a href="/support#reform-2027" className="mt-2 block text-xs text-ink/70 bg-[#FFF4EA] border border-[#FFE2C9] rounded-xl px-3 py-2">
+          ℹ️ 이 계산은 <b>현행 제도(2027년 6월 30일까지 출생)</b> 기준이에요. 2027년 7월 이후 출생아는 아이맞이지원금·아동기본수당 개편안(국회 심의 중)이 적용될 수 있어요 <span className="underline">개편안 보기</span>
+        </a>
       </header>
 
       <section className="card p-6 grid md:grid-cols-2 gap-6">
@@ -119,7 +122,7 @@ function ShareButton({ total, order }: { total: number; order: "first" | "second
 
   async function onShare() {
     const url = "https://ssook-portal.vercel.app/calculator";
-    const text = `우리 아기(${orderKo}) 2026년 예상 출산·육아 지원금 약 ${amount}만원! 🍼\n아이쑥쑥에서 우리 가족 받을 금액도 계산해보세요 🌱`;
+    const text = `우리 아기(${orderKo}) 예상 출산·육아 지원금(현행 제도) 약 ${amount}만원! 🍼\n아이쑥쑥에서 우리 가족 받을 금액도 계산해보세요 🌱`;
     // 모바일: 네이티브 공유 시트
     if (typeof navigator !== "undefined" && (navigator as any).share) {
       try {

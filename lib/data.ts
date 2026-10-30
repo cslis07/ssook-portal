@@ -15,18 +15,39 @@ export type Support = {
 };
 
 export const SUPPORTS: Support[] = [
-  { key: "first", name: "첫만남이용권", amount: "첫째 200만 · 둘째↑ 300만", detail: "출생 후 2년 이내 사용. 국민행복카드 포인트.", apply: "행복출산 원스톱", category: "바우처", icon: "🎁" },
-  { key: "parent0", name: "부모급여 (0세)", amount: "월 100만원", detail: "0~11개월 매월 25일 현금 지급.", apply: "복지로 / 행복출산", category: "현금", icon: "👶" },
-  { key: "parent1", name: "부모급여 (1세)", amount: "월 50만원", detail: "12~23개월 매월 25일 현금 지급.", apply: "복지로 / 행복출산", category: "현금", icon: "🍼" },
-  { key: "child", name: "아동수당", amount: "월 10~13만원", detail: "만 9세 미만. 비수도권·인구감소지역 추가.", apply: "복지로 / 행복출산", category: "현금", icon: "💝" },
+  { key: "first", name: "첫만남이용권", amount: "첫째 200만 · 둘째↑ 300만", detail: "출생 후 2년 이내 사용. 국민행복카드 포인트. 2027년 6월 30일 이전 출생아까지 (이후 출생아는 아이맞이지원금으로 개편 예정)", apply: "행복출산 원스톱", category: "바우처", icon: "🎁" },
+  { key: "parent0", name: "부모급여 (0세)", amount: "월 100만원", detail: "0~11개월 매월 25일 현금 지급. 2027년 6월 30일 이전 출생아까지.", apply: "복지로 / 행복출산", category: "현금", icon: "👶" },
+  { key: "parent1", name: "부모급여 (1세)", amount: "월 50만원", detail: "12~23개월 매월 25일 현금 지급. 2027년 6월 30일 이전 출생아까지.", apply: "복지로 / 행복출산", category: "현금", icon: "🍼" },
+  { key: "child", name: "아동수당", amount: "월 10~12만원", detail: "2027년 만 10세 미만 (매년 1세씩 확대, 2030년 13세 미만). 수도권 10만·비수도권 10.5만·인구감소지역 11~12만원.", apply: "복지로 / 행복출산", category: "현금", icon: "💝" },
   { key: "med", name: "임신·출산 진료비", amount: "단태아 100만 · 다태아 140만+", detail: "국민행복카드 바우처. 2세 미만 아동 진료에도 사용.", apply: "국민행복카드", category: "바우처", icon: "🏥" },
   { key: "elec", name: "출산가구 전기요금", amount: "30%, 월 1.6만원 한도", detail: "출생 후 3년. 신청한 시점부터 적용 (소급 불가).", apply: "한전 123 / 한전ON", category: "감면", icon: "💡" },
   { key: "gas", name: "도시가스 (다자녀)", amount: "동절기 월 6,000~18,000원", detail: "3자녀 이상 또는 사회배려대상.", apply: "도시가스사 / 정부24", category: "감면", icon: "🔥" },
   { key: "diaper", name: "기저귀 바우처", amount: "월 9만원", detail: "기초생활·차상위·한부모 등. 최대 24개월.", apply: "보건소 / 복지로", category: "바우처", icon: "🧷" },
   { key: "formula", name: "조제분유 바우처", amount: "월 11만원", detail: "모유수유 불가 사유 인정 시. 최대 24개월.", apply: "보건소 / 복지로", category: "바우처", icon: "🍼" },
   { key: "doula", name: "산모·신생아 건강관리", amount: "5~40일 산후도우미", detail: "출산예정 40일 전 ~ 출산 후 60일 신청.", apply: "보건소 / 복지로", category: "바우처", icon: "🤱" },
-  { key: "leave", name: "육아휴직 급여 (1~3개월)", amount: "통상임금 100%, 月 250만원", detail: "사후지급금 폐지, 매월 전액 지급.", apply: "고용24", category: "휴직", icon: "💼" },
+  { key: "leave", name: "육아휴직 급여 (1~3개월)", amount: "통상임금 100%, 月 250만원", detail: "1~3개월 월 250만·4~6개월 월 200만·7개월부터 월 160만원 상한. 사후지급금 폐지, 매월 전액 지급.", apply: "고용24", category: "휴직", icon: "💼" },
   { key: "leave2", name: "6+6 부모육아휴직제", amount: "최대 月 450만원", detail: "생후 18개월 내 부모 모두 사용 시 단계 상향.", apply: "고용24", category: "휴직", icon: "👨‍👩‍👧" },
+];
+
+// ===== 2027년 개편안 (정부안 · 국회 심의 중) =====
+// 출처: 보건복지부 보도자료(2026.8.28 2027년 핵심 예산, 2026.9.1 2027년 예산안), 베이비뉴스 정리(2026.9.15·10.28)
+// ⚠️ 국회 예산·아동수당법 개정 심의 결과에 따라 금액·대상·시기가 바뀔 수 있음. 확정 전까지 '정부안'으로만 표시.
+export const REFORM_2027 = {
+  asOf: "2026년 10월 30일",
+  status: "정부안 · 국회 심의 중",
+  appliesTo: "2027년 7월 1일 이후 출생아 (1~6월 출생아 소급 적용은 검토 중, 미확정)",
+  legacy: "2027년 6월 30일까지 태어난 아이는 지금의 첫만남이용권·부모급여·아동수당을 그대로 받아요.",
+  sources: [
+    { label: "보건복지부 보도자료 (2026.8.28)", url: "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156775938" },
+    { label: "정책브리핑 · 아동수당 단계적 확대", url: "https://www.korea.kr/news/policyNewsView.do?newsId=148961693" },
+  ],
+};
+
+export const SUPPORTS_2027: Support[] = [
+  { key: "welcome", name: "아이맞이지원금", amount: "첫째 1,000만 · 둘째 1,200만 · 셋째↑ 1,500만", detail: "출생 후 1년간 분기별 4회 현금 분할 지급. 우대지역(행정안전부 지역우대지수) 출생 시 500만원 추가 — 최대 2,000만원. 첫만남이용권·부모급여를 대체.", apply: "2027.7.1 이후 출생아 (정부안)", category: "현금", icon: "🎉" },
+  { key: "basic", name: "아동기본수당", amount: "월 20만원 (우대지역 30만원)", detail: "절반은 현금, 절반은 지역사랑상품권. 0~1세를 어린이집 대신 가정에서 돌보면 월 30만원 추가. 대상 연령은 매년 1세씩 늘려 2030년 13세 미만까지. 아동수당을 대체.", apply: "2027.7.1 이후 출생아 (정부안)", category: "현금", icon: "🌱" },
+  { key: "marriage", name: "혼인지원금", amount: "1인 50만 · 부부 100만원", detail: "평생 1회. 2027년 1월 1일 이후 혼인신고 부부, 나이·소득 기준 없음. 2027년 하반기부터 계좌 지급 예정(혼인세액공제 대체).", apply: "2027.1.1 이후 혼인신고 (정부안)", category: "현금", icon: "💍" },
+  { key: "selfemp", name: "육아수당 (고용보험 밖 부모)", amount: "150만원", detail: "1인 자영업자·특수고용직·프리랜서 등 고용보험 미가입 부모 대상. 2027년 첫 지급 목표, 세부 기준은 추후 발표.", apply: "세부 기준 추후 발표 (정부안)", category: "휴직", icon: "🧑‍💻" },
 ];
 
 export const TIMELINE = [

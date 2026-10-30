@@ -120,7 +120,11 @@ function SupportCard({ baby, ready }: { baby: Baby | null; ready: boolean }) {
             <span className="ss-m">예상 지원금 총액</span>
           </p>
           <p className="ss-amount">약 {Math.round(r.total).toLocaleString()}<small>만원</small></p>
-          <p className="ss-caption" style={{ marginTop: 2 }}>가정양육·24개월 기준 예상치 · 실제와 다를 수 있어요</p>
+          <p className="ss-caption" style={{ marginTop: 2 }}>
+            {baby && baby.date >= "2027-07-01"
+              ? <>현행 제도 기준이에요 · 2027.7 이후 출생은 <Link href="/support#reform-2027" style={{ textDecoration: "underline" }}>개편안(심의 중)</Link> 적용 예정</>
+              : "가정양육·24개월 기준 예상치 · 실제와 다를 수 있어요"}
+          </p>
           <Link href="/calculator" className="ss-card-go" aria-label="지원금 계산기에서 자세히 보기"><IconChevronRight size={20} strokeWidth={2.2} /></Link>
         </>
       ) : (
