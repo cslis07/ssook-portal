@@ -10,7 +10,6 @@ const MENU = [
   { href: "/growth", icon: "🌷", label: "월령별 성장", bg: "#EBF3FE" },
   { href: "/checklist", icon: "🎀", label: "출산준비물", bg: "#FDEDEF" },
   { href: "/utility", icon: "💡", label: "공과금혜택", bg: "#FDF1E4" },
-  { href: "/local", icon: "🗺️", label: "우리 동네", bg: "#EFEBFB" },
   { href: "/medical", icon: "🏥", label: "의료·약국", bg: "#EAF6EE" },
   { href: "/fever", icon: "🌡️", label: "해열제", bg: "#FFF5DA" },
   { href: "/seoul", icon: "🎫", label: "공공서비스예약", bg: "#EBF3FE" },

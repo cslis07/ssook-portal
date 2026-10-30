@@ -5,14 +5,14 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { groupOf } from "@/lib/nav";
 import MenuSheet from "./MenuSheet";
-import { IconGift, IconHome, IconPin, IconSprout, IconUser } from "./Icons";
+import { IconGift, IconHome, IconMedical, IconSprout, IconUser } from "./Icons";
 
-// 모바일 하단 5탭 (DESIGN_SPEC §4: 홈 / 혜택 / 성장 / 동네 / 내 정보). 899px 이하에서만 보임
+// 모바일 하단 5탭: 홈 / 혜택 / 성장 / 생활(의료) / 내 정보. 899px 이하에서만 보임 (우리 동네 기능 제거로 동네 → 생활)
 const TABS = [
   { key: "home", href: "/", label: "홈", Icon: IconHome },
   { key: "benefit", href: "/support", label: "혜택", Icon: IconGift },
   { key: "grow", href: "/calendar", label: "성장", Icon: IconSprout },
-  { key: "local", href: "/local", label: "동네", Icon: IconPin },
+  { key: "life", href: "/medical", label: "생활", Icon: IconMedical },
 ];
 
 export default function MobileTabBar() {

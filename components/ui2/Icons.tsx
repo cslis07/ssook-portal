@@ -19,6 +19,7 @@ export const IconHome = (p: P) => <S {...p}><path d="M4 11 12 4l8 7" /><path d="
 export const IconGift = (p: P) => <S {...p}><rect x="4" y="8" width="16" height="12" rx="2" /><path d="M4 12h16M12 8v12" /><path d="M12 8S10.5 4 8.5 4.5 7.5 8 12 8ZM12 8s1.5-4 3.5-3.5S16.5 8 12 8Z" /></S>;
 export const IconSprout = (p: P) => <S {...p}><path d="M12 20v-8" /><path d="M12 12c0-3.5-2.5-6-6.5-6 0 3.5 2.5 6 6.5 6Z" /><path d="M12 13c0-3 2.2-5.5 6.5-5.5 0 3-2.2 5.5-6.5 5.5Z" /></S>;
 export const IconPin = (p: P) => <S {...p}><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 1 1 13 0c0 5-6.5 11-6.5 11Z" /><circle cx="12" cy="10" r="2.3" /></S>;
+export const IconMedical = (p: P) => <S {...p}><rect x="4" y="7" width="16" height="13" rx="2.5" /><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7" /><path d="M12 10.5v6M9 13.5h6" /></S>;
 export const IconUser = (p: P) => <S {...p}><circle cx="12" cy="8.5" r="3.8" /><path d="M4.5 20c1.2-3.6 4.2-5.5 7.5-5.5s6.3 1.9 7.5 5.5" /></S>;
 export const IconMenu = (p: P) => <S {...p}><path d="M4 7h16M4 12h16M4 17h16" /></S>;
 

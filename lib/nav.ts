@@ -30,21 +30,13 @@ export const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
-    id: "local",
-    label: "우리동네",
-    short: "동네",
-    items: [
-      { href: "/local", label: "우리 동네", desc: "예방접종기관·안전정보" },
-      { href: "/seoul", label: "공공서비스예약", desc: "서울시 공공예약" },
-    ],
-  },
-  {
     id: "life",
     label: "생활·의료",
     short: "의료",
     items: [
       { href: "/medical", label: "의료·약국", desc: "응급실·소아진료·약 검색" },
       { href: "/fever", label: "해열제", desc: "몸무게별 용량·대처법" },
+      { href: "/seoul", label: "공공서비스예약", desc: "서울시 공공예약" },
     ],
   },
 ];

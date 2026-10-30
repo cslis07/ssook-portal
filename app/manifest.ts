@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     id: "/",
     name: "아이쑥쑥 · 2026 출산·육아 올인원",
     short_name: "아이쑥쑥",
-    description: "2026 출산·육아 지원금, 준비물, 개월별 가이드, 우리 동네 의료·약 안전까지 한 곳에.",
+    description: "2026 출산·육아 지원금, 준비물, 개월별 가이드, 의료·약 안전까지 한 곳에.",
     start_url: "/",
     scope: "/",
     display: "standalone",
@@ -41,7 +41,7 @@ export default function manifest(): MetadataRoute.Manifest {
     shortcuts: [
       { name: "지원금 계산기", short_name: "계산기", url: "/calculator", icons: [{ src: "/api/appicon?size=192", sizes: "192x192" }] },
       { name: "해열제 용량", short_name: "해열제", url: "/fever", icons: [{ src: "/api/appicon?size=192", sizes: "192x192" }] },
-      { name: "우리 동네", short_name: "우리 동네", url: "/local", icons: [{ src: "/api/appicon?size=192", sizes: "192x192" }] },
+      { name: "의료·약국", short_name: "의료·약국", url: "/medical", icons: [{ src: "/api/appicon?size=192", sizes: "192x192" }] },
     ],
   };
 }
