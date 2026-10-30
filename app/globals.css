@@ -33,7 +33,7 @@
 html, body {
   background: linear-gradient(100deg, var(--ss-canvas-a) 0%, #F7F2F3 55%, var(--ss-canvas-b) 100%);
   background-attachment: fixed;
-  color: #3D2C2E;
+  color: #3A4660;
   min-height: 100%;
   font-family: var(--ss-font);
 }
@@ -136,9 +136,9 @@ html, body {
 
 .card {
   background: #fff;
-  border: 2px solid #FFE2E9;
-  border-radius: 28px;
-  box-shadow: 0 8px 24px rgba(255, 181, 197, 0.18);
+  border: 1px solid #ECEEF3;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(26, 40, 64, 0.06);
 }
 
 .chip {
