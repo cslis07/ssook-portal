@@ -131,6 +131,9 @@ function ProfileModal({ initial, onClose, onSave, onClear }: {
             <button onClick={onClear} className="btn-pop bg-white border border-[#E2E5EC] text-[color:var(--ss-muted)] px-3 py-2 rounded-full font-bold text-xs">삭제</button>
           )}
         </div>
+        <a href="/my" onClick={onClose} className="mt-2 block text-center text-[11px] font-bold text-[color:var(--ss-muted)] underline">
+          내 아이 기록 · 백업 · 가족 공유 →
+        </a>
       </div>
     </div>
   );

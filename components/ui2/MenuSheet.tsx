@@ -42,6 +42,12 @@ export default function MenuSheet({ open, onClose, withMe = false }: { open: boo
             <button onClick={() => { onClose(); openBabyModal(); }}>{s ? "수정" : "입력하기"}</button>
           </div>
         )}
+        {withMe && (
+          <div className="ss-sheet-links" style={{ marginTop: 10 }}>
+            <Link href="/my" onClick={onClose}><b>🧸 내 아이 기록</b><small>진료 전 요약·백업·가족 공유</small></Link>
+            <Link href="/milestones" onClick={onClose}><b>🌱 발달 체크</b><small>월령별 발달 기록</small></Link>
+          </div>
+        )}
 
         {NAV_GROUPS.map((g) => (
           <div key={g.id} className="ss-sheet-group">

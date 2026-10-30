@@ -14,6 +14,9 @@ const MENU = [
   { href: "/medical", icon: "🏥", label: "의료·약국", bg: "#EAF6EE" },
   { href: "/fever", icon: "🌡️", label: "해열제", bg: "#FFF5DA" },
   { href: "/seoul", icon: "🎫", label: "공공서비스예약", bg: "#EBF3FE" },
+  { href: "/milestones", icon: "🌱", label: "발달 체크", bg: "#EAF6EE" },
+  { href: "/food", icon: "🥄", label: "이유식 체크", bg: "#FFF5DA" },
+  { href: "/my", icon: "🧸", label: "내 아이 기록", bg: "#FDF1E4" },
 ];
 
 export default function HomeMenu() {

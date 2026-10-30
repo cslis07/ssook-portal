@@ -390,6 +390,15 @@
   .ss-quick small { display: none; }
 }
 
+/* 인쇄 — 진료 전 요약만 깔끔하게 */
+@media print {
+  html, body { background: #fff !important; }
+  .ss-header, .ss-footer, .ss-tabbar, .no-print, #splash { display: none !important; }
+  .ss-shell { width: 100%; margin: 0; box-shadow: none; border-radius: 0; background: #fff; }
+  .ss-main { padding: 0; }
+  .print-area { border: 0 !important; box-shadow: none !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ss-shell *, .ss-shell *::before, .ss-shell *::after, .ss-btn3d, .ss-skel, .ss-sheet { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }

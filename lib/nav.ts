@@ -24,6 +24,9 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: "/calendar", label: "개월별 가이드", desc: "발달·접종·검진" },
       { href: "/growth", label: "월령별 성장", desc: "이른둥이~36개월" },
       { href: "/checklist", label: "출산준비물", desc: "체크리스트·출산가방" },
+      { href: "/milestones", label: "발달 체크", desc: "월령별 발달 기록" },
+      { href: "/food", label: "이유식 체크", desc: "먹어본 재료·반응 메모" },
+      { href: "/my", label: "내 아이 기록", desc: "진료 전 요약·백업·가족 공유" },
     ],
   },
   {
