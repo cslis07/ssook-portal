@@ -1,6 +1,8 @@
 import "./globals.css";
+import "./ui2.css";
 import type { Metadata, Viewport } from "next";
 import NavBar from "@/components/NavBar";
+import MobileTabBar from "@/components/ui2/MobileTabBar";
 
 export const viewport: Viewport = {
   themeColor: "#FFB5C5",
@@ -42,7 +44,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko">
       <body>
         {/* 스플래시 — 앱 진입 시 새싹이 자라는 로딩 화면(세션당 1회) */}
-        <div id="splash" aria-hidden="true">
+        {/* suppressHydrationWarning: 아래 인라인 스크립트가 하이드레이션 전에 class를 바꾸므로(기존 경고 해소, 동작 동일) */}
+        <div id="splash" aria-hidden="true" suppressHydrationWarning>
           <div className="splash-inner">
             <span className="splash-badge"><span className="splash-sprout">🌱</span></span>
             <div className="splash-name">아이쑥쑥</div>
@@ -62,28 +65,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             ].join(""),
           }}
         />
-        <NavBar />
-        <main className="max-w-6xl mx-auto py-8 px-gutter-safe">{children}</main>
-        <footer className="text-center text-xs text-ink/60 pt-10 pb-gutter-safe px-gutter-safe">
-          <p>🌱 아이쑥쑥 · 2026년 기준 정부·공공기관 공개 자료 요약</p>
-          <p className="mt-1 font-semibold text-ink/70">
-            ※ 본 앱은 정부·공공기관이 운영하거나 정부와 제휴한 앱이 아니며, 어떠한 정부 기관도 대표하지 않습니다.
-          </p>
-          <p className="mt-1">앱의 정보는 아래 공식 출처의 공개 자료를 요약·안내한 참고용입니다. 최종 신청 전에는 반드시 공식 사이트·관할 기관에서 확인하세요.</p>
-          <div className="mt-2 flex flex-wrap justify-center gap-x-3 gap-y-1">
-            <a href="https://www.bokjiro.go.kr" target="_blank" rel="noopener" className="underline hover:text-rose">복지로</a>
-            <a href="https://www.gov.kr" target="_blank" rel="noopener" className="underline hover:text-rose">정부24</a>
-            <a href="https://www.mohw.go.kr" target="_blank" rel="noopener" className="underline hover:text-rose">보건복지부</a>
-            <a href="https://nip.kdca.go.kr" target="_blank" rel="noopener" className="underline hover:text-rose">예방접종도우미</a>
-            <a href="https://www.nhis.or.kr" target="_blank" rel="noopener" className="underline hover:text-rose">국민건강보험공단</a>
-            <a href="https://www.childcare.go.kr" target="_blank" rel="noopener" className="underline hover:text-rose">아이사랑</a>
-          </div>
-          <p className="mt-3">
-            <a href="/privacy" className="underline hover:text-rose">개인정보 처리방침 · 이용안내</a>
-            <span className="mx-2">·</span>
-            <a href="/guide.html" className="underline hover:text-rose">이용가이드</a>
-          </p>
-        </footer>
+        <div className="ss-shell">
+          <NavBar />
+          <main className="ss-main">{children}</main>
+          <footer className="ss-footer">
+            <p>🌱 <strong>아이쑥쑥</strong> · 2026년 기준 정부·공공기관 공개 자료 요약</p>
+            <p className="mt-1 font-semibold" style={{ color: "#4B5567" }}>
+              ※ 본 앱은 정부·공공기관이 운영하거나 정부와 제휴한 앱이 아니며, 어떠한 정부 기관도 대표하지 않습니다.
+            </p>
+            <p className="mt-1">앱의 정보는 아래 공식 출처의 공개 자료를 요약·안내한 참고용입니다. 최종 신청 전에는 반드시 공식 사이트·관할 기관에서 확인하세요.</p>
+            <div className="ss-footer-links">
+              <a href="https://www.bokjiro.go.kr" target="_blank" rel="noopener">복지로</a>
+              <a href="https://www.gov.kr" target="_blank" rel="noopener">정부24</a>
+              <a href="https://www.mohw.go.kr" target="_blank" rel="noopener">보건복지부</a>
+              <a href="https://nip.kdca.go.kr" target="_blank" rel="noopener">예방접종도우미</a>
+              <a href="https://www.nhis.or.kr" target="_blank" rel="noopener">국민건강보험공단</a>
+              <a href="https://www.childcare.go.kr" target="_blank" rel="noopener">아이사랑</a>
+            </div>
+            <p className="ss-footer-links" style={{ marginTop: 12 }}>
+              <a href="/privacy">개인정보 처리방침 · 이용안내</a>
+              <a href="/guide.html">이용가이드</a>
+            </p>
+          </footer>
+        </div>
+        <MobileTabBar />
       </body>
     </html>
   );

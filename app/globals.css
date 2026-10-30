@@ -4,12 +4,38 @@
 
 :root {
   --bg: #FFF8F0;
+
+  /* ===== UI 2.0 디자인 토큰 (ssook_2.0 원본 시안에서 샘플링) ===== */
+  --ss-ink: #0B193D;          /* 제목·핵심 수치 */
+  --ss-text: #3A4660;         /* 본문 */
+  --ss-muted: #758398;        /* 보조 */
+  --ss-canvas-a: #EEF1F9;     /* 바깥 배경 좌 */
+  --ss-canvas-b: #FCEBE3;     /* 바깥 배경 우 */
+  --ss-shell: #FFFEFC;        /* 데스크톱 페이지 프레임 */
+  --ss-mobile-bg: #FCFAF6;    /* 모바일 바탕 */
+  --ss-mint: #EAF6EE;
+  --ss-mint-inner: #F5FAF7;
+  --ss-peach: #FDF1E4;
+  --ss-blue: #EBF3FE;
+  --ss-pill: #FCEFE3;         /* 활성 메뉴 알약 */
+  --ss-accent: #EB8562;       /* '쑥쑥' 강조 */
+  --ss-dday-bg: #FED8D9;
+  --ss-dday: #D2505A;
+  --ss-border: #ECEEF3;
+  --ss-cta-top: #FFE3CC;
+  --ss-cta-bottom: #FAB792;
+  --ss-cta-border: #FFC59E;
+  --ss-shadow: 0 8px 24px rgba(26, 40, 64, 0.06);
+  /* 한글은 기기 기본 폰트(웹폰트 다운로드 없음 — 사용자 정책). Pretendard는 기기에 설치된 경우만 */
+  --ss-font: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
 }
 
 html, body {
-  background: linear-gradient(180deg, #FFF8F0 0%, #FFEFE3 100%);
+  background: linear-gradient(100deg, var(--ss-canvas-a) 0%, #F7F2F3 55%, var(--ss-canvas-b) 100%);
+  background-attachment: fixed;
   color: #3D2C2E;
   min-height: 100%;
+  font-family: var(--ss-font);
 }
 
 /* ---- Android 15+ edge-to-edge 안전 영역(노치·상태바·제스처바) ---- */

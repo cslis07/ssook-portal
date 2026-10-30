@@ -12,25 +12,25 @@ export default function AdSlot({ variant = "banner" }: { variant?: "banner" | "i
   const title = process.env.NEXT_PUBLIC_COUPANG_TITLE || DEFAULT_TITLE;
 
   return (
-    <section aria-label="광고">
+    <section aria-label="광고" className="ss-section">
       <a
         href={url}
         target="_blank"
         rel="sponsored nofollow noopener"
-        className="btn-pop block card overflow-hidden bg-gradient-to-r from-peach/50 to-rose/30"
+        className="btn-pop block overflow-hidden rounded-[20px] border border-[#ECEEF3] bg-white shadow-[0_8px_24px_rgba(26,40,64,.06)]"
       >
         <div className="flex items-center gap-3 p-4">
-          <div className="w-12 h-12 rounded-2xl bg-white grid place-items-center text-3xl shrink-0 shadow-soft">🛒</div>
+          <div className="w-12 h-12 rounded-2xl bg-[#FDF1E4] grid place-items-center text-3xl shrink-0">🛒</div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] font-bold text-ink/50 bg-white/70 px-1.5 py-0.5 rounded">광고 · AD</span>
+              <span className="text-[10px] font-bold text-[color:var(--ss-muted)] bg-[#F3F4F7] px-1.5 py-0.5 rounded">광고 · AD</span>
             </div>
-            <div className="font-extrabold text-ink text-sm md:text-base mt-1 leading-tight">{title}</div>
+            <div className="font-extrabold text-[color:var(--ss-ink)] text-sm md:text-base mt-1 leading-tight">{title}</div>
           </div>
           <span className="text-ink/40 text-lg shrink-0">›</span>
         </div>
       </a>
-      <p className="text-[10px] text-ink/40 mt-1 px-1">
+      <p className="text-[10px] text-[color:var(--ss-muted)] mt-1 px-1">
         쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받을 수 있습니다.
       </p>
     </section>

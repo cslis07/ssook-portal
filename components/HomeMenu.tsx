@@ -1,32 +1,30 @@
 import Link from "next/link";
 
-// 홈 메인 메뉴 — 아이콘 그리드 허브 (전 기능 한눈에)
+// 홈 하단 '전체 메뉴' — 기존 12개 기능 진입점 (URL·라벨 유지, UI 2.0 카드 스타일)
 const MENU = [
-  { href: "/support", icon: "💝", label: "지원금혜택", bg: "bg-rose/40" },
-  { href: "/calculator", icon: "🧮", label: "지원금계산기", bg: "bg-peach/60" },
-  { href: "/timeline", icon: "📅", label: "시기별 신청 할 일", bg: "bg-lavender/50" },
-  { href: "/localgov", icon: "🏘️", label: "지자체 지원금", bg: "bg-mint/50" },
-  { href: "/calendar", icon: "👶", label: "개월별 가이드", bg: "bg-butter/60" },
-  { href: "/growth", icon: "🌷", label: "월령별 성장", bg: "bg-sky/50" },
-  { href: "/checklist", icon: "🎀", label: "출산준비물", bg: "bg-rose/30" },
-  { href: "/utility", icon: "💡", label: "공과금혜택", bg: "bg-peach/50" },
-  { href: "/local", icon: "🗺️", label: "우리 동네", bg: "bg-lavender/40" },
-  { href: "/medical", icon: "🏥", label: "의료·약국", bg: "bg-mint/40" },
-  { href: "/fever", icon: "🌡️", label: "해열제", bg: "bg-butter/50" },
-  { href: "/seoul", icon: "🎫", label: "공공서비스예약", bg: "bg-sky/40" },
+  { href: "/support", icon: "💝", label: "지원금혜택", bg: "#FDEDEF" },
+  { href: "/calculator", icon: "🧮", label: "지원금계산기", bg: "#FDF1E4" },
+  { href: "/timeline", icon: "📅", label: "시기별 신청 할 일", bg: "#EFEBFB" },
+  { href: "/localgov", icon: "🏘️", label: "지자체 지원금", bg: "#EAF6EE" },
+  { href: "/calendar", icon: "👶", label: "개월별 가이드", bg: "#FFF5DA" },
+  { href: "/growth", icon: "🌷", label: "월령별 성장", bg: "#EBF3FE" },
+  { href: "/checklist", icon: "🎀", label: "출산준비물", bg: "#FDEDEF" },
+  { href: "/utility", icon: "💡", label: "공과금혜택", bg: "#FDF1E4" },
+  { href: "/local", icon: "🗺️", label: "우리 동네", bg: "#EFEBFB" },
+  { href: "/medical", icon: "🏥", label: "의료·약국", bg: "#EAF6EE" },
+  { href: "/fever", icon: "🌡️", label: "해열제", bg: "#FFF5DA" },
+  { href: "/seoul", icon: "🎫", label: "공공서비스예약", bg: "#EBF3FE" },
 ];
 
 export default function HomeMenu() {
   return (
-    <section className="card p-4 md:p-5">
-      <h2 className="text-base font-extrabold text-ink mb-3 px-1">🌈 전체 메뉴</h2>
-      <div className="grid grid-cols-4 gap-y-4 gap-x-2">
+    <section className="ss-section" aria-labelledby="ss-allmenu">
+      <h2 id="ss-allmenu" className="ss-section-title">전체 메뉴</h2>
+      <div className="ss-menu-grid">
         {MENU.map((m) => (
-          <Link key={m.href} href={m.href} className="btn-pop flex flex-col items-center gap-1.5">
-            <span className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl grid place-items-center text-3xl md:text-4xl shadow-soft ${m.bg}`}>
-              {m.icon}
-            </span>
-            <span className="text-[11px] md:text-xs font-bold text-ink text-center leading-tight">{m.label}</span>
+          <Link key={m.href} href={m.href}>
+            <span className="ss-menu-ic" style={{ background: m.bg }} aria-hidden="true">{m.icon}</span>
+            {m.label}
           </Link>
         ))}
       </div>

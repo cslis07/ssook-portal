@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { getSeoulRows } from "@/lib/seoul-client";
 
 // 이용대상(USETGTINFO 자유텍스트) → 버킷 분류 (seoul 페이지와 동일 기준)
 const BUCKETS: { key: string; label: string; icon: string; kw: string[] }[] = [
@@ -43,10 +44,9 @@ export default function TodayPick() {
     let alive = true;
     (async () => {
       try {
-        const r = await fetch("/api/seoul-reserve?cat=all&start=1&end=1000");
-        const data = await r.json();
+        const rows = await getSeoulRows();
         if (!alive) return;
-        setRows(Array.isArray(data.rows) ? data.rows : []);
+        setRows(rows);
       } catch {
         if (alive) setError(true);
       }
@@ -67,12 +67,12 @@ export default function TodayPick() {
   }, [candidates, seed]);
 
   return (
-    <section className="card p-6 bg-gradient-to-br from-sky/30 via-lavender/20 to-rose/20">
+    <section className="ss-section rounded-[24px] border border-[#ECEEF3] bg-white p-6 shadow-[0_8px_24px_rgba(26,40,64,.06)]">
       <div className="flex items-center justify-between flex-wrap gap-2 mb-1">
-        <h2 className="text-2xl font-extrabold text-ink">🎯 오늘의 공공서비스 픽</h2>
-        <span className="chip bg-white/70 text-ink">서울시 공공예약</span>
+        <h2 className="text-[19px] font-extrabold text-[color:var(--ss-ink)] tracking-tight">🎯 오늘의 공공서비스 픽</h2>
+        <span className="chip bg-[#F3F4F7] text-[color:var(--ss-text)]">서울시 공공예약</span>
       </div>
-      <p className="text-sm text-ink/70 mb-4">카테고리를 고르면 오늘의 추천을 여러 개 뽑아드려요.</p>
+      <p className="text-sm text-[color:var(--ss-muted)] mb-4">카테고리를 고르면 오늘의 추천을 여러 개 뽑아드려요.</p>
 
       {/* 카테고리 칩 */}
       <div className="flex flex-wrap gap-2 mb-4">
@@ -81,7 +81,7 @@ export default function TodayPick() {
             key={b.key}
             onClick={() => { setBucket(b.key); setSeed((s) => s + 1); }}
             className={`btn-pop px-3 py-1.5 rounded-full text-sm font-bold border-2 transition ${
-              bucket === b.key ? "bg-ink text-cream border-ink" : "bg-white/80 text-ink border-rose/30 hover:bg-rose/20"
+              bucket === b.key ? "bg-[#23395F] text-white border-[#23395F]" : "bg-white text-[color:var(--ss-text)] border-[#E2E5EC] hover:bg-[#F7F4F1]"
             }`}
           >
             {b.icon} {b.label}
@@ -107,7 +107,7 @@ export default function TodayPick() {
           {candidates.length > SHOW && (
             <div className="flex justify-center mt-4">
               <button onClick={() => setSeed((s) => s + 1)}
-                className="btn-pop bg-white border-2 border-rose/30 text-ink px-5 py-2.5 rounded-full font-bold text-sm">
+                className="btn-pop bg-white border border-[#E2E5EC] text-[color:var(--ss-ink)] px-5 py-2.5 rounded-full font-bold text-sm">
                 🎲 다른 픽 보기 ({candidates.length}개 중)
               </button>
             </div>
@@ -128,7 +128,7 @@ function PickCard({ pick }: { pick: any }) {
   const url = decodeHtml(pick.SVCURL || "");
 
   return (
-    <div className="bg-white rounded-blob overflow-hidden border-2 border-rose/20 shadow-soft flex flex-col">
+    <div className="bg-white rounded-[20px] overflow-hidden border border-[#ECEEF3] shadow-[0_8px_24px_rgba(26,40,64,.06)] flex flex-col">
       {/* 이미지 (없으면 그라데이션 플레이스홀더) */}
       <div className="h-32 relative bg-gradient-to-br from-rose/40 to-lavender/40 shrink-0">
         {img ? (
@@ -155,7 +155,7 @@ function PickCard({ pick }: { pick: any }) {
         </div>
         {url && (
           <a href={url} target="_blank" rel="noopener"
-            className="btn-pop bg-ink text-cream px-3 py-2 rounded-full font-bold text-xs text-center mt-3">🔗 예약하러 가기</a>
+            className="btn-pop bg-[#23395F] text-white px-3 py-2.5 rounded-full font-bold text-xs text-center mt-3">🔗 예약하러 가기</a>
         )}
       </div>
     </div>
