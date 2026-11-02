@@ -102,7 +102,7 @@ export default function TodayPick() {
       ) : (
         <>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {picks.map((p, i) => <PickCard key={i} pick={p} />)}
+            {picks.map((p, i) => <PickCard key={p.SVCID || i} pick={p} />)}
           </div>
           {candidates.length > SHOW && (
             <div className="flex justify-center mt-4">
@@ -126,14 +126,20 @@ function PickCard({ pick }: { pick: any }) {
   const stat = pick.SVCSTATNM || "";
   const rcpt = (pick.RCPTBGNDT || pick.RCPTENDDT) ? `${(pick.RCPTBGNDT || "").slice(0, 10)} ~ ${(pick.RCPTENDDT || "").slice(0, 10)}` : "";
   const url = decodeHtml(pick.SVCURL || "");
+  const [broken, setBroken] = useState(false);
 
   return (
     <div className="bg-white rounded-[20px] overflow-hidden border border-[#ECEEF3] shadow-[0_8px_24px_rgba(26,40,64,.06)] flex flex-col">
-      {/* 이미지 (없으면 그라데이션 플레이스홀더) */}
-      <div className="h-32 relative bg-gradient-to-br from-rose/40 to-lavender/40 shrink-0">
-        {img ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
+      {/* 이미지 — 16:9 고정. 포스터·가로배너 등 비율이 제각각이라 잘리지 않게 전체를 보여주고(contain),
+          남는 여백은 같은 이미지를 흐리게 깔아 채운다. 로드 실패·없음은 그라데이션 플레이스홀더 */}
+      <div className="aspect-[16/9] relative overflow-hidden bg-gradient-to-br from-rose/40 to-lavender/40 shrink-0">
+        {img && !broken ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={img} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-60" loading="lazy" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={img} alt="" className="relative w-full h-full object-contain" loading="lazy" onError={() => setBroken(true)} />
+          </>
         ) : (
           <div className="w-full h-full grid place-items-center text-4xl">🎪</div>
         )}
